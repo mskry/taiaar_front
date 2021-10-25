@@ -1,0 +1,45 @@
+<ng-container *ngIf="bannerVideos.length">
+    <section id="gernal-product-slider">
+        <div class="container mt-3">
+
+            <div class="row">
+                <div [ngClass] ="settings.enable_cravv_theme == 1 ? 'col-md-12' : col-md-4">
+                    <div class="gernal-product-title">
+                        <h1 style="font-size: 2rem;">
+                            {{'Watch our latest story' | translate}}
+                        </h1>
+                        <!-- <a [style.background-color]="style?.primaryColor" style="color: #ffffff; cursor: pointer;"
+                        class="main_btn" (click)="onSeeMore()">{{'View All' | translate}}</a> -->
+                    </div>
+                </div>
+                <div  [ngClass] ="settings.enable_cravv_theme == 1 ? 'col-md-12' : col-md-8" class="rec-sup">
+
+                    <!-- <div *ngIf="!isLoading; else skeleton2"> -->
+                    <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
+                        <div ngxSlickItem
+                            *ngFor="let banner of bannerVideos.slice(0, 6); let i = index;trackBy:trackBySuppFn;"
+                            class="slide">
+                            <div class="item">
+                                <div class="product-item" style="padding-right: 30px; cursor: pointer;">
+                                    <!-- autoplay -->
+                                    <video id="myVideo" width="100%" height="218" controls>
+                                        <source src="{{banner.website_video}}" type="video/mp4">
+                                        Your browser does not support HTML5 video.
+                                    </video>
+                                    <!-- <img style="width: 100%;" appImage [url]="supplier?.logo" [size]="'355x320'"
+                                        [settings]="settings" [src]="supplier?.logo"
+                                        onError="src = '/assets/images/placeholder_image.svg';"
+                                        (click)="productList(supplier)"> -->
+                                    <!-- <h2 class="ellipsis d-inline-flex">{{supplier?.name}}</h2> -->
+                                </div>
+                            </div>
+                        </div>
+                    </ngx-slick-carousel>
+                    <!-- </div> -->
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+</ng-container>

@@ -1,0 +1,240 @@
+<ng-container *ngIf="isMobile; else webTemplate">
+    <div class="home-page-search">
+        <div class="home-page-search-inner" style="width: 90%;">
+            <input type="text" placeholder="Search" name="search" [(ngModel)]="searchText"
+                (keydown.enter)="searchProduct($event.target.value)">
+            <!-- <img src="/assets/images/food/ic_search.svg" style="left: 100%; cursor: pointer;" (click)="searchProduct(searchText)"> -->
+        </div>
+        <div class="home-page-search-restorent" (click)="searchProduct(searchText)"
+            style="cursor: pointer; padding: 0px 20px;">
+            <img src="/assets/images/food/ic_search.svg" style="margin-top: 17px;">
+        </div>
+        <div class="home-page-search-restorent dropdown"
+            *ngIf="settings.search_by == 2 && settings?.is_unify_search == 0 && settings?.app_type != 8 && settings?.app_type < 11">
+            <a class=" dropdown-toggle pointer" data-toggle="dropdown">{{searchBy ? ('supplier' | localization |
+                translate) : ('product' | localization | translate)}}
+                <img src="/assets/images/down_black.png"></a>
+            <ul class="dropdown-menu">
+                <li class="pointer"><a (click)="searchBy = 0; searchText = ''">{{'product' | localization |
+                        translate}}</a>
+                </li>
+                <li class="pointer"><a (click)="searchBy = 1; searchText = ''">{{'supplier' | localization |
+                        translate}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</ng-container>
+
+<ng-template #webTemplate>
+
+    <ng-container [ngSwitch]="settings.app_type">
+
+        <ng-template [ngSwitchCase]="8">
+            <form autocomplete="off" class="expanding-search-form dropdown">
+                <input class="search-input dropdown-toggle" id="global-search" type="text" name="search"
+                    placeholder="{{'Search' | translate}}" [(ngModel)]="searchText"
+                    (keydown.enter)="searchProduct($event.target.value)" data-toggle="dropdown">
+                <div class="dropdown-menu w-100" *ngIf="localSearchedData.length > 0" id="recentSearch">
+                    <h6 class="dropdown-header list-header" [style.color]="style?.secondaryColor">
+                        {{'Recently Searched' | translate}}</h6>
+                    <a class="dropdown-item search-results" *ngFor="let item of localSearchedData;trackBy:trackByFn"
+                        (click)="searchProduct(item); searchText = item"
+                        [style.color]="style?.defaultColor">{{item}}</a>
+                </div>
+                <button [ngStyle]="{'background': style.primaryColor}" class="button search-button" type="button"
+                    (click)="searchProduct(searchText)">
+                    <i class="fa fa-search" aria-hidden="true"></i> <span class="search-text">{{'Search' |
+                        translate}}</span>
+                </button>
+            </form>
+        </ng-template>
+
+        <ng-template [ngSwitchCase]="2">
+            <ng-container [ngTemplateOutlet]="common"></ng-container>
+        </ng-template>
+
+        <ng-template [ngSwitchCase]="1">
+            <div class="home-page-search"
+                *ngIf="[1,2,3,4].includes(settings?.selected_template) && !settings?.is_single_vendor">
+                <div class="home-page-search-inner" *ngIf="settings?.selected_template!=4">
+                    <input type="text"
+                        placeholder="{{settings?.is_unify_search == 0 ? ((('search_for' | localization) | translate) + ' ' + ((searchBy ? ('supplier' | localization) : ('product' | localization)) | translate)) : ('Search' | translate)}}"
+                        name="search" [(ngModel)]="searchText" (keydown.enter)="searchProduct($event.target.value)">
+                    <img src="/assets/images/food/ic_search.svg">
+                </div>
+                <div class="home-page-search-inner" *ngIf="settings?.selected_template==4">
+                    <input type="text"
+                        placeholder="{{settings?.is_unify_search == 0 ? ((('search_for' | localization) | translate) + ' ' + ('supplier' | localization)) : ('Search' | translate)}}"
+                        name="search" [(ngModel)]="searchText" (keydown.enter)="searchProduct($event.target.value)">
+                    <img src="/assets/images/food/ic_search.svg">
+                </div>
+                <div class="home-page-search-restorent dropdown"
+                    *ngIf="settings?.search_by == 2 && settings?.is_unify_search == 0  && settings?.selected_template!=4">
+                    <a class=" dropdown-toggle pointer" data-toggle="dropdown">{{searchBy ? ('supplier' | localization |
+                        translate) : ('product' | localization | translate)}}
+                        <img src="/assets/images/down_black.png"></a>
+                    <ul class="dropdown-menu" *ngIf="settings?.selected_template!=4">
+                        <li class="pointer"><a (click)="searchBy = 0; searchText = ''">{{'product' | localization |
+                                translate}}</a>
+                        </li>
+                        <li class="pointer"><a (click)="searchBy = 1; searchText = ''">{{'supplier' | localization |
+                                translate}}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="home-page-search-restorent dropdown"
+                    *ngIf="settings?.search_by == 2 && settings?.is_unify_search == 0 && settings?.selected_template==4">
+                    <a class=" dropdown-toggle pointer" data-toggle="dropdown">{{srchTextToShow}}
+                        <img src="/assets/images/down_black.png"></a>
+                    <ul class="dropdown-menu">
+                        <li class="pointer"><a (click)="setOrderType(2)">{{'Table Booking' | translate}}</a>
+                        </li>
+                        <li class="pointer"><a (click)="setOrderType(1)">{{'Pick Up' | translate}}</a>
+                        </li>
+                        <li class="pointer"><a (click)="setOrderType(0)">{{'Delivery' | translate}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- <div class="home-page-search-restorent dropdown psn"
+                *ngIf="settings?.search_by == 2 && settings?.is_unify_search == 0 && settings?.selected_template==4">
+                <a class=" dropdown-toggle pointer" data-toggle="dropdown">{{srchTextToShow}}
+                    <img src="/assets/images/down_black.png"></a>
+                <ul class="dropdown-menu">
+                    <li class="pointer"><a (click)="setOrderType(2)">{{'Table Booking' | translate}}</a>
+                    </li>
+                    <li class="pointer"><a (click)="setOrderType(1)">{{'Pick Up' | translate}}</a>
+                    </li>
+                    <li class="pointer"><a (click)="setOrderType(0)">{{'Delivery' | translate}}</a>
+                    </li>
+                </ul>
+            </div> -->
+
+            <div class="home-page-search-inner"
+                *ngIf="(settings?.selected_template == 1 || settings?.selected_template == 3 || settings?.selected_template == 4) && settings?.is_single_vendor">
+                <input name="search" type="text" [(ngModel)]="searchText"
+                    (keydown.enter)="searchProduct($event.target.value)"
+                    placeholder="{{('search_for' | localization)}} {{('product' | localization)}}">
+                <img src="/assets/images/food/ic_search.svg">
+            </div>
+
+            <div *ngIf="settings?.selected_template == 2 && settings?.is_single_vendor == 1">
+                <!-- <div *ngIf="!settings?.enable_custom_header_contant;else headerCustomMenu"> -->
+                    <input type="text" class="form-control" id="inputCity"
+                        [placeholder]="'Search For ' + ('product' | localization | translate)" [(ngModel)]="searchText"
+                        (keydown.enter)="searchProduct($event.target.value)">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                <!-- </div> -->
+            </div>
+
+            <ng-container *ngIf="!settings?.selected_template && settings.tag_search == 1" [ngTemplateOutlet]="tag">
+            </ng-container>
+            <ng-container *ngIf="!settings?.selected_template && !settings.tag_search" [ngTemplateOutlet]="common">
+            </ng-container>
+        </ng-template>
+    </ng-container>
+
+</ng-template>
+
+
+<ng-template #headerCustomMenu>
+    <div class="headerCustomMenu">
+        <div class="row mt-3">
+        <ul>
+            <li>
+                <a class="cursor lnk_btn" (click)="navigate('/about_us')">{{'About Us' | translate }}</a>
+            </li>
+            <li>
+                <a class="cursor lnk_btn" (click)="navigate('/products/all-categories')">{{'Shop' | translate }}</a>
+            </li>
+            <li>
+                <a class="cursor lnk_btn" (click)="navigate('/contact_us')">{{'Contact Us' | translate }}</a>
+            </li>
+        </ul>
+        </div>
+        <div class="row search mt-5" *ngIf="show_header_custom_search">
+            <!-- <p>
+                {{'Food Tradition & Beyond' | translate}}
+            </p> -->
+            <input type="text" class="form-control" id="inputCity"
+                [placeholder]="'Search For ' + ('product' | localization | translate)" [(ngModel)]="searchText"
+                (keydown.enter)="searchProduct($event.target.value)">
+            <i class="fa fa-search" aria-hidden="true"></i>
+
+            <button class="go" (click)="searchProduct(searchText)">{{'Go' | translate }}</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #tag>
+    <div class="tag-search-outter">
+        <div class="tag-search">
+            <div class="d-inline-block">
+                <p-autoComplete [(ngModel)]="selectedTags" [suggestions]="tags" (completeMethod)="onTagSearch($event)"
+                    field="name" styleClass="autocomplete-search" class="tab-search-box" [multiple]="true"
+                    [placeholder]="'search'" [emptyMessage]="'No Result Found'" [size]="100">
+                </p-autoComplete>
+            </div>
+            <div class="tag-search-btn">
+                <button type="button" class="btn" (click)="onSearch()">search</button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #common>
+    <form autocomplete="off" class="dropdown" *ngIf="settings?.selected_template != 5">
+        <div class="header-search-box">
+            <div class="radio-btn-div" *ngIf="settings.search_by == 2 && settings?.is_unify_search == 0">
+                <div class="custom-search-radio">
+                    <input type="radio" [id]="'product'" name="search" [value]="0" [checked]="searchBy == 0"
+                        (change)="searchBy = 0; search = '' ">
+                    <label [for]="'product'"><span>{{'product' | localization}}</span></label>
+                </div>
+
+                <div class="custom-search-radio">
+                    <input type="radio" [id]="'supplier'" name="search" [value]="1" [checked]="searchBy == 1"
+                        (change)="searchBy = 1 ; search = '' ">
+                    <label [for]="'supplier'"><span>{{'supplier' | localization}}</span></label>
+                </div>
+
+            </div>
+
+            <div class="home-page-search-restorent search-box dropdown"
+                *ngIf="settings?.search_by == 3 && settings?.is_unify_search == 0  && settings?.selected_template!=4">
+                <a class=" dropdown-toggle pointer" data-toggle="dropdown">{{searchBy ? ('supplier' | localization |
+                    translate) : ('product' | localization | translate)}}
+                    <img class="home-page-search-arrow" src="/assets/images/down_black.png"></a>
+                <ul class="dropdown-menu" *ngIf="settings?.selected_template!=4">
+                    <li class="pointer"><a (click)="searchBy = 0; searchText = ''">{{'product' | localization |
+                            translate}}</a>
+                    </li>
+                    <li class="pointer"><a (click)="searchBy = 1; searchText = ''">{{'supplier' | localization |
+                            translate}}</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="search-div">
+                <div (click)="searchProduct(searchText)">
+                    <i style="pointer-events: all;" class="fa fa-search" aria-hidden="true"></i>
+                </div>
+                <input class="dropdown-toggle" type="text"
+                    placeholder="{{'what_are_u_looking_for' | localization | translate}}" name="search"
+                    [(ngModel)]="searchText" (keydown.enter)="searchProduct($event.target.value)"
+                    data-toggle="dropdown">
+            </div>
+            <div style="width: 100%" class="dropdown-menu" *ngIf="localSearchedData.length > 0" id="recentSearch">
+                <h6 class="dropdown-header list-header" [style.color]="style?.secondaryColor">
+                    {{'Recently Searched' | translate}}</h6>
+                <a class="dropdown-item search-results" *ngFor="let item of localSearchedData;trackBy:trackBySearchFn"
+                    (click)="searchProduct(item); search = item" [style.color]="style?.defaultColor">{{item}}</a>
+            </div>
+        </div>
+    </form>
+
+    <!-- <input *ngIf="settings?.selected_template == 5" type="text" name="search" placeholder="SEARCH"
+        [(ngModel)]="searchText" (keydown.enter)="searchProduct($event.target.value)"><i class="fa fa-search"
+        aria-hidden="true"></i> -->
+</ng-template>

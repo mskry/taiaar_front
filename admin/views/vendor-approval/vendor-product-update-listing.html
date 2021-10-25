@@ -1,0 +1,222 @@
+<div class="container-fluid back">
+    <a class="back" ui-sref="vendorApproval.vendorApproval-list"><i class="fa fa-angle-left" aria-hidden="true"></i>&nbsp;&nbsp;Back</a>
+
+</div>
+
+<div class="wrapper">
+    <div class="category">
+        <div class="secnav">
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    <h1 class="bold">{{'Vendor Product Update List' | translate}}</h1>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="topfil">
+                        <ul>
+                            <li>
+                                <button type="button" class="simple" ng-click="refresh()"><img
+                                        src="img/v1_images/ic_rotate.svg">{{'REFRESH' | translate}}</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content m-top-30">
+            <div class="tab-pane active">
+                <div class="tableouter">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>{{'ID' | translate}}</th>
+                                <th>{{'PRODUCT ID' | translate}}</th>
+                                <th>{{'IMAGES'| translate}}</th>
+                                <th>{{'NAME' | translate}}</th>
+                                <th>{{'Supplier Name' | translate}}</th>
+                                <th>{{'Supplier Branch Name' | translate}}</th>
+                                <th>{{'MAKING PRICE' | translate}}</th>
+                                <th>{{'DESCRIPTION' | translate}}</th>
+                                <th>{{'IS APPROVED' | translate}}</th>
+                                <th
+                                    ng-if="profile==='ADMIN' && (enable_homenet_theme == 0 || permissions('VENDOR_APPROVAL', 'update') == 1)">
+                                    {{'ACTION' | translate}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="request in vendorUpdateList">
+                                <td>{{request.id}}</td>
+                                <td>{{request.product_id}}</td>
+                                <td>
+                                    <img ng-if="request.productUpdationImages.length"
+                                        src="{{request.productUpdationImages[0].image_path || '/../../../img/no_photo_icon.jpg'}}">
+                                    <img ng-if="!request.productUpdationImages.length"
+                                        src="{{request.oldProductData.productImages[0].image_path || '/../../../img/no_photo_icon.jpg'}}">
+                                </td>
+                                <td>{{request.name || 'N/A'}}</td>
+
+                                <td>{{request.supplier_name}}</td>
+                                <td>{{request.supplier_branch_name}}</td>
+                                <td>{{request.making_price}}</td>
+                                <td>
+                                    <div ng-if="request.product_desc"
+                                        ng-bind-html="request.product_desc | limitHtml: 40 | toTrusted"></div>
+                                    <div ng-if="!request.product_desc">'N/A'</div>
+                                </td>
+                                <td>
+                                    <span ng-if="profile==='ADMIN' && request.update_request_approved==0"
+                                        class="pending">
+                                        {{'Pending'}}
+                                    </span>
+                                    <span ng-if="profile==='ADMIN' && request.update_request_approved==1"
+                                        class="approved">
+                                        {{'Approved'}}
+                                    </span>
+                                    <span ng-if="profile==='ADMIN' && request.update_request_approved==2"
+                                        class="rejected">
+                                        {{'Rejected'}}
+                                    </span>
+                                </td>
+                                <td
+                                    ng-if="profile==='ADMIN' && (enable_homenet_theme == 0 || permissions('VENDOR_APPROVAL', 'update') == 1)">
+                                    <button class="btn btn-primary" class="delete" ng-click="viewChanges(request)">
+                                        {{'View Changes'}}
+                                    </button>
+                                    <button class="btn btn-primary"
+                                        ng-if="profile==='ADMIN' && request.update_request_approved==0" class="delete"
+                                        ng-click="approveRejectUpdation(request,1)">
+                                        {{'Approve'}}
+                                    </button>
+                                    <button class="btn btn-danger"
+                                        ng-if="profile==='ADMIN' && request.update_request_approved==0" class="delete"
+                                        ng-click="approveRejectUpdation(request, 2)">
+                                        {{'Reject'}}
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="no-data-found" ng-if="vendorUpdateList.length == 0 && dataLoaded">
+                        {{'NO DATA FOUND' | translate}}
+                    </div>
+                    <div ng-if="vendorUpdateList.length > 0 && dataLoaded" class="row pagination">
+                        <ul ng-if="pager.pages && pager.pages.length">
+                            <li ng-class="{disabled:pager.currentPage === 1}">
+                                <a ng-click="setPage(1)">{{'FIRST' | translate}}</a>
+                            </li>
+                            <li ng-class="{disabled:pager.currentPage === 1}">
+                                <a ng-click="setPage(pager.currentPage - 1)">{{'PREVIOUS' | translate}}</a>
+                            </li>
+                            <li ng-repeat="page in pager.pages" ng-class="{active:pager.currentPage === page}">
+                                <a ng-click="setPage(page)">{{page}}</a>
+                            </li>
+                            <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                                <a ng-click="setPage(pager.currentPage + 1)">{{'NEXT' | translate}}</a>
+                            </li>
+                            <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                                <a ng-click="setPage(pager.totalPages)">{{'LAST' | translate}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<success-modal message="message"></success-modal>
+
+
+
+<div class="modal" id="view_change_diff" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="modhead">
+                    <h6 class="text-center">Product Changes For Approval</h6>
+                    <button type="button" class="close" id="closeBrandModal" data-dismiss="modal"><img
+                            src="img/v1_images/ic_cross.svg"></button>
+                </div>
+                <div class="tableouter">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Key</th>
+                                <th>Old</th>
+                                <th>New</th>
+                            </tr>
+                            <tr>
+                                <th>Image</th>
+                                <td>
+                                    <img
+                                        src="{{selectedProductOldData.productImages[0].image_path || '/../../../img/no_photo_icon.jpg'}}">
+                                </td>
+                                <td>
+                                    <img ng-if="selectedProduct.productUpdationImages.length"
+                                        src="{{selectedProduct.productUpdationImages[0].image_path || '/../../../img/no_photo_icon.jpg'}}">
+                                    <img ng-if="!selectedProduct.productUpdationImages.length"
+                                        src="{{selectedProductOldData.productImages[0].image_path || '/../../../img/no_photo_icon.jpg'}}">
+                                </td>
+                            </tr>
+                            <tr ng-class="{flages: selectedProductOldData.name != selectedProduct.name}">
+                                <th>Name</th>
+                                <td>{{selectedProductOldData.name}}</td>
+                                <td>{{selectedProduct.name}}</td>
+                            </tr>
+                            <tr
+                                ng-class="{flages: selectedProductOldData.product_desc != selectedProduct.product_desc}">
+                                <th>Description</th>
+                                <td>{{selectedProductOldData.product_desc}}</td>
+                                <td>{{selectedProduct.product_desc}}</td>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="modfooter">
+                    <button class="btn btn-danger" ng-if="profile==='ADMIN' && selectedProduct.update_request_approved==0"
+                         ng-click="approveRejectUpdation(selectedProduct, 2)">
+                        {{'Reject'}}
+                    </button> 
+                    <button class="btn btn-primary" ng-if="profile==='ADMIN' && selectedProduct.update_request_approved==0"
+                         ng-click="approveRejectUpdation(selectedProduct,1)">
+                        {{'Approve'}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+    .delete {
+        cursor: pointer;
+    }
+
+    .delete:hover {
+        text-decoration: underline;
+        font-weight: 600;
+    }
+
+    .btn {
+        font-size: 12px
+    }
+
+    .approved {
+        color: green;
+    }
+
+    .rejected {
+        color: red;
+    }
+
+    .pending {
+        color: rgb(158, 158, 42);
+    }
+
+    .flages {
+        background-color: rgb(243, 243, 112);;
+    }
+</style>

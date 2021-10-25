@@ -1,0 +1,297 @@
+<ng-container [ngSwitch]="settings?.selected_template">
+
+  <ng-template [ngSwitchCase]="0">
+    <div class="w-100">
+      <app-banner></app-banner>
+    </div>
+
+    <div *ngIf="this.supplierDetail?.branchCount > 1" class="text-right mr-5">
+      <button class="btn btn-success" [routerLink]="['/', 'products', 'listing']"
+        [queryParams]="{'supplierId': this.supplierDetail?.id}">{{'View Branches' | translate}}</button>
+    </div>
+
+    <section class="recoomond_section recomand-2">
+      <div class="recoomond_section" style="padding: 0" *ngIf="!isLoading else skeleton">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-3 col-md-4">
+              <div class="left_section-pizza sticky">
+                <ul>
+                  <li class="capitalize" [ngClass]="{'single-category':products && products.length == 1}"
+                    *ngFor="let cat of products | paginate: { itemsPerPage: pagination.perPage, currentPage: pagination.currentPage, totalItems: pagination.count }; let i = index;trackBy:trackByCatFn"
+                    [value]="i"
+                    [ngStyle]="categoryIndex==i ? {'backgroundColor': style.primaryColor, color: '#ffffff', opacity: '1', 'font-weight': '600'} : {'backgroundColor': style.backgroundColor, color: style.baseColor}"
+                    (click)="categorySelect(i)" @fade>
+                    <img *ngIf="cat?.sub_cat_name != 'Special Offers'" [src]="cat?.sub_cat_image"
+                      onError="src = './assets/images/placeholder_image.svg';">
+                    {{cat?.sub_cat_name}}
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-lg-9 col-md-8">
+              <div class="reccom-main_section">
+                <div *ngFor="let data of products; let i = index;trackBy:trackByProductsDataFn" [id]=i>
+                  <h2 class="pizza-title" [style.color]="style.baseColor" @fade>{{data?.sub_cat_name}}</h2>
+                  <div class="row">
+                    <ng-container *ngIf="data.value && data.value.length; else noData">
+                      <div *ngFor="let product of data?.value;trackBy:trackByProductFn"
+                        class="col-lg-4 col-md-6 col-sm-6">
+                        <app-product [product]="product" [state]="productstate" [settings]="settings" [style]="style"
+                          [loggedIn]="loggedIn" (add)="addProduct($event)" (remove)="removeProduct($event)">
+                        </app-product>
+                      </div>
+                    </ng-container>
+                    <ng-template #noData>
+                      <div class="home-no-data">
+                        <h2 [style.color]="style.baseColor">{{'No Product Found' | translate}}</h2>
+                      </div>
+                    </ng-template>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="custom-pagination mt-5" *ngIf="pagination.count > pagination.perPage">
+              <pagination-controls responsive="true" [style.color]="style.primaryColor" previousLabel="Prev"
+                nextLabel="Next" (pageChange)="pageChange($event)"></pagination-controls>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <ng-template #skeleton>
+      <div class="skeleton recoomond_section" style="padding: 0">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-3 col-md-4">
+              <div class="left_section-pizza sticky">
+                <ul>
+                  <li class="capitalize" *ngFor="let item of util.generateFakeList(4);trackBy:trackByFakeListFn;">
+                    <p [ngStyle]="{'width': '100%', 'height': '16px', 'margin': '0px' }"></p>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-lg-9 col-md-8">
+              <div class="reccom-main_section">
+                <div *ngFor="let data of util.generateFakeList(2); let i = index;trackBy:trackByUtilFakeListFn;" [id]=i>
+                  <h2 class="pizza-title" [ngStyle]="{'width': '30%', 'height': '24px'}"></h2>
+                  <div class="row">
+                    <div *ngFor="let item of util.generateFakeList(4);trackBy:trackByGenFakeListFn;"
+                      class="col-lg-4 col-md-6 col-sm-6">
+                      <app-product-skeleton [settings]="settings" [style]="style"></app-product-skeleton>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+  </ng-template>
+
+  <ng-template [ngSwitchCase]="1">
+
+    <div class="w-100">
+      <app-banner></app-banner>
+    </div>
+
+    <div class="Ecom-web-theme">
+      <section id="Ecom-web-product-outter" *ngIf="popularProducts.length">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="ecom-main-heading">
+                <h3 [style.color]="style.baseColor">({{siteName == 'Little Caesars' ? 'Most Popular' : 'Top Rated'}}
+                </h3>
+                <p>{{settings?.single_vendor_popular_text}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+
+              <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
+                <div ngxSlickItem *ngFor="let product of popularProducts;trackBy:trackByPPFn;">
+                  <app-product [product]="product" [state]="productstate" [settings]="settings" [style]="style"
+                    [loggedIn]="loggedIn" (add)="addProduct($event)" (remove)="removeProduct($event)">
+                  </app-product>
+                </div>
+              </ngx-slick-carousel>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <section id="category-back">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <div class="category-back-list text-center">
+                <ul>
+                  <li *ngFor="let category of categoryData;trackBy:trackByCategoryDataFn;">
+                    <a (click)="supplierList(category)" style="cursor: pointer;">
+                      <img appImage [url]="category?.image" [size]="'130x130'" [src]="category?.image"
+                        [settings]="settings" onError="src = './assets/images/placeholder_image.svg';">
+                      <h4 [style.color]="style.baseColor">{{category?.name}}</h4>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="Ecom-web-product-outter" class="single-vender-Popular-Products" *ngIf="offerData.length">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="ecom-main-heading">
+                <h3 [style.color]="style.baseColor">{{'Special Offers' | translate}}</h3>
+                <p>{{settings?.single_vendor_offer_text}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+
+              <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
+                <div ngxSlickItem *ngFor="let product of offerData;trackBy:trackByOfferDataFn;">
+                  <app-product [product]="product" [state]="productstate" [settings]="settings" [style]="style"
+                    [loggedIn]="loggedIn" (add)="addProduct($event)" (remove)="removeProduct($event)">
+                  </app-product>
+                </div>
+              </ngx-slick-carousel>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <section id="single-vender-offer-banner"
+        *ngIf="settings?.singleVendorBottomBanner?.banner1 && settings?.singleVendorBottomBanner?.banner2">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="eco-theme-banner-img">
+                <!-- <img src="assets/images/Offers01.png"> -->
+                <img appImage [url]="settings?.singleVendorBottomBanner.banner1" [size]="'660x310'"
+                  [src]="settings?.singleVendorBottomBanner.banner1" [settings]="settings"
+                  onError="src = './assets/images/placeholder_image.svg';">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="eco-theme-banner-img">
+                <!-- <img src="assets/images/Offers02.png"> -->
+                <img appImage [url]="settings?.singleVendorBottomBanner.banner2" [size]="'660x310'"
+                  [src]="settings?.singleVendorBottomBanner.banner2" [settings]="settings"
+                  onError="src = './assets/images/placeholder_image.svg';">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="single-vender-services"
+        [ngStyle]="{'background' : 'url(' + settings?.singleFoodStoryBackground + ')', 'backgroundRepeat': 'no-repeat', 'backgroundSize': 'cover', 'backgroundPosition': 'center'}"
+        *ngIf="settings.descriptionSections && settings.descriptionSections.length">
+        <div class="container">
+          <div class="row">
+            <div [ngClass]="settings.descriptionSections.length > 3 ? 'col-md-3' : 'col-md-3 col-sm-2'"
+              *ngFor="let service of settings.descriptionSections;trackBy:trackBySectionsFn;">
+              <div class="single-vender-services-inner">
+                <div class="single-vender-services-img">
+                  <img appImage [url]="service.image" [size]="'300x300'" [src]="service.image" [settings]="settings"
+                    style="height: 100px; width: 100px;" onError="src = './assets/images/placeholder_image.svg';">
+                </div>
+                <h5>{{service?.title}}</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  </ng-template>
+
+  <ng-template [ngSwitchCase]="2">
+
+    <div class="w-100">
+      <app-banner></app-banner>
+    </div>
+
+    <!------------------service section-------------------->
+    <section class="bg-white p-0">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12 main_heading t-center">
+            <h1>Start Your Experience</h1>
+            <!-- <p class="view_more_category"><a (click)="viewAll()">View All</a></p> -->
+            <!-- <a href="#">View all</a> -->
+          </div>
+          <div class="col-sm-3 box cat-img"
+            *ngFor="let category of categoryData;trackBy:trackByCategoryDataFn;">
+            <img appImage [url]="category?.image" [size]="'260x200'" [src]="category?.image" [settings]="settings"
+              onError="src = './assets/images/placeholder_image.svg';" (click)="toProducts(category)">
+            <h3 style="cursor: pointer;" (click)="toProducts(category)"><a>{{category?.name}}<i
+                  class="fa fa-long-arrow-right" aria-hidden="true"></i></a></h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="hover-img"
+      *ngIf="settings?.singleVendorBottomBanner?.banner1 && settings?.singleVendorBottomBanner?.banner2">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6 image-effact">
+            <img style="width: 100%;" appImage [url]="settings?.singleVendorBottomBanner.banner2" [size]="'660x310'"
+              [src]="settings?.singleVendorBottomBanner.banner2" [settings]="settings"
+              onError="src = './assets/images/placeholder_image.svg';">
+            <div class="image-txt">
+              <h1>{{settings?.singleVendorBottomBanner?.offer_Text}}</h1>
+              <a class="view_offer_s" (click)="onSeeMore()">View Offers</a>
+            </div>
+          </div>
+          <div class="col-sm-6 image-effact">
+            <img style="width: 100%;" appImage [url]="settings?.singleVendorBottomBanner.banner1" [size]="'660x310'"
+              [src]="settings?.singleVendorBottomBanner.banner1" [settings]="settings"
+              onError="src = './assets/images/placeholder_image.svg';">
+            <div class="image-txt">
+              <h1>{{settings?.singleVendorBottomBanner?.popular_Text}}</h1>
+              <a class="view_offer_s" (click)="onSeeMore()">View Offers</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!----------------image hover effact------------------>
+    <!-- <section class="hover-img">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-6 image-effact">
+          <img src = "assets/images/image-1.jpg">
+          <div class="image-txt">
+            <h1>50% off</h1>
+            <a href="#">View Offers</a>
+          </div>
+      </div>
+      <div class="col-sm-6 image-effact">
+          <img src = "assets/images/image-2.jpg">
+          <div class="image-txt">
+            <h1>50% off</h1>
+            <a href="#">View Offers</a>
+          </div>
+      </div>
+    </div>    
+  </div>
+  </section> -->
+    <!------------bg section------------>
+
+  </ng-template>
+
+</ng-container>

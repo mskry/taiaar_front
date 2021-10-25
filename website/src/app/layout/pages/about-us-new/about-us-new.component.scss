@@ -1,0 +1,112 @@
+html {line-height:1;overflow-y: scroll;-webkit-tap-highlight-color: rgba(0, 0, 0, 0);height:100%;}
+a:hover,
+a:focus {color:#061822;}
+a{text-decoration: none !important;}
+button:focus{outline:0 none !important;}
+ul {padding:0;}
+ul li {list-style:none;}
+h1,h2,h3,h4,h5,h6 {color:#061822;}
+h1 {font-size:30px;}
+h2 {font-size:28px;}
+h3 {font-size:26px;}
+h4 {font-size:24px;}
+h5 {font-size:22px;}
+h6 {font-size:20px;}
+img {max-width:100%;}
+body{margin:0;padding:0;font-family: Catamaran !important;
+    font-weight: 600 !important;}
+/*-------------about us page css--------------*/
+.about_us {
+    padding: 40px 0;
+}
+.about_headnig{
+    font-size: 24px;
+    font-weight: bold;
+    font-family: 'Catamaran';
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+}
+.about_txt p{
+    font-weight: normal;
+    color: #797979;
+    font-family: 'roboto';
+    font-size: 15px;
+    line-height: 25px;
+}
+.about_img img{border-radius:5px;}
+.our_mission {
+    padding: 60px 0;
+}
+.about_headnig{
+    font-size: 24px;
+    font-weight: bold;
+    font-family: 'roboto';
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+}
+.our_mission_txt p {
+    font-weight: normal;
+    color: #797979;
+    font-family: 'roboto';
+    font-size: 15px;
+    line-height: 25px;
+}
+.about_box h3{
+    background-color:#fff;
+    position: relative;
+    padding: 10px;
+    border-radius: 5px;
+    width: 90%;
+    font-size: 14px;
+    font-weight: 700;
+    margin:0 auto;
+    top: -80px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
+    cursor:pointer;
+}
+.about_box h3 p {
+    margin-bottom: 0;
+    font-size: 16px;
+    font-weight: bold;
+}
+.about_box h3 span{
+    font-weight: normal;
+    line-height: 25px;
+    color: #797979;
+}
+.about_box img{border-radius:5px;}
+.about_box {
+    margin-top: 20px;
+}
+.our_team {
+    padding: 40px 0 0 0;
+}
+/* MEDIA QUERIES
+--------------------------------------------------------------------------*/
+@media (max-width:992px) {
+.about_box {
+    text-align: center;
+    width: 50% !important;
+    flex: 50% !important;
+    max-width:50% !important;
+}
+}
+@media (max-width:767px) {
+    .about_box {
+    text-align: center;
+    width: 100% !important;
+    flex: 100% !important;
+    max-width: 100% !important;
+}
+.about_box h3{width:60%;margin:0 auto;}
+}
+
+@media (max-width:375px) {
+}
+@media (max-width:1024px) {
+}
+@media (min-width: 1200px){
+
+}

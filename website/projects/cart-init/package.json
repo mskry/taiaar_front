@@ -1,0 +1,17 @@
+{
+  "name": "@sh_mayank/cart-init",
+  "version": "0.0.7",
+  "peerDependencies": {
+    "@angular/common": "^8.2.14",
+    "@angular/core": "^8.2.14"
+  },
+  "author": "Mayank Sharma",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mayank2468/cartInit.git"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  }
+}

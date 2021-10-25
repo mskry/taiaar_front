@@ -1,0 +1,12 @@
+<div id="notfound">
+  <div class="notfound">
+    <div class="notfound-404">
+      <img alt="logo" *ngIf="site_logo" class="logo-img" (click)="toHome()" [src]="site_logo">
+    </div>
+
+    <h1>404</h1>
+    <h2>Oops! Page Not Found</h2>
+    <p>Sorry, but the page that you are looking for does not exist. Either it has been removed, or is temporarily unavailable. Please try again in sometime..</p>
+    <a href="javascript: void(0)" (click)="toHome()">Back To Home</a>
+  </div>
+</div>

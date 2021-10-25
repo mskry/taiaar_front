@@ -1,0 +1,115 @@
+<ng-container [ngSwitch]="settings?.selected_template">
+    <ng-template [ngSwitchCase]="1">
+
+        <section id="product-categories" class="top-selling-Dishes"
+            [ngClass]="settings?.categories_above_supplier == 1 ? 'single_line_categories' : ''">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="Restaurants-heading">
+                                    <h2 *ngIf="settings?.cat_wise_rest_section">
+                                        {{settings?.cat_wise_rest_section?.section_name  | translate}}</h2>
+                                    <h2 *ngIf="!settings?.cat_wise_rest_section">{{'Products'  | translate}}
+                                    </h2>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+
+                                </div>
+                            </div>
+                            <ng-container *ngIf="!isLoading; else skeleton2">
+                                <div *ngFor="let supplier of suppliers" style="width: 100%;">
+                                    <p class="ml-3" *ngIf="supplier?.suppliers?.length">
+                                        <b>{{supplier?.category_name}}</b></p>
+                                    <div class="row" *ngIf="supplier?.suppliers?.length">
+                                        <div class="col-md-4" *ngFor="let vendor of supplier?.suppliers.slice(0,6);trackBy:trackBySuppliersFn;">
+                                            <app-supplier [supplier]="vendor" [style]="style" [settings]="settings"
+                                                [darkTheme]="isDarkTheme">
+                                            </app-supplier>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+
+                            <ng-template #skeleton2>
+                                <div class="skeleton col-md-4" *ngFor="let supplier of util.generateFakeList(4);trackBy:trackByUtilSuppFn;">
+                                    <app-supplier-skeleton [style]="style" [settings]="settings">
+                                    </app-supplier-skeleton>
+                                </div>
+                            </ng-template>
+
+                            <!-- <div class="col-md-12">
+                                <div class="see-more">
+                                    <a (click)="onSeeMore()" style="cursor: pointer;">{{'View All' | translate}}</a>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </ng-template>
+    <ng-template [ngSwitchCase]="3">
+
+        <section id="product-categories" class="top-selling-Dishes"
+            [ngClass]="settings?.categories_above_supplier == 1 ? 'single_line_categories' : ''">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="Restaurants-heading">
+                                    <h2 *ngIf="settings?.cat_wise_rest_section">
+                                        {{settings?.cat_wise_rest_section?.section_name  | translate}}</h2>
+                                    <h2 *ngIf="!settings?.cat_wise_rest_section">{{'Products'  | translate}}
+                                    </h2>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+
+                                </div>
+                            </div>
+                            <ng-container *ngIf="!isLoading; else skeleton2">
+                                <div class="row col-md-12" *ngFor="let supplier of suppliers;trackBy:trackBySupFn;">
+                                    <p class="ml-3" *ngIf="supplier?.suppliers?.length">
+                                        <b>{{supplier?.category_name}}</b></p>
+                                        <a [routerLink]="['/supplier/supplier-list']"
+                                        [queryParams]="{cat_id:supplier?.category_id,cat_name:supplier?.category_name}"> view all</a>
+                                    <div class="col-md-12 row" *ngIf="supplier?.suppliers?.length">
+                                        <div class="col-md-4" *ngFor="let vendor of supplier?.suppliers.slice(0,6);trackBy:trackBySupliersFn;">
+                                            <app-supplier [supplier]="vendor" [style]="style" [settings]="settings"
+                                                [darkTheme]="isDarkTheme">
+                                            </app-supplier>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+
+                            <ng-template #skeleton2>
+                                <div class="skeleton col-md-4" *ngFor="let supplier of util.generateFakeList(4);trackBy:trackByUtilSupliersFn;">
+                                    <app-supplier-skeleton [style]="style" [settings]="settings">
+                                    </app-supplier-skeleton>
+                                </div>
+                            </ng-template>
+
+                            <!-- <div class="col-md-12">
+                                <div class="see-more">
+                                    <a (click)="onSeeMore()" style="cursor: pointer;">{{'View All' | translate}}</a>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </ng-template>
+
+</ng-container>

@@ -1,0 +1,30 @@
+<ng-container>
+    <div class="dialog-model">
+        <div class="dialog-content">
+            <div class="container">
+                <div class="dialog-header">
+                    <h5>Pay With Hyper Pay</h5>
+                    <a href="javascript:void(0)" class="dialog-close-button" (click)="close()">&times;</a>
+                </div>
+                <div class="stripe-form form-row">
+
+                    <div class="col-md-12" *ngIf="!is_continue">
+                        <p class="check">
+                            <input type="checkbox" [(ngModel)]="is_mada_entity_id">
+                            <span>Is Card Type Mada?</span>
+                        </p>
+                        <div class="ml-5">
+                            <button class="btn float-right" [ngStyle]=" {'backgroundColor': style.primaryColor, 'borderColor' : style.primaryColor, 'color'
+                        : '#ffffff' }" href="javascript:void(0)" (click)="continue()"
+                                type="submit">{{'Continue' | translate}}</button>
+                        </div>
+                    </div>
+
+                    <div id="card-element">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>

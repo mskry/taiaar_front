@@ -1,0 +1,186 @@
+<div class="container-fluid back">
+
+</div>
+
+
+<div class="container">
+    <div class="row profile">
+        <div class="col-4">
+
+        </div>
+    </div>
+</div>
+
+
+<div class="wrapper">
+    <div class="category">
+        <div class="secnav">
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    <h1 class="bold">{{'Sales Record' | translate}}</h1>
+                </div>
+                <div class="topfil" ng-if="profile == 'SUPPLIER'">
+                    <ul>
+                        <li style="filter: grayscale(0)" ng-if="permissions('promotions', 'create') == 1">
+                            <button type="button" class="bold create" data-toggle="modal" ng-click="downloadCSV()">{{'DOWNLOAD CSV' |
+                                   translate}}</button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12" ng-if="profile == 'ADMIN'">
+                    <div class="reporttop">
+                        <form>
+
+                            <div class="row">
+                                <!-- <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{'FROM DATE' | translate}}</label><br>
+                                        <input class="datePicker" type="text" id="datepicker_statement" style="width: 100% !important;"
+                                            placeholder="{{'DATE' | translate}}">
+                                        <span class="inputtag"><img src="/img/v1_images/calendar.svg"></span>
+                                    </div>
+                                </div> -->
+
+                                <div class="col-md-4">
+                                    <div class="form-group select-category"
+                                        ng-if="profile === 'ADMIN' && is_single_vendor == 0">
+                                        <label>{{localisation.supplier | translate}}</label>
+                                        <select class="app" placeholder="Choose {{localisation.supplier | translate}}"
+                                            tabindex="4" ng-model="selected_supplier"
+                                            ng-options="supplier.supplier_name for supplier in suppliers"
+                                            ng-change="changeSupplier(selected_supplier)">
+                                            <option selected value="">{{'ALL' | translate}}</option>
+                                        </select>
+                                        <span class="inputtag"><img src="/img/v1_images/ic_dropdown.svg"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="btns">
+                                        <button type="button" ng-click="downloadCSV()"
+                                            ng-class="(profile === 'SUPPLIER' && restriction_view_only_for_restaurant === '1') ? 'restrictRestaurant' : ''"
+                                            style="border: 1px solid var(--primary-color);	background-color: #FFFFFF; color: var(--primary-color);">
+                                            {{'DOWNLOAD CSV' | translate}}</button>
+                                        <button type="button" ng-click="resetFilter()"
+                                            ng-class="(profile === 'SUPPLIER' && restriction_view_only_for_restaurant === '1') ? 'restrictRestaurant' : ''"
+                                            style="border: 1px solid var(--primary-color);	background-color: #FFFFFF; color: var(--primary-color);">{{'RESET' |
+                                        translate}}</button>
+                                        <button type="button" class="bg-success" ng-click="selectFilter()"
+                                            ng-class="(profile === 'SUPPLIER' && restriction_view_only_for_restaurant === '1') ? 'restrictRestaurant' : ''"
+                                            style="color: #fff; border: 1px solid var(--primary-color); margin-left: 7px;">{{"FILTER" |
+                                        translate}}</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="sales-records">
+                <h6 class="text-right"><b>Total Received Amount:</b>{{totalAmount.toFixed(price_decimal_length)}}</h6>
+                <h6 class="text-right"><b>Cancelled Order amount:</b>
+                    {{totalRefundableAmount.toFixed(price_decimal_length)}}</h6>
+                <h6 class="text-right"><b>Balance Amount:</b>
+                    {{balanceAmount.toFixed(price_decimal_length)}}</h6>
+            </div>
+
+            <div class="tab-content m-top-30">
+                <div class="tab-pane active">
+                    <div class="tableouter">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>{{'USER ID' | translate}}</th>
+                                    <th>{{'USER NAME' | translate}}</th>
+                                    <th>{{'ORDER ID' | translate}}</th>
+                                    <th>{{'Status' | translate}}</th>
+                                    <th>{{'ORDER AMOUNT' | translate}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="sale in salesRecordList">
+                                    <td>{{sale.user_id || 'N/A'}}</td>
+                                    <td>{{sale.userName}}</td>
+                                    <td>{{sale.order_id}}</td>
+                                    <td>
+                                        <span>
+                                            <p ng-if="sale.status == 5">
+                                                {{5 | status}}
+                                            </p>
+                                            <p ng-if="sale.status == 2">
+                                                {{2 | status}}
+                                            </p>
+                                            <p ng-if="sale.status == 8">
+                                                {{8 | status}}
+                                            </p>
+                                            <p ng-if="sale.status == 6">
+                                                {{6 | status}}
+                                            </p>
+                                        </span>
+                                    </td>
+                                    <td>{{sale.net_amount.toFixed(price_decimal_length)}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="no-data-found" ng-if="salesRecordList.length == 0 && dataLoaded">
+                            {{'NO DATA FOUND' | translate}}
+                        </div>
+                        <div ng-if="salesRecordList.length > 0 && dataLoaded" class="row pagination">
+                            <ul ng-if="pager.pages && pager.pages.length">
+                                <li ng-class="{disabled:pager.currentPage === 1}">
+                                    <a ng-click="setPage(1)">{{'FIRST' | translate}}</a>
+                                </li>
+                                <li ng-class="{disabled:pager.currentPage === 1}">
+                                    <a ng-click="setPage(pager.currentPage - 1)">{{'PREVIOUS' | translate}}</a>
+                                </li>
+                                <li ng-repeat="page in pager.pages" ng-class="{active:pager.currentPage === page}">
+                                    <a ng-click="setPage(page)">{{page}}</a>
+                                </li>
+                                <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                                    <a ng-click="setPage(pager.currentPage + 1)">{{'NEXT' | translate}}</a>
+                                </li>
+                                <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                                    <a ng-click="setPage(pager.totalPages)">{{'LAST' | translate}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <success-modal message="message"></success-modal>
+
+
+
+
+    <style>
+        .delete {
+            cursor: pointer;
+        }
+
+        .delete:hover {
+            text-decoration: underline;
+            font-weight: 600;
+        }
+
+        .sales-records {
+            margin-top: 10px;
+        }
+
+        .datePicker {
+            height: 35px;
+            border-radius: 4px;
+            background-color: transparent;
+            padding: 0px 10px;
+            width: 100%;
+            color: #484848;
+            font-size: 14px;
+            /* border: 1px solid rgba(0, 0, 0, 0.12); */
+            border: 1px solid rgba(0, 0, 0, 0.35);
+        }
+    </style>

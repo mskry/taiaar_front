@@ -1,0 +1,319 @@
+<ng-container *ngIf="settings?.app_type == 2 && settings?.selected_template == 2; else default">
+
+  <div class="price_details theme1_custom_div" *ngIf="loggedIn && settings.gift_card == 1"
+    [ngStyle]="{'background-color': style.cardBackgroundColor, 'border-color': style.secondaryColor }">
+    <app-cart-gift-cards (onSelect)="onGiftCardSelect($event)" (onRemove)="onGiftCardRemove()" [priceObj]="priceObj">
+    </app-cart-gift-cards>
+  </div>
+
+  <div class="price_details theme1_custom_div"
+    [ngStyle]="{'background-color': style.cardBackgroundColor, 'border-color': style.secondaryColor }">
+
+    <h5 class="cstm-border" [style.color]="style.baseColor">
+      {{ "Order Details" | translate }}
+      <p class="m-b-n promo_label" *ngIf="!priceObj?.discount && !is_voucher_applied">
+        <span>Apply Coupon</span>
+        <a href="#promoCode" (click)="promoCode = ''" data-toggle="collapse"
+          [style.color]="style.primaryColor">{{ "Add code" | translate }}</a>
+      </p>
+      <p class="m-b-n promo_label" *ngIf="priceObj?.discount || is_voucher_applied">
+        <span class="uppercase">{{promoCode}}</span>
+        <a href="javascript:void(0)" (click)="priceObj.discount = 0; applyDiscount()"
+          [style.color]="style.primaryColor">{{ "Remove code" | translate }}</a>
+      </p>
+      <div id="promoCode" #closePromoCode class="promo-form collapse">
+        <input [(ngModel)]="promoCode" (keypress)="restrictSpace($event)" class="form-control" type="text"
+          placeholder="{{ 'Enter Promo Code 1' | translate }}" />
+        <button class="btn profile-submit-form ml-3" [ngStyle]="saveBtn" type="button" (click)="submitPromoCode()">
+          {{ "Apply" | translate }}
+        </button>
+      </div>
+
+    </h5>
+
+    <ul [style.color]="style.baseColor" class="b-n">
+
+      <li> {{ "sub_total" | localization | translate }} <span>{{ currency }}
+          {{ ((priceObj?.amount*1)*
+                    selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length) }}</span>
+      </li>
+      <li *ngIf="priceObj?.discount > 0"> {{ "Discount" | translate }} <small class="uppercase"> -
+          ({{ promoCode || this.priceObj.gift.gift_name}})</small>
+        <span> - {{ currency }} {{ priceObj?.discount.toFixed(settings?.price_decimal_length) }}</span>
+      </li>
+      <!-- <li>{{'Total' | translate}} <span>{{currency}} {{priceObj?.subTotal}}</span></li> -->
+      <li
+        *ngIf="(selfPickup != 1 && settings?.app_type != 8 && priceObj?.deliveryCharges && is_dinin==0 && settings?.enable_base_delivery_charge_on_vehicle_cat == 0)">
+        {{ "Delivery Charges" | translate }}
+        <span>{{ currency }}
+          {{ deliveryType == 1 ? (((priceObj?.deliveryCharges*1)*selected_currency?.conversion_rate) +
+                    urgentPrice) :
+                    ((priceObj?.deliveryCharges*1)*selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)
+                    }}</span>
+      </li>
+      <li
+        *ngIf="(priceObj?.deliveryCharges == 0 && is_dinin == 0 && settings.enable_min_order_amount_for_free_delivery == 1 && settings?.enable_base_delivery_charge_on_vehicle_cat == 0)">
+        {{ "Delivery Charges" | translate }}
+        <span>{{ currency }}
+          {{priceObj?.deliveryCharges}}</span>
+      </li>
+      <li *ngIf="settings?.enable_base_delivery_charge_on_vehicle_cat == 1">
+        {{ "Expected Delivery Charges" | translate }}
+        <span>{{ currency }}
+          {{priceObj.expectedDeliveryCharges}}</span>
+      </li>
+      <li *ngIf="settings?.app_type == 8">{{ "Addon Charges" | translate }} <span>{{ currency }}
+          {{ priceObj?.questionPrice.toFixed(settings?.price_decimal_length) }}</span> </li>
+
+      <li *ngIf="settings?.disable_tax == 0 && !hide_tax">{{ 'tax' | localization | translate }} <span>{{ currency }}
+          {{
+                    ((priceObj?.handingCharges*1)*selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)
+                    }}</span>
+      </li>
+      <li *ngIf="priceObj?.agent_tip">{{'agent' | localization}} {{'tip' | localization}} <span>{{ currency }}
+          {{ priceObj?.agent_tip.toFixed(settings?.price_decimal_length) }}</span> </li>
+      <li *ngIf="priceObj?.referral_amount">Referral Discount <span>- {{ currency }}
+          {{ (priceObj?.referral_amount > priceObj?.netTotal ? priceObj?.netTotal :
+                    priceObj?.referral_amount).toFixed(settings?.price_decimal_length) }}</span>
+      </li>
+      <li *ngIf="priceObj?.slot_price && settings?.is_schdule_order == 1">Slot Price <span>{{ currency }}
+          {{ (priceObj?.slot_price).toFixed(settings?.price_decimal_length) }}</span>
+      </li>
+      <li *ngIf="settings?.supplier_service_fee == 1">{{'supplier_service_fee' | localization | translate}}
+        <span>{{ currency }}
+          {{
+                    ((priceObj.serviceCharge*1)*selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)
+                    }}</span>
+      </li>
+      <li *ngIf="priceObj?.appliedLoyaltyAmount || priceObj?.productLoyaltyDiscountAmount">Loyalty Discount
+        <span>- {{ currency }}
+          {{ (priceObj?.appliedLoyaltyAmount +
+                    priceObj.productLoyaltyDiscountAmount).toFixed(settings?.price_decimal_length) }}</span>
+      </li>
+    </ul>
+    <h6 [style.color]="style.baseColor"> {{ "Net Total" | translate }}
+      <!-- <span *ngIf="!priceObj?.referral_amount">{{ currency }} {{ priceObj?.netTotal.toFixed(2) }}</span> -->
+      <span [style.color]="style.baseColor">{{ currency }}
+        {{ (netAmount).toFixed(settings?.price_decimal_length) }}</span>
+    </h6>
+  </div>
+</ng-container>
+
+<ng-template #default>
+
+  <div class="price_details" *ngIf="loggedIn && settings.gift_card == 1"
+    [ngStyle]="{'background-color': style.cardBackgroundColor, 'border-color': style.secondaryColor }">
+    <app-cart-gift-cards (onSelect)="onGiftCardSelect($event)" (onRemove)="onGiftCardRemove()" [priceObj]="priceObj">
+    </app-cart-gift-cards>
+  </div>
+  <div class="price_details box_shadow" *ngIf="settings.pickit_home_theme == 1" style="padding: 0 !important;"
+    [ngStyle]="{'background-color': style.cardBackgroundColor, 'border-color': style.secondaryColor }">
+  </div>
+    <h5 [style.color]="style.baseColor" style="padding: 15px!important;">
+      <!-- <div class="promo-form" *ngIf="!priceObj?.discount && !is_voucher_applied">
+        <input [(ngModel)]="promoCode" (keypress)="restrictSpace($event)" class="form-control" type="text"
+          style="border-radius: 5px !important;" placeholder="{{ 'Enter Promo Code' | translate }}" />
+        <button class="btn profile-submit-form ml-3" [ngStyle]="saveBtn" type="button"
+          style="padding: 4px 12px !important;margin: 4px 10px !important;" (click)="submitPromoCode()">
+          {{ "Apply" | translate }}
+        </button>
+
+        <a *ngIf="settings?.enable_promo_code_list == 1 || activePlan" class="p-1 ml-3 p-code-btn" [ngStyle]="saveBtn"
+          type="button" (click)="openPromoCodeList()">
+          {{ "Promo Codes" | translate }}
+        </a>
+      </div>
+      <div class="promo-form" *ngIf="priceObj?.discount || is_voucher_applied">
+        <input [(ngModel)]="promoCode" (keypress)="restrictSpace($event)" class="form-control" type="text"
+          style="border-radius: 5px !important;" placeholder="{{ 'Enter Promo Code' | translate }}" readonly />
+        <button class="btn profile-submit-form ml-3" [ngStyle]="saveBtn" type="button"
+          style="padding: 4px 12px !important;margin: 4px 10px !important;background-color: #AE272D !important;"
+          (click)="removePromoCode()">
+          {{ "Remove" | translate }}
+        </button>
+      </div> -->
+
+      <div class="price_details"
+        [ngStyle]="{'background-color': style.cardBackgroundColor, 'border-color': style.secondaryColor }">
+        <h5 [style.color]="style.baseColor" style="margin-bottom: 15px;">
+          {{ "Price Details" | translate }}
+          <a href="#promoCode" *ngIf="!priceObj?.discount && !is_voucher_applied && settings.hide_promo_module == 0"
+            (click)="promoCode = ''" data-toggle="collapse"
+            [style.color]="style.primaryColor">{{ "Apply Promo code" | translate }}</a>
+          <a href="javascript:void(0)"
+            *ngIf="(priceObj?.discount || is_voucher_applied) && settings.hide_promo_module == 0"
+            (click)="removePromoCode()" [style.color]="style.primaryColor">{{ "Remove Promo code" | translate }}</a>
+
+          <div class="show-promo-code">
+            <div id="promoCode" #closePromoCode class="promo-form collapse">
+              <input [(ngModel)]="promoCode" (keypress)="restrictSpace($event)" class="form-control" type="text"
+                placeholder="{{ 'Enter Promo Code' | translate }}" />
+              <button class="btn profile-submit-form ml-3" [ngStyle]="saveBtn" type="button"
+                (click)="submitPromoCode()">
+                {{ "Apply" | translate }}
+              </button>
+              <br />
+              <a *ngIf="settings?.enable_promo_code_list == 1 || activePlan" class="p-1 ml-3 p-code-btn"
+                [ngStyle]="saveBtn" type="button" (click)="openPromoCodeList()">
+                {{ "Promo Codes" | translate }}
+              </a>
+            </div>
+          </div>
+        </h5>
+
+        <ul [style.color]="style.baseColor" class="amount_data">
+          <li> <span>{{ "sub_total" | localization | translate }}</span> <strong>{{ currency }}
+              {{ ((priceObj?.amount*1)*
+                    selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length) }}</strong>
+          </li>
+          <li *ngIf="priceObj?.discount > 0"> <span>{{ "Discount" | translate }}</span> <small class="uppercase"> -
+              ({{ promoCode || this.priceObj.gift.gift_name}})</small>
+            <strong> - {{ currency }} {{ priceObj?.discount.toFixed(settings?.price_decimal_length) }}</strong>
+          </li>
+          <li *ngIf="priceObj?.walletDiscountAmount > 0"> <span>{{ "Wallet Discount" | translate }}</span>
+            <strong> - {{ currency }}
+              {{ priceObj?.walletDiscountAmount.toFixed(settings?.price_decimal_length) }}</strong>
+          </li>
+          <!-- <li>{{'Total' | translate}} <span>{{currency}} {{priceObj?.subTotal}}</span></li> -->
+          <li
+            *ngIf="(selfPickup != 1 && settings?.app_type != 8 && priceObj?.deliveryCharges && is_dinin==0 && settings?.enable_base_delivery_charge_on_vehicle_cat == 0)">
+            <span> {{ "Delivery Charges" | translate }}</span>
+            <strong>{{ currency }}
+              {{ deliveryType == 1 ? (((priceObj?.deliveryCharges*1)*selected_currency?.conversion_rate) +
+                    urgentPrice) :
+                    ((priceObj?.deliveryCharges*1)*selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)
+                    }}</strong>
+          </li>
+          <li
+            *ngIf="(priceObj?.deliveryCharges == 0 && is_dinin == 0 && settings.enable_min_order_amount_for_free_delivery == 1 && settings?.enable_base_delivery_charge_on_vehicle_cat == 0)">
+            <span> {{ "Delivery Charges" | translate }}</span>
+            <strong>{{ currency }}
+              {{priceObj?.deliveryCharges.toFixed(settings?.price_decimal_length)}}</strong>
+          </li>
+          <li *ngIf="settings?.enable_base_delivery_charge_on_vehicle_cat == 1">
+            <span> {{ "Expected Delivery Charges" | translate }}</span><a class="star" style="color: red;">*</a>
+            <strong>{{ currency }}
+              {{priceObj?.expectedDeliveryCharges}}</strong>
+          </li>
+          <li *ngIf="settings?.app_type == 8"><span>{{ "Addon Charges" | translate }}</span> <strong>{{ currency }}
+              {{ priceObj?.questionPrice.toFixed(settings?.price_decimal_length) }}</strong> </li>
+          <li *ngIf="settings?.disable_tax == 0"><span>{{ "tax" | localization | translate }}</span>
+            <strong>{{ currency }}
+              {{
+                    ((priceObj?.handingCharges*1)*selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)
+                    }}</strong>
+          </li>
+          <li *ngIf="priceObj?.agent_tip"><span>{{'agent' | localization}} {{'tip' | localization}}</span>
+            <strong>{{ currency }}
+              {{ priceObj?.agent_tip.toFixed(settings?.price_decimal_length) }}</strong> </li>
+          <li *ngIf="priceObj?.referral_amount"><span>{{'Referral Discount' | translate}}</span> <strong>-
+              {{ currency }}
+              {{ (priceObj?.referral_amount > priceObj?.netTotal ? priceObj?.netTotal :
+                    priceObj?.referral_amount).toFixed(settings?.price_decimal_length) }}</strong>
+          </li>
+          <li *ngIf="priceObj?.slot_price && settings?.is_schdule_order == 1"><span>Slot Price
+            </span><strong>{{ currency }}
+              {{ (priceObj?.slot_price).toFixed(settings?.price_decimal_length) }}</strong>
+          </li>
+          <li *ngIf="is_dinin==1 && settings?.is_dinin == 1 && priceObj?.slot_price>0">Slot Price <span>{{ currency }}
+              {{ (priceObj?.slot_price).toFixed(settings?.price_decimal_length) }}</span>
+          </li>
+
+          <li *ngIf="settings?.supplier_service_fee == 1">
+            <span>{{'supplier_service_fee' | localization | translate}}</span>
+            <strong>{{ currency }}
+              {{
+                    ((priceObj.serviceCharge*1)*selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)
+                    }}</strong>
+          </li>
+          <!-- *ngIf="settings?.supplier_service_fee == 1" -->
+          <li *ngIf="settings?.enable_liquor_popup == 1 && priceObj.bottle_deposit_price"><span>{{'Bottle Deposit' |
+                translate}}</span>
+            <strong>{{ currency }}
+              {{
+                    ((priceObj.bottle_deposit_price*1)*selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)
+                    }}</strong>
+          </li>
+          <li *ngIf="settings?.enable_liquor_popup == 1 && priceObj.plt_tax"><span>{{'PLT' | translate}}</span>
+            <strong>{{ currency }}
+              {{ ((priceObj.plt_tax*1)*selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)
+                    }}</strong>
+          </li>
+
+          <li
+            *ngIf="(priceObj?.appliedLoyaltyAmount || priceObj?.productLoyaltyDiscountAmount) && !settings.loyality_discount_on_product_listing">
+            <span>Loyalty Discount</span>
+            <strong>- {{ currency }}
+              {{ (priceObj?.appliedLoyaltyAmount +
+                    priceObj.productLoyaltyDiscountAmount).toFixed(settings?.price_decimal_length) }}</strong>
+          </li>
+
+          <li
+            *ngIf="settings?.table_book_mac_theme == 1 && !!table_booking_details && table_booking_details.table_booking_price">
+            <span> {{'Table Booking Fee' | translate}}</span>
+            <strong>{{ currency }}
+              {{
+                    ((table_booking_details.table_booking_price*1)*selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)
+                    }}</strong>
+          </li>
+
+          <li
+            *ngIf="settings?.table_book_mac_theme == 1 && !!table_booking_details && table_booking_details.table_booking_price">
+            <span> {{'Table Booking Discount' | translate}}</span>
+            <strong>- {{ currency }}
+              {{
+                    ((table_booking_details.table_booking_price*1)*selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)
+                    }}</strong>
+          </li>
+        </ul>
+        <h6 [style.color]="style.baseColor"> {{ "Net Total" | translate }}
+          <!-- <span *ngIf="!priceObj?.referral_amount">{{ currency }} {{ priceObj?.netTotal.toFixed(2) }}</span> -->
+          <span [style.color]="style.baseColor">{{ priceObj?.local_currency || currency }}
+            {{ ((priceObj.displayNetTotal*1)*
+                selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length) }}
+            <small *ngIf="settings.is_currency_exchange_rate == 1 && priceObj.currency_exchange_rate">( XR:
+              {{currency}} 1 = {{priceObj?.local_currency || currency }} {{priceObj?.currency_exchange_rate}} )
+            </small></span>
+        </h6>
+
+        <h6 *ngIf="settings?.enable_base_delivery_charge_on_vehicle_cat == 1" style="color: red;text-align: center;">
+          <small><b>Note:</b> Delivery Charge may vary as per Delivery Vehicle Type</small>
+        </h6>
+      </div>
+      </h5>
+
+</ng-template>
+
+<!-- Voucher Modal -->
+<!-- <div id="promoCode" class="modal fade" role="dialog">
+    <div class="modal-dialog promo-modal-width">
+        Modal content
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"></button>
+                <h4 class="modal-title" [style.color]="style.defaultColor">
+                    {{ "Promo Code" | translate }}
+                </h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="profile_form">
+                    <div class="form-group">
+                        <label>{{ "Promo Code" | translate }}</label>
+                        <input [(ngModel)]="promoCode" (keypress)="restrictSpace($event)" type="text" placeholder="{{ 'Enter Promo Code' | translate }}" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn profile-submit-form ml-3" [ngStyle]="saveBtn" type="button"
+                    (click)="submitPromoCode()">
+                    {{ "Apply" | translate }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<app-promo-code-list *ngIf="isPromoCodeList" [style]="style" [settings]="settings" [dialogData]="supplier_ids"
+  [hideBtns]="false" (onItemSelect)="onItemSelectEvt($event)">
+</app-promo-code-list>

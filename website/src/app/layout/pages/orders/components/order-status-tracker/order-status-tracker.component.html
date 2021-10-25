@@ -1,0 +1,103 @@
+<div class="track_order_outter_detail"
+    [ngStyle]="{'background-color':style.cardBackgroundColor, 'border-color': style.secondaryColor}">
+    <h3 [style.color]="style.baseColor">{{'Tracking Details' | translate}}</h3>
+    <div class="order-status">
+
+        <div class="order-status-process">
+            <div class="order-status-process-line"
+                [ngClass]="[1,3,4,5,6,10,11].includes(order?.status) ? 'active' : ''">
+            </div>
+            <div class="order-single-status">
+                <h4 [ngClass]="[1,3,4,5,6,10,11].includes(order?.status) ? 'active' : 'in-active'">
+                    {{(1 | orderStatus: order) | translate}}</h4>
+                <p [ngStyle]="{'color': style.baseColor, 'opacity': 0.5}"
+                    *ngIf="order?.confirmed_on && order?.confirmed_on !='Invalid date'">
+                    {{order?.confirmed_on | date: 'medium' : '+000'}}
+                </p>
+            </div>
+        </div>
+        <!-- In the kitchen -->
+        <div class="order-status-process"
+            *ngIf="(settings?.enable_product_appointment && !order.product[0].is_appointment) && !(settings?.table_book_mac_theme == 1 && order?.is_dine_in == 1)">
+            <!-- *ngIf="!settings?.enable_product_appointment || (settings?.enable_product_appointment && !order.product[0].is_appointment) && !(settings?.table_book_mac_theme == 1 && order?.is_dine_in == 1)"> -->
+            <div class="order-status-process-line" [ngClass]="[3,5,6,10,11,4].includes(order?.status) ? 'active' : ''">
+            </div>
+            <div class="order-single-status">
+                <h4 [ngClass]="[3,5,6,10,11,4].includes(order?.status) ? 'active' : 'in-active'">
+                    {{(11 | orderStatus: order) | translate }}</h4>
+                <p [ngStyle]="{'color': style.baseColor, 'opacity': 0.5}"
+                    *ngIf="order?.progress_on && order?.progress_on !='Invalid date'">
+                    {{order?.progress_on | date: 'medium' : '+000'}}
+                </p>
+            </div>
+        </div>
+
+        <div *ngIf="([1, 2, 8].includes(settings?.app_type) || ([8].includes(order?.type))) && !(settings?.table_book_mac_theme && order?.is_dine_in)"
+            class="order-status-process">
+            <div class="order-status-process-line" [ngClass]="[3,5,10,6,4].includes(order?.status) ? 'active' : ''">
+            </div>
+            <div class="order-single-status">
+                <h4 [ngClass]="[3,5,6,10,6,4].includes(order?.status) ? 'active' : 'in-active'">
+                    {{(10 | orderStatus: order) | translate }}</h4>
+                <p [ngStyle]="{'color': style.baseColor, 'opacity': 0.5}"
+                    *ngIf="order?.near_on && order?.near_on != 'Invalid date'">
+                    {{order?.near_on | date: 'medium' : '+000'}}
+                </p>
+            </div>
+        </div>
+
+        <!--- for On the way ---->
+        <div *ngIf="order?.self_pickup != 1 && !(settings?.table_book_mac_theme && order?.is_dine_in)"
+            class="order-status-process">
+            <div class="order-status-process-line" [ngClass]="[3,5,6].includes(order?.status) ? 'active' : ''"></div>
+            <div class="order-single-status">
+                <h4 [ngClass]="[3,5,6].includes(order?.status) ? 'active' : 'in-active'">
+                    {{(3 | orderStatus: order) | translate }}
+                </h4>
+                <p [ngStyle]="{'color': style.baseColor, 'opacity': 0.5}"
+                    *ngIf="order?.shipped_on && order?.shipped_on !='Invalid date' && [3,5,6].includes(order?.status)">
+                    {{order?.shipped_on | date: 'medium' : '+000'}}
+                </p>
+            </div>
+        </div>
+
+        <!--- for food ready to pick ---->
+        <div *ngIf="order.self_pickup == 1 && (settings?.app_type == 1 || (order?.type == 8 && settings?.enable_product_appointment))"
+            class="order-status-process">
+            <div class="order-status-process-line" [ngClass]="[5,6,4,3].includes(order?.status) ? 'active' : ''"></div>
+            <div class="order-single-status">
+                <h4 [ngClass]="[5,6,4,3].includes(order?.status) ? 'active' : 'in-active'">
+                    {{(3 | orderStatus: order) | translate }}</h4>
+                <p [ngStyle]="{'color': style.baseColor, 'opacity': 0.5}"
+                    *ngIf="order?.schedule_date && order?.schedule_date !='Invalid date' && [5,6,4,3].includes(order?.status)">
+                    {{order?.schedule_date | date: 'medium' : '+000'}}
+                </p>
+            </div>
+        </div>
+
+        <div *ngIf="order.self_pickup == 1 && settings?.app_type == 1" class="order-status-process">
+            <div class="order-status-process-line" [ngClass]="[5,6,4].includes(order?.status) ? 'active' : ''"></div>
+            <div class="order-single-status">
+                <h4 [ngClass]="[5,6,4].includes(order?.status) ? 'active' : 'in-active'">
+                    {{(4 | orderStatus: order) | translate }}</h4>
+                <p [ngStyle]="{'color': style.baseColor, 'opacity': 0.5}"
+                    *ngIf="order?.schedule_date && order?.schedule_date !='Invalid date' && [5,6,4].includes(order?.status)">
+                    {{order?.schedule_date | date: 'medium' : '+000'}}
+                </p>
+            </div>
+        </div>
+
+        <div class="order-status-process">
+            <div class="order-status-process-line-delivered" [ngClass]="[5,6].includes(order?.status) ? 'active' : ''">
+            </div>
+            <div class="order-single-status">
+                <h4 [ngClass]="[5,6].includes(order?.status) ? 'active' : 'in-active'">
+                    {{(order.self_pickup == 1 ? (order?.type == 8 ? 'Ended' : 'Picked') : 5 | orderStatus: order) |
+                    translate }}</h4>
+                <p [ngStyle]="{'color': style.baseColor, 'opacity': 0.5}" *ngIf="order.status == '5'">
+                    {{order?.delivered_on | date: 'medium' : '+000'}}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

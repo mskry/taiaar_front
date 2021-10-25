@@ -1,0 +1,38 @@
+<ng-container [ngSwitch]="settings?.selected_template">
+    <ng-template [ngSwitchCase]="5">
+        <section>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h2 class="heading">Recommended</h2>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="flex-container">
+
+            <div class="flex-slide home" *ngFor="let supplier of recommendedData.slice(0,4)"
+                [ngStyle]="{'background-image': 'url(' + supplier?.logo  + ')'}" (click)="productList(supplier)">
+                <div class="flex-title"></div>
+                <div class="flex-about"></div>
+            </div>
+
+            <!-- <div class="flex-slide home" [ngStyle]="{'background-image': 'url(' + img2  + ')'}">
+                <div class="flex-title"></div>
+                <div class="flex-home"></div>
+            </div>
+            <div class="flex-slide about" [ngStyle]="{'background-image': 'url(' + img3  + ')'}">
+                <div class="flex-title"></div>
+                <div class="flex-about"></div>
+            </div>
+            <div class="flex-slide work"  [ngStyle]="{'background-image': 'url(' + img1  + ')'}">
+                <div class="flex-title"></div>
+                <div class="flex-about"></div>
+                <div class="flex-slide contact">
+                    <div class="flex-title"></div>
+                    <div class="flex-about"></div>
+                </div>
+            </div> -->
+        </div>
+    </ng-template>
+</ng-container>

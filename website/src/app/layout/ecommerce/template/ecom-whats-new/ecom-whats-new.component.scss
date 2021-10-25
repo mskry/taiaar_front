@@ -1,0 +1,65 @@
+.slick-slide img {
+    display: block;
+    height: 378px;
+    width: 100%;
+}
+a.aa-add-card-btn {
+    position: relative;
+    top: 330px;
+    height: 50px;
+}
+.aa-product-catg li .aa-product-hvr-content {
+    top: 36%;
+}
+button.slick-next.slick-arrow {
+    background: #100f0e4d !important;
+    border-radius: 0 !important;
+    width: 38px !important;
+    height: 38px !important;
+    color: #000 !important;
+    line-height: 53px !important;
+    position: absolute !important;
+    top: 211px;
+    text-align: center !important;
+    z-index: 9999;
+}
+
+button.slick-next.slick-arrow {
+    background: #100f0eba !important;
+    border-radius: 0 !important;
+    width: 38px !important;
+    height: 38px !important;
+    color: #000 !important;
+    line-height: 53px !important;
+    position: absolute !important;
+    top: 211px;
+    text-align: center !important;
+    right: 6px;
+    z-index: 9999;
+}
+button.slick-prev.slick-arrow {
+    background: #100f0ee0 !important;
+    border-radius: 0 !important;
+    width: 38px !important;
+    height: 38px !important;
+    color: #000 !important;
+    line-height: 53px !important;
+    position: absolute !important;
+    top: 211px;
+    text-align: center !important;
+    left: 415px;
+    z-index: 9999;
+}
+button.slick-prev.slick-arrow.slick-disabled {
+    background: #100f0ee0 !important;
+    border-radius: 0 !important;
+    width: 38px !important;
+    height: 38px !important;
+    color: #000 !important;
+    line-height: 53px !important;
+    position: absolute !important;
+    top: 211px;
+    text-align: center !important;
+    left: 93%;
+    z-index: 9999;
+}

@@ -1,0 +1,53 @@
+  .allergy {
+  width: 20px;
+  height: 26px;
+  position: absolute;
+  top: 4px;
+  right: 25px;
+  cursor: pointer;
+}
+
+.instruction {
+  right: 52px !important;
+}
+
+.categories-item-product-detail.product-item p {
+  width: 100% !important;
+}
+
+.add-btn span {
+  cursor: pointer;
+}
+
+.add-btn.add_remove1 {
+  text-align: right;
+  background-color: transparent !important;
+}
+
+.boxes-1 a button {
+  border: 1px solid;
+  padding: 2px 5px;
+  float: right;
+  font-size:14px;
+}.customisable span {
+    font-size: 18px;
+}
+.instraction_box .dialog-content {
+    border-radius: 6px;
+}
+
+.pickiit_dicount  {
+float: left;
+}
+.pickiit_dicount s {
+  margin-left: 10px;
+}
+// .add-to-card-outter-box {
+//   display: flex !important;
+// }
+
+// @media (max-width: 700px) {
+//   .add-to-card-outter-box {
+//     display: block !important;
+//   }
+// }

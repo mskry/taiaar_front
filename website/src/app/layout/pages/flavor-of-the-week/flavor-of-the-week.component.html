@@ -1,0 +1,35 @@
+<section id="Flavour_week">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="Flavour_week_text">
+                    <h2>{{flavorOfTheWeek?.title_one || 'Flavor of the Week'}}</h2>
+                    <!-- <p>Our customers, which we call Flavor Lovers, are treated to the highest customer service. We
+                        take extra steps working with the restaurants to ensure that their order is correct and
+                        delivered quickly. There are no additional service fees, you only pay the delivery fee.
+                    </p> -->
+                    <p [innerHtml]="flavorOfTheWeek?.description_one || 'N/A'"></p>
+                </div>
+            </div>
+            <div class="col-md-7">
+                <div class="Flavour_week_image" style="margin-top: 75px;">
+                    <img src="{{flavorOfTheWeek?.image_one || '/assets/images/food/flvr2.jpg'}}"
+                        style="height: 100%; object-fit: cover; height: 300px;">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="Flavour_About_Restaurant">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="Flavour_About_Restaurant_text">
+                    <!-- <img src="/assets/images/food/img01.png"> -->
+                    <h3> {{flavorOfTheWeek?.title_two || 'About District Pour House + Kitchen'}}</h3>
+                    <p [innerHtml]="flavorOfTheWeek?.description_two || 'N/A'"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

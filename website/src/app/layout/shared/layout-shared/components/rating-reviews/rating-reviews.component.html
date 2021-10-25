@@ -1,0 +1,31 @@
+<ng-container>
+    <div class="dialog-model">
+        <div class="dialog-content" style="max-width: 570px;">
+            <div class="container">
+                <div class="dialog-header">
+                    <a href="javascript:void(0)" class="dialog-close-button" (click)="close()">&times;</a>
+                </div>
+                <h2>{{'Reviews' | translate}}</h2>
+                <div class="container">
+                    <div class="col-md-12" *ngFor="let review of ratingReviews">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <p>
+                                    <img style="width: 100%; cursor: pointer;" appImage [url]="review?.user_image"
+                                        [settings]="settings" [size]="'355x320'" [src]="review?.user_image"
+                                        onError="src = '/assets/images/placeholder_image.svg';">
+                                </p>
+                            </div>
+                            <div class="col-md-9">
+                                <p>{{review?.firstname}}</p>
+                                <p>{{review?.comment}}</p>
+                                <p>{{review?.rating}}&nbsp;<i class="fa fa-star" aria-hidden="true"></i></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</ng-container>

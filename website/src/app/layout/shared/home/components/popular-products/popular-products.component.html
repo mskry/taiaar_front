@@ -1,0 +1,77 @@
+<ng-container [ngSwitch]="settings?.app_type">
+
+    <!------------------------------- Home Service------------------------------------>
+    <ng-template [ngSwitchCase]="2">
+        <div class="royo_recommends discounted-product">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="home-title" [style.color]="style.primaryColor">
+                            {{'popular_products' | localization | translate}} </h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="royo_recommends-produ">
+            <div class="container">
+                <div class="row " *ngIf="!isLoading; else skeleton">
+                    <ng-container *ngIf="popularProducts && popularProducts.length; then data else noData">
+                    </ng-container>
+                    <ng-template #data>
+                        <div class="col-md-4 col-lg-3 col-sm-6 Recommends-products"
+                            *ngFor="let offer of popularProducts.slice(0,10);trackBy:trackByProductsFn;">
+                            <app-product [product]="offer" [settings]="settings" [style]="style" [loggedIn]="loggedIn"
+                                (add)="addProduct($event)" (remove)="removeProduct($event)">
+                            </app-product>
+                        </div>
+                    </ng-template>
+                    <ng-template #noData>
+                        <div class="home-no-data">
+                            <h4 [style.color]="style.baseColor">{{'No' | translate}} {{'product' | localization | translate}}
+                                {{'Found' | translate}}</h4>
+                        </div>
+                    </ng-template>
+                </div>
+
+                <ng-template #skeleton>
+                    <div class="skeleton">
+                        <div class="row">
+                            <div class="col-md-4 col-lg-3 col-sm-6 Recommends-products"
+                                *ngFor="let item of utilityService.generateFakeList(10);trackBy:trackByUtilFakeListFn;">
+                                <app-product-skeleton [settings]="settings" [style]="style"> </app-product-skeleton>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </ng-template>
+
+    <!------------------------------- Home Service------------------------------------>
+    <ng-template [ngSwitchCase]="8">
+        <h1 *ngIf="popularProducts && popularProducts.length" [style.color]="style.baseColor"
+            style="font-size: 24px; line-height: 40px;">
+            {{'Most Booked' | translate}}</h1>
+        <ng-container *ngIf="!isLoading; else skeleton">
+            <div class="row full_width_mobile" *ngIf="popularProducts && popularProducts.length">
+                <div class="col-lg-4 col-md-6 col-6 flex_box"
+                    *ngFor="let product of popularProducts.slice(0,6);trackBy:trackByPopularFn;">
+                    <app-product [settings]="settings" [style]="style" [product]="product" [loggedIn]="loggedIn"
+                        (add)="addProduct($event)" (remove)="removeProduct($event)">
+                    </app-product>
+                </div>
+            </div>
+        </ng-container>
+
+        <ng-template #skeleton>
+            <div class="skeleton">
+                <div class="row">
+                    <div class="col-md-4 col-sm-6"
+                        *ngFor="let item of utilityService.generateFakeList(8);trackBy:trackByFakeListFn;">
+                        <app-product-skeleton [settings]="settings"></app-product-skeleton>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </ng-template>
+</ng-container>

@@ -1,0 +1,50 @@
+<ng-container>
+    <div class="dialog-model">
+        <div class="dialog-content" [style.width]="is_mobile ? '90%' : '60%'">
+            <div class="container">
+                <div class="dialog-header">
+                    <h5>{{'I am safe and healthy'}}</h5>
+                    <a href="javascript:void(0)" class="dialog-close-button" (click)="close()" style="margin-top: -15px;">&times;</a>
+                </div>
+                <div class="col-md-12">
+                    <h4>
+                        <p></p>
+                    </h4>
+                    <p>
+                        COVID-19 Self Health Declaration: Your honest response will ensure your safety as well as that
+                        of our
+                        professionals
+                    </p>
+                    <p class="check">
+                        <input type="checkbox" [(ngModel)]="is_declaration_checked">
+                        <span>Click here to agree</span>
+                    </p>
+                    <div>
+                        <ul>
+                            <li>
+                                I am not suffering from flu-like symptoms: Fever, Cough, Breathlessness, Sore throat
+                                etc.
+                            </li>
+                            <li>
+                                I have not traveled domestically or internationally in last 14 days.
+                            </li>
+                            <li>
+                                I have not come in contact with any COVID-19 case in last 14 days.
+                            </li>
+                            <li>
+                                I understand that while, {{website_name}} is taking all necessary safety & hygiene
+                                precautions, it cannot be held liable in the unfortunate event that a customer or
+                                professional is diagnosed with COVID-19
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="login-submit">
+                        <button (click)="onSubmit()" [style.background-color]="style.primaryColor" type="submit"
+                            class="btn">{{'Agree' | translate}}</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>

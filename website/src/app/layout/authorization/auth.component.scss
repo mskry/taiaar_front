@@ -1,0 +1,16 @@
+a {
+  cursor: pointer;
+}
+.check_tnc {
+  width: 20px;
+  height: 20px;
+}
+.tnc_txt {
+  position: relative;
+  bottom: 5px;
+  cursor: pointer;
+}
+.tnc_txt:hover {
+  text-decoration: underline;
+  font-weight: 500;
+}

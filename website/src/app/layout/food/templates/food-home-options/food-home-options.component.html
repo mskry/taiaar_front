@@ -1,0 +1,185 @@
+<ng-container [ngSwitch]="settings?.selected_template">
+
+    <ng-template [ngSwitchCase]="0">
+        <section id="become_falavor">
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div (click)="navigate(0)" class="col-md-4 cursor">
+                            <a>
+                                <div class="become_falavor-item">
+                                    <p>{{'flavor_of_the_week' | localization | translate}}</p>
+                                    <img style="object-fit: cover"
+                                        src="{{flavorOfTheWeek?.image_one || '/assets/images/food/district pour house logo.png'}}">
+                                </div>
+                            </a>
+                        </div>
+                        <div (click)="navigate(1)" class="col-md-4 cursor">
+                            <a>
+                                <div class="become_falavor-item">
+                                    <p>{{'become_a_flavor' | localization | translate}}</p>
+                                    <img
+                                        src="{{flavorOfTheWeek?.image_two || '/assets/images/food/become_a_flavour.jpg'}}">
+                                </div>
+                            </a>
+                        </div>
+                        <div (click)="navigate(2)" class="col-md-4 cursor">
+                            <a>
+                                <div class="become_falavor-item">
+                                    <p>Become A Driver</p>
+                                    <img
+                                        src="{{flavorOfTheWeek?.image_three || '/assets/images/food/delivery_guy.jpg'}}">
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </ng-template>
+
+    <ng-template [ngSwitchCase]="1">
+        <section id="become_falavor">
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div (click)="navigate(0)" class="col-md-4 cursor">
+                            <a>
+                                <div class="become_falavor-item">
+                                    <p>{{'flavor_of_the_week' | localization | translate}}</p>
+                                    <img style="object-fit: cover"
+                                        src="{{flavorOfTheWeek?.image_one || '/assets/images/food/district pour house logo.png'}}">
+                                </div>
+                            </a>
+                        </div>
+                        <div (click)="navigate(1)" class="col-md-4 cursor">
+                            <a>
+                                <div class="become_falavor-item">
+                                    <p>{{'become_a_flavor' | localization | translate}}</p>
+                                    <img
+                                        src="{{flavorOfTheWeek?.image_two || '/assets/images/food/become_a_flavour.jpg'}}">
+                                </div>
+                            </a>
+                        </div>
+                        <div (click)="navigate(2)" class="col-md-4 cursor">
+                            <a>
+                                <div class="become_falavor-item">
+                                    <p>Become A Driver</p>
+                                    <img
+                                        src="{{flavorOfTheWeek?.image_three || '/assets/images/food/delivery_guy.jpg'}}">
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </ng-template>
+
+    <ng-template [ngSwitchCase]="2">
+        <section id="become_falavor">
+            <div class="container">
+                <div class="row" *ngIf="siteName == 'localflavorKC'">
+                    <div class="col-md-12 text-center">
+                        <div class="app-dwnld btn_top">
+                            <a *ngIf="settings.ios_app_url" target="_blank" [href]="settings.ios_app_url"><img
+                                    src="/assets/images/app_store.png"></a>
+                            <a *ngIf="settings.android_app_url" target="_blank"
+                                [href]="settings.android_app_url"><img style="margin-top: 0px;"
+                                    src="/assets/images/google_play.png"></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <ul>
+                            <li (click)="navigate(0)" class="cursor">
+                                <a>
+                                    <div class="become_falavor-item">
+                                        <p>{{'flavor_of_the_week' | localization | translate}}</p>
+                                        <img style="object-fit: cover"
+                                            src="{{flavorOfTheWeek?.image_one || '/assets/images/food/district pour house logo.png'}}">
+                                    </div>
+                                </a>
+                            </li>
+                            <li (click)="navigate(1)" class="cursor">
+                                <a>
+                                    <div class="become_falavor-item">
+                                        <p>{{'become_a_flavor' | localization | translate}}</p>
+                                        <img
+                                        src="{{flavorOfTheWeek?.image_two || '/assets/images/food/become_a_flavour.jpg'}}">
+                                    </div>
+                                </a>
+                            </li>
+                            <li (click)="navigate(2)" class="cursor">
+                                <a>
+                                    <div class="become_falavor-item">
+                                        <p>Become A Driver</p>
+                                        <img
+                                        src="{{flavorOfTheWeek?.image_three || '/assets/images/food/delivery_guy.jpg'}}">
+                                    </div>
+                                </a>
+                            </li>
+                            <!-- <li (click)="navigate(3)" class="cursor">
+                                <a>
+                                    <div class="become_falavor-item">
+                                        <p>Group Ordering</p>
+                                        <img src="/assets/images/food/boardroom.jpg">
+                                    </div>
+                                </a>
+                            </li> -->
+                            <li (click)="navigate(4)" class="cursor">
+                                <a>
+                                    <div class="become_falavor-item" style="position: relative;">
+                                        <p>Catering</p>
+                                        <img src="/assets/images/food/catering.jpg">
+                                        <!-- <div class="coming-soon">Coming Soon</div> -->
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </ng-template>
+
+    <ng-template [ngSwitchCase]="3">
+        <section id="become_falavor">
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div (click)="navigate(0)" class="col-md-4 cursor">
+                            <a>
+                                <div class="become_falavor-item">
+                                    <p>{{'flavor_of_the_week' | localization | translate}}</p>
+                                    <img style="object-fit: cover"
+                                        src="{{flavorOfTheWeek?.image_one || '/assets/images/food/district pour house logo.png'}}">
+                                </div>
+                            </a>
+                        </div>
+                        <div (click)="navigate(1)" class="col-md-4 cursor">
+                            <a>
+                                <div class="become_falavor-item">
+                                    <p>{{'become_a_flavor' | localization | translate}}</p>
+                                    <img
+                                        src="{{flavorOfTheWeek?.image_two || '/assets/images/food/become_a_flavour.jpg'}}">
+                                </div>
+                            </a>
+                        </div>
+                        <div (click)="navigate(2)" class="col-md-4 cursor">
+                            <a>
+                                <div class="become_falavor-item">
+                                    <p>Become A Driver</p>
+                                    <img
+                                        src="{{flavorOfTheWeek?.image_three || '/assets/images/food/delivery_guy.jpg'}}">
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </ng-template>
+
+</ng-container>

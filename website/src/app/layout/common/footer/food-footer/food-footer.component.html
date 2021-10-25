@@ -1,0 +1,722 @@
+<footer
+  *ngIf="settings?.selected_template == 0 || settings?.selected_template == 1 || (settings?.selected_template == 2 && settings?.is_single_vendor == 0)">
+  <div class="footer-part">
+    <div class="appwrap col-md-12" *ngIf="siteName == '100% Ayiti'">
+      <ul class="text-center">
+        <li>
+          <a>{{'DOWNLOAD THE APP' | translate}}</a>
+        </li>
+        <li>
+          <a *ngIf="appLink?.android && !is_new_badge" target="_blank" [href]="appLink?.android">
+            <img src="/assets/images/google_play.png" style=" margin-bottom: 0px;">
+          </a>
+        </li>
+        <li>
+          <a *ngIf="appLink?.ios && !is_new_badge" target="_blank" [href]="appLink?.ios">
+            <img src="/assets/images/app_store.png" style=" margin-bottom: 0px;">
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <section id="download_app_section"
+      *ngIf="settings?.selected_template == 2 && settings?.app_type == 1 && router.url == '/'">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-5">
+            <div class="download_app_section-text">
+              <h2>{{settings.footer_mockup_title || 'Download Our app' | translate}}</h2>
+              <p>{{settings?.footer_mockup_description || 'For Android and IOS'}}</p>
+              <div class="">
+                <a *ngIf="appLink?.ios" target="_blank" [href]="appLink?.ios"><img
+                    src="/assets/images/food/Apple_store.png"></a>
+                <a *ngIf="appLink?.android" target="_blank" [href]="appLink?.android"><img
+                    src="/assets/images/food/google_pay.png"></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-7">
+            <div class="download_app_section_img">
+              <img [src]="settings.footer_mockup_image">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container"
+      [ngStyle]="((settings?.is_single_vendor && settings?.selected_template == 1) || (!settings?.is_single_vendor && settings?.selected_template == 2)) && settings?.app_type == 1 ? {'borderTop': '0px'} : {'borderTop': '1px solid rgba(37, 73, 77, .34901960784313724)'}">
+
+      <div class="row info-block" *ngIf="['homefreshmeals_0027', 'homefreshmeals_0769'].includes(client_code)">
+        <div class="col-md-4">
+          <b>Purchaser</b><br>Home Fresh Meal is not liable under any circumstances for any lose or any inconvenience
+          purchase or any delays on the delivery or quality of the food that is provided.
+        </div>
+
+        <div class="col-md-4">
+          <b>Cook</b><br>Cook needs to have his own insurance for any fresh delivery of the purchased fresh food and
+          Fresh Home Meal is not liable under any circumstances
+        </div>
+
+        <div class="col-md-4">
+          <b>Driver</b><br>Driver needs to have his own insurance for whatever delivery of the food is required and
+          Fresh Home Meal is not liable under any circumstances.
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div
+          [ngClass]="(settings?.allow_dynamic_image_on_fotter === '1' && settings?.footer_ad_image) ? 'col-md-3' : 'col-md-4'"
+          *ngIf="settings?.aboutUs || settings?.termsAndConditions || settings?.privacyPolicy || settings?.faqs || settings?.enable_cookies_policy || settings?.enable_cookies_policy">
+          <div class="useful-links">
+            <h2 [style.color]="style.baseColor">{{'Useful Links' | translate}}</h2>
+            <ul>
+              <li *ngIf="settings?.aboutUs">
+                <a [style.color]="style.baseColor" [routerLink]="['/about']">{{'about_us' | localization |
+                  translate}}</a>
+              </li>
+              <li *ngIf="settings?.termsAndConditions">
+                <a [style.color]="style.baseColor" [routerLink]="['/terms-and-conditions']">{{'terms_and_conditions' |
+                  localization | translate}}</a>
+              </li>
+              <li *ngIf="settings?.privacyPolicy">
+                <a [style.color]="style.baseColor" [routerLink]="['/privacy-policy']">{{'privacy_policy' | localization
+                  | translate}}</a>
+              </li>
+              <li *ngIf="settings?.faqs">
+                <a [style.color]="style.baseColor" [routerLink]="['/faq']">{{'faq' | localization | translate}}</a>
+              </li>
+              <li *ngIf="settings?.enable_cookies_policy">
+                <a [style.color]="style.baseColor" [routerLink]="['/cookie_policy']">{{'cookie_policy' |
+                  localization | translate}}</a>
+              </li>
+              <li *ngIf="settings?.enable_allergy_policy">
+                <a [style.color]="style.baseColor" [routerLink]="['/allergy_policy']">{{'allergy_policy' |
+                  localization | translate}}</a>
+              </li>
+
+              <li *ngIf="settings?.is_vendor_registration == 1"><a [style.color]="style.baseColor" target="_blank"
+                  [href]="registrationUrl">{{client_code == 'readychef_0309' ? 'Become A Restaurant Partner' :
+                (settings?.enable_pearwheel_theme == 1 ? 'Signup to be a Pearwheel Merchant' : 
+                ('Register As' | translate) + ' ' + ('supplier' | localization | translate))}}
+                </a></li>
+              <li
+                *ngIf="settings?.agentsignup == 1 && client_code != 'yummy_0122' && settings?.enable_pearwheel_theme == 0">
+                <a [style.color]="style.baseColor" target="_blank" class="cursor" data-toggle="modal"
+                  data-target="#agentApp">{{client_code ==
+                  'afridash_0613' ? 'Become An Afdash' : 'Become A'}}
+                  {{'agent' | localization | translate}}</a></li>
+              <li *ngIf="settings?.agentsignup == 1 && client_code == 'yummy_0122'"><a [style.color]="style.baseColor"
+                  target="_blank" class="cursor"
+                  href="https://docs.google.com/forms/d/e/1FAIpQLSfxP6GCNyDKHAC0NXVeG5V89gOF8w1yh5QiX-I1uP7MKatr2Q/viewform">Become
+                  A
+                  {{'agent' | localization}}</a></li>
+              <!-- <li><a [style.color]="style.baseColor" [routerLink]="['/sitemap']">Sitemap</a></li> -->
+              <li *ngIf="settings?.is_glassdoor_link == 1 && settings?.glassdoor_link">
+                <a [style.color]="style.baseColor" [href]="settings?.glassdoor_link">Glassdoor</a>
+              </li>
+
+              <li *ngIf="settings?.is_guest_user_feedback_enable == 1" class="">
+                <a href="javascript:void(0)" data-toggle="modal" data-target="#feedbackModal"
+                  [style.color]="style?.baseColor" (click)="openUserFeedBack()">
+                  {{'Feedback' | translate}}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div *ngIf="settings?.enable_pearwheel_theme == 0"
+          [ngClass]="(settings?.allow_dynamic_image_on_fotter === '1' && settings?.footer_ad_image) ? 'col-lg-3 col-md-3' : 'col-lg-4 col-md-4'">
+          <div class="useful-links">
+            <h2 [style.color]="style.baseColor">{{'Contact Us' | translate}}</h2>
+            <ul>
+              <li [style.color]="style.baseColor" class="cursor" (click)="onPhone()">{{contact?.phoneNumber}}</li>
+              <li [style.color]="style.baseColor"
+                *ngIf="contact?.whatsAppNumber && settings?.enable_whatsapp_contact_us" class="cursor"
+                (click)="onWhatsApp()">
+                <img src="/assets/social-icons/whatsapp.png" width="20px" style="margin-top:13px;">
+                {{contact?.whatsAppNumber}}
+              </li>
+              <li [style.color]="style.baseColor"
+                *ngIf="contact?.whatsAppNumber && settings?.enable_whatsapp_contact_us" class="cursor"
+                (click)="onWhatsApp()">
+                <img src="/assets/social-icons/whatsapp.png" width="20px" style="margin-top:13px;">
+                {{contact?.whatsAppNumber}}
+              </li>
+              <li [style.color]="style.baseColor" class="cursor" (click)="onEmail()">{{contact?.email}}</li>
+              <li [style.color]="style.baseColor" *ngIf="siteName == '100% Ayiti'">1112 Dickinson st Elizabeth Nj 07201
+              </li>
+              <li [style.color]="style.baseColor">{{contact?.country}}</li>
+              <li *ngIf="contact?.email && settings.email" class="help cursor" (click)="onHelp()">
+                {{"Help & Support" | translate}}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div *ngIf="settings?.enable_pearwheel_theme == 1"
+          [ngClass]="(settings?.allow_dynamic_image_on_fotter === '1' && settings?.footer_ad_image) ? 'col-lg-3 col-md-3' : 'col-lg-4 col-md-4'">
+          <div class="useful-links">
+            <h2 [style.color]="style.baseColor">{{'for enquiry:' | translate}}</h2>
+            <ul class="cityrunner-icons">
+              <li [style.color]="style.baseColor">
+                <a [style.color]="style.baseColor" href="https://pearwheel.com" target="_blank"> <img
+                    src="assets/cityrunner-icons/ic_web.png" alt="">www.pearwheel.com</a>
+              </li>
+              <li [style.color]="style.baseColor"
+                *ngIf="contact?.whatsAppNumber && settings?.enable_whatsapp_contact_us" class="cursor"
+                (click)="onWhatsApp()">
+                <img src="/assets/social-icons/whatsapp.png" width="20px" style="margin-top:13px;">
+                {{contact?.whatsAppNumber}}
+              </li>
+              <li [style.color]="style.baseColor" class="cursor" (click)="onEmail()"><img
+                  src="assets/cityrunner-icons/ic_mail.png" alt="">{{contact?.email}}</li>
+              <!-- <li [style.color]="style.baseColor" class="cursor" (click)="onPhone()"><img src="assets/cityrunner-icons/ic_call.png" alt=""> {{contact?.phoneNumber}}</li> -->
+              <li [style.color]="style.baseColor" class="cursor" (click)="onPhone()"><img
+                  src="assets/cityrunner-icons/ic_call.png" alt="">+234-803-531-4802</li>
+
+              <!-- <li [style.color]="style.baseColor">{{contact?.country}}</li> -->
+              <li [style.color]="style.baseColor"><img src="assets/cityrunner-icons/ic_insta.png" alt=""><img
+                  src="assets/cityrunner-icons/ic_facebook.png" alt="">@PearWheel</li>
+              <!-- <li *ngIf="contact?.email && settings.email" class="help cursor" (click)="onHelp()">
+                {{"Help & Support" | translate}}
+              </li> -->
+              <li [style.color]="style.baseColor">
+                <span class="row">
+                  <span class="col-lg-2">
+                    <img src="assets/cityrunner-icons/ic_location.png" alt="">
+                  </span>
+                  <span class="col-lg-10 px-0">
+                    70, Adetokunbo Ademola St,<br> Opposite Eko Hotel.
+                  </span>
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div
+          [ngClass]="(settings?.allow_dynamic_image_on_fotter === '1' && settings?.footer_ad_image) ? 'col-md-3' : 'null'"
+          *ngIf="(settings?.allow_dynamic_image_on_fotter === '1' && settings?.footer_ad_image)">
+          <div class="use-mobile-sectiont m-left" *ngIf=" (appLink?.android || appLink?.ios)">
+            <div class="post-img">
+              <img src="{{settings?.footer_ad_image}}" alt="" width="250" height="120">
+              <!-- <a><img src="/assets/images/app_store.png"></a> -->
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="settings?.enable_pearwheel_theme == 0"
+          [ngClass]="(settings?.allow_dynamic_image_on_fotter === '1' && settings?.footer_ad_image) ? 'col-lg-3 col-md-3' : 'col-lg-4 col-md-4'">
+          <div class="use-mobile-sectiont">
+            <h2 [style.color]="style.baseColor">{{'Download Our App' | translate}}</h2>
+            <div class="app-images" *ngIf="siteName !== '100% Ayiti' && settings?.selected_template != 2">
+              <a *ngIf="appLink?.android && !is_new_badge" target="_blank" [href]="appLink?.android">
+                <img src="/assets/images/google_play.png">
+              </a>
+              <a *ngIf="appLink?.android && is_new_badge" target="_blank" [href]="appLink?.android">
+                <img src="/assets/images/food/play-store-new.png">
+              </a>
+              <!-- <a><img src="/assets/images/google_play.png"></a> -->
+              <!-- <br> -->
+              <a *ngIf="appLink?.ios && !is_new_badge" target="_blank" [href]="appLink?.ios">
+                <img src="/assets/images/app_store.png">
+              </a>
+              <a *ngIf="appLink?.ios && is_new_badge" target="_blank" [href]="appLink?.ios">
+                <img src="/assets/images/food/app-store-new.png">
+              </a>
+              <!-- <a><img src="/assets/images/app_store.png"></a> -->
+            </div>
+
+            <div class="app-images" *ngIf="siteName !== '100% Ayiti' && settings?.selected_template == 2">
+              <!-- <h2 [style.color]="style.baseColor">{{'Download Our App' | translate}}</h2> -->
+
+              <a *ngIf="appLink?.android" target="_blank" [href]="appLink?.android" [style.color]="style.baseColor">
+                Get It On Google
+              </a>
+              <a *ngIf="appLink?.ios" target="_blank" [href]="appLink?.ios" [style.color]="style.baseColor">
+                Download At App Store
+              </a>
+            </div>
+
+            <div class="work-with-us" *ngIf="siteName == '100% Ayiti'">
+              <h2 [style.color]="style.baseColor">{{'Work With Us' | translate}}</h2>
+              <ul>
+                <li>
+                  <a target="_blank" [href]="registrationUrl" [style.color]="style.baseColor">
+                    Sign up your store
+                  </a>
+                </li>
+                <li>
+                  <a target="_blank" [href]="settings?.agent_android_app_url" [style.color]="style.baseColor">
+                    Android Driver App
+                  </a>
+                </li>
+                <li>
+                  <a target="_blank" [href]="settings?.agent_ios_app_url" [style.color]="style.baseColor">
+                    IOS Driver App
+                  </a>
+                </li>
+                <li *ngIf="contact?.email && settings.email" class="help cursor" (click)="onHelp()">
+                  {{"Help & Support" | translate}}
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="useful-links social"
+            *ngIf="settings?.social_media_icons == 1 && !settings?.is_single_vendor && settings?.selected_template == 1 && (settings?.fackbook_link || settings?.twitter_link || settings?.linkedin_link || settings?.google_link)">
+            <h2 [style.color]="style.baseColor">{{'Follow Us On' | translate}}</h2>
+            <ul>
+              <li><a *ngIf="settings?.fackbook_link" [style.color]="style.primaryColor" target="_blank"
+                  [href]="settings?.fackbook_link"><i class="fa fa-facebook" aria-hidden="true"></i>
+                </a></li>
+              <li><a *ngIf="settings?.twitter_link" [style.color]="style.primaryColor" target="_blank"
+                  [href]="settings?.twitter_link"><i class="fa fa-twitter" aria-hidden="true"></i>
+                </a></li>
+              <li><a *ngIf="settings?.linkedin_link" [style.color]="style.primaryColor" target="_blank"
+                  [href]="settings?.linkedin_link"><i class="fa fa-linkedin" aria-hidden="true"></i>
+                </a></li>
+              <li><a *ngIf="settings?.google_link" [style.color]="style.primaryColor" target="_blank"
+                  [href]="settings?.google_link"><i class="fa fa-google-plus" aria-hidden="true"></i>
+                </a></li>
+            </ul>
+          </div>
+        </div>
+
+
+        <div *ngIf="settings?.enable_pearwheel_theme == 1"
+          [ngClass]="(settings?.allow_dynamic_image_on_fotter === '1' && settings?.footer_ad_image) ? 'col-lg-3 col-md-3' : 'col-lg-4 col-md-4'">
+          <div class="use-mobile-sectiont">
+            <h2 [style.color]="style.baseColor" class="text-center">{{'Download Our Apps' | translate}}</h2>
+            <div class="row">
+
+              <div class="app-images col-lg-6 col-md-6"
+                *ngIf="siteName !== '100% Ayiti' && settings?.selected_template != 2">
+                <h2>User</h2>
+                <a *ngIf="appLink?.android && !is_new_badge" target="_blank" [href]="appLink?.android">
+                  <img src="/assets/images/google_play.png">
+                </a>
+                <a *ngIf="appLink?.android && is_new_badge" target="_blank" [href]="appLink?.android">
+                  <img src="/assets/images/food/play-store-new.png">
+                </a>
+                <!-- <a><img src="/assets/images/google_play.png"></a> -->
+                <!-- <br> -->
+                <a *ngIf="appLink?.ios && !is_new_badge" target="_blank" [href]="appLink?.ios">
+                  <img src="/assets/images/app_store.png">
+                </a>
+                <a *ngIf="appLink?.ios && is_new_badge" target="_blank" [href]="appLink?.ios">
+                  <img src="/assets/images/food/app-store-new.png">
+                </a>
+                <!-- <a><img src="/assets/images/app_store.png"></a> -->
+              </div>
+
+              <div class="app-images col-lg-6 col-md-6"
+                *ngIf="siteName !== '100% Ayiti' && settings?.selected_template != 2">
+                <h2>Agent</h2>
+                <a *ngIf="appLink?.android && !is_new_badge" target="_blank" [href]="appLink?.android_agent">
+                  <img src="/assets/images/google_play.png">
+                </a>
+                <a *ngIf="appLink?.android && is_new_badge" target="_blank" [href]="appLink?.android_agent">
+                  <img src="/assets/images/food/play-store-new.png">
+                </a>
+                <!-- <a><img src="/assets/images/google_play.png"></a> -->
+                <!-- <br> -->
+                <a *ngIf="appLink?.ios && !is_new_badge" target="_blank" [href]="appLink?.ios_agent">
+                  <img src="/assets/images/app_store.png">
+                </a>
+                <a *ngIf="appLink?.ios && is_new_badge" target="_blank" [href]="appLink?.ios_agent">
+                  <img src="/assets/images/food/app-store-new.png">
+                </a>
+                <!-- <a><img src="/assets/images/app_store.png"></a> -->
+              </div>
+
+            </div>
+
+
+            <div class="app-images" *ngIf="siteName !== '100% Ayiti' && settings?.selected_template == 2">
+              <h2 [style.color]="style.baseColor">{{'Download Our App' | translate}}</h2>
+
+              <a *ngIf="appLink?.android" target="_blank" [href]="appLink?.android" [style.color]="style.baseColor">
+                Get It On Google
+              </a>
+              <a *ngIf="appLink?.ios" target="_blank" [href]="appLink?.ios" [style.color]="style.baseColor">
+                Download At App Store
+              </a>
+            </div>
+
+          </div>
+
+          <div class="useful-links social"
+            *ngIf="settings?.social_media_icons == 1 && !settings?.is_single_vendor && settings?.selected_template == 1 && (settings?.fackbook_link || settings?.twitter_link || settings?.linkedin_link || settings?.google_link)">
+            <h2 [style.color]="style.baseColor">{{'Follow Us On' | translate}}</h2>
+            <ul>
+              <li><a *ngIf="settings?.fackbook_link" [style.color]="style.primaryColor" target="_blank"
+                  [href]="settings?.fackbook_link"><i class="fa fa-facebook" aria-hidden="true"></i>
+                </a></li>
+              <li><a *ngIf="settings?.twitter_link" [style.color]="style.primaryColor" target="_blank"
+                  [href]="settings?.twitter_link"><i class="fa fa-twitter" aria-hidden="true"></i>
+                </a></li>
+              <li><a *ngIf="settings?.linkedin_link" [style.color]="style.primaryColor" target="_blank"
+                  [href]="settings?.linkedin_link"><i class="fa fa-linkedin" aria-hidden="true"></i>
+                </a></li>
+              <!-- <li><a *ngIf="settings?.google_link" [style.color]="style.primaryColor" target="_blank"
+                [href]="settings?.google_link"><i class="fa fa-google-plus" aria-hidden="true"></i>
+              </a></li> -->
+              <li><a *ngIf="settings?.instagram_link" [style.color]="style.primaryColor" target="_blank"
+                  [href]="settings?.instagram_link"><i class="fa fa-instagram" aria-hidden="true"></i>
+                </a></li>
+            </ul>
+          </div>
+        </div>
+
+    </div>
+    <div class="powered_by" *ngIf="settings.payment_card_images == 1">
+      <h2 class="text-center"><b><span>We Accept</span></b></h2>
+      <div class="row">
+        <div class="powered_by_img"><img src="./../../../../../assets/images/Amex.jpg"></div>
+        <div class="powered_by_img"><img src="./../../../../../assets/images/Mastercard SecureCode.jpg">
+        </div>
+        <div class="powered_by_img"><img src="./../../../../../assets/images/MasterCard.jpg"></div>
+        <div class="powered_by_img"><img src="./../../../../../assets/images/Verified by Visa.jpg"></div>
+        <div class="powered_by_img"><img src="./../../../../../assets/images/visa.png"></div>
+      </div>
+    </div>
+  </div>
+  </div>
+</footer>
+
+<div class="single-vender-bottom-footer" *ngIf="settings?.selected_template == 1 && settings?.is_single_vendor">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="single-vender-bottom-text">
+          <p>{{siteName}} © 2020. All Rights Reserved</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="single-vender-bottom-social">
+          <ul>
+            <li *ngIf="settings?.fackbook_link"><a [href]="settings?.fackbook_link" target="_blank"><i
+                  class="fa fa-facebook-square" aria-hidden="true"></i>
+              </a></li>
+            <li *ngIf="settings?.linkedin_link"><a [href]="settings?.linkedin_link" target="_blank"><i
+                  class="fa fa-instagram" aria-hidden="true"></i>
+              </a></li>
+            <li *ngIf="settings?.google_link"><a [href]="settings?.google_link" target="_blank"><i
+                  class="fa fa-google-plus" aria-hidden="true"></i>
+              </a></li>
+            <li *ngIf="settings?.twitter_link"><a [href]="settings?.twitter_link" target="_blank"><i
+                  class="fa fa-twitter-square" aria-hidden="true"></i>
+              </a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-user-feed-back *ngIf="showUserFeedback" [settings]="settings" [style]="style"
+  (onUserFeedbackClose)="onUserFeedbackClose($event)">
+</app-user-feed-back>
+
+<!-- new added footer -->
+<footer class="selling-product-footer" *ngIf="settings?.selected_template == 3">
+  <div class="footer-part">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-5 ">
+          <div *ngIf="settings?.is_alternate_about_us" class="useful-links">
+            <h2 style="color: rgb(47, 49, 58);">{{'About Us' | translate}}</h2>
+            <p class="footer-about" [innerHtml]="settings?.aboutus_two_english | safe: 'html'"></p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4">
+          <div class="useful-links">
+            <h2 style="color: rgb(47, 49, 58);">{{'Quick links'| translate}}</h2>
+            <ul>
+              <li *ngIf="settings?.aboutUs">
+                <a [style.color]="style.baseColor" [routerLink]="['/about']">{{'about_us' | localization |
+                  translate}}</a>
+              </li>
+              <li *ngIf="settings?.termsAndConditions">
+                <a [style.color]="style.baseColor" [routerLink]="['/terms-and-conditions']">{{'terms_and_conditions' |
+                  localization | translate}}</a>
+              </li>
+              <li *ngIf="settings?.privacyPolicy">
+                <a [style.color]="style.baseColor" [routerLink]="['/privacy-policy']">{{'privacy_policy' | localization
+                  | translate}}</a>
+              </li>
+              <li *ngIf="settings?.faqs">
+                <a [style.color]="style.baseColor" [routerLink]="['/faq']">{{'faq' | localization | translate}}</a>
+              </li>
+              <li *ngIf="settings?.enable_allergy_policy">
+                <a [style.color]="style.baseColor" [routerLink]="['/allergy_policy']">{{'allergy_policy' |
+                  localization | translate}}</a>
+              </li>
+              <li *ngIf="settings?.is_vendor_registration == 1"><a [style.color]="style.baseColor" target="_blank"
+                  [href]="registrationUrl">{{'Register As' | translate}}
+                  {{'supplier' | localization}}</a></li>
+              <!-- <li><a [style.color]="style.baseColor" [routerLink]="['/sitemap']">Sitemap</a></li> -->
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-4">
+          <div class="useful-links">
+            <h2 style="color: rgb(47, 49, 58);">{{'Contact us' | translate}}</h2>
+            <ul>
+              <li class=""><a style="color: rgb(47, 49, 58);"><i class="fa fa-map-marker" aria-hidden="true"></i>
+                  17, 17E, Sector 17, Chandigarh</a></li>
+              <li class=""><a style="color: rgb(47, 49, 58);"><i class="fa fa-envelope" aria-hidden="true"></i>
+                  info@code-brew.com</a></li>
+              <li class=""><a href="" style="color: rgb(47, 49, 58);"><i class="fa fa-phone" aria-hidden="true"></i>
+                  253-68-454</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+<!-- new added footer -->
+<footer class="selling-product-footer" *ngIf="settings?.selected_template == 4">
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-4">
+          <h3>Social Links</h3>
+          <div class="contact">
+            <ul>
+              <li class="social-icon"><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+              <li class="social-icon"><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+              <li class="social-icon"><a href="#"><i class="fa fa-google" aria-hidden="true"></i></a></li>
+              <li class="social-icon"><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
+              <li class="social-icon"><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+              <li class="social-icon"><a href="#"><i class="fa fa-youtube-play" aria-hidden="true"></i></a></li>
+            </ul>
+          </div>
+          <div class="contact">
+            <ul>
+              <li>
+                <a class="mt-4" *ngIf="appLink?.android && !is_new_badge" target="_blank" [href]="appLink?.android">
+                  <img src="/assets/images/google_play.png" style=" margin-bottom: 0px;">
+                </a>
+                <a class="mt-4" *ngIf="appLink?.ios && !is_new_badge" target="_blank" [href]="appLink?.ios">
+                  <img src="/assets/images/app_store.png" style=" margin-bottom: 0px;">
+                </a>
+              </li>
+              <!-- <li>
+                <a class="mt-4" *ngIf="appLink?.ios && !is_new_badge" target="_blank" [href]="appLink?.ios">
+                  <img src="/assets/images/app_store.png" style=" margin-bottom: 0px;">
+                </a>
+              </li> -->
+            </ul>
+          </div>
+        </div>
+        <div class="col-sm-4 footer-links">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a [routerLink]="['/about']">{{'About'| translate}}</a></li>
+            <li><a [routerLink]="['/help']">{{'Help' | translate }}</a></li>
+            <li><a [routerLink]="['/terms-and-conditions']">{{'Terms and Conditions' | translate}}</a></li>
+            <li><a [routerLink]="['/privacy-policy']">{{'Privacy Policy' | translate}}</a></li>
+
+          </ul>
+        </div>
+        <div class="col-sm-4">
+          <h3>Contact Us</h3>
+          <div class="contact">
+            <ul>
+              <li><i class="fa fa-map-marker" aria-hidden="true"></i><span>886 Lennon Forges Apt. 357</span></li>
+              <li><i class="fa fa-envelope" aria-hidden="true"></i><a href="#">bmt@hotmail.com</a></li>
+              <li><i class="fa fa-phone" aria-hidden="true"></i><a href="#">973-735-4051</a></li>
+            </ul>
+          </div>
+          <!-- <div class="contact">
+            <ul>
+              <li>
+                <a class="mt-4" *ngIf="appLink?.android && !is_new_badge" target="_blank" [href]="appLink?.android">
+                  <img src="/assets/images/google_play.png" style=" margin-bottom: 0px;">
+                </a>
+                <a class="mt-4" *ngIf="appLink?.ios && !is_new_badge" target="_blank" [href]="appLink?.ios">
+                  <img src="/assets/images/app_store.png" style=" margin-bottom: 0px;">
+                </a>
+              </li>
+              <li>
+                <a class="mt-4" *ngIf="appLink?.ios && !is_new_badge" target="_blank" [href]="appLink?.ios">
+                  <img src="/assets/images/app_store.png" style=" margin-bottom: 0px;">
+                </a>
+              </li>
+            </ul>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </footer>
+</footer>
+
+<div class="footer-second" *ngIf="settings?.selected_template == 3 || settings?.selected_template == 4">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <p>{{siteName}} - 2020. {{'All Right Reserved' | translate}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="single-vender-bottom-footer" *ngIf="settings?.selected_template == 2 && settings?.is_single_vendor == 1">
+  <app-news-letter [settings]="settings"></app-news-letter>
+
+  <footer class="pt-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-4 footer-links">
+          <h3>Useful Links</h3>
+          <ul>
+            <li *ngIf="settings?.aboutUs && settings?.pickit_home_theme == 0">
+              <a [style.color]="style.footerTextColor"
+                [routerLink]="['/about']">{{'about_us' | localization | translate}}</a>
+            </li>
+            <li *ngIf="settings?.pickit_home_theme == 1">
+              <a [style.color]="style.footerTextColor"
+                [routerLink]="['/about_us']">{{'about_us' | localization | translate}}</a>
+            </li>
+            <li *ngIf="settings?.termsAndConditions">
+              <a [style.color]="style.baseColor" [routerLink]="['/terms-and-conditions']">{{'terms_and_conditions' |
+                localization | translate}}</a>
+            </li>
+            <li *ngIf="settings?.privacyPolicy">
+              <a [style.color]="style.baseColor" [routerLink]="['/privacy-policy']">{{'privacy_policy' | localization
+                | translate}}</a>
+            </li>
+            <li *ngIf="settings?.faqs">
+              <a [style.color]="style.baseColor" [routerLink]="['/faq']">{{'faq' | localization | translate}}</a>
+            </li>
+            <li *ngIf="settings?.is_vendor_registration == 1"><a [style.color]="style.baseColor" target="_blank"
+                [href]="registrationUrl">{{client_code == 'readychef_0309' ? 'Become A Restaurant Partner' :
+                ('Register As' | translate) + ' ' + ('supplier' | localization)}}
+              </a></li>
+            <li *ngIf="settings?.agentsignup == 1 && client_code != 'yummy_0122'"><a [style.color]="style.baseColor"
+                target="_blank" class="cursor" data-toggle="modal" data-target="#agentApp">{{client_code ==
+                'afridash_0613' ? 'Become An Afdash' : 'Become A'}}
+                {{'agent' | localization}}</a></li>
+            <li *ngIf="settings?.is_guest_user_feedback_enable == 1" class="">
+              <a href="javascript:void(0)" data-toggle="modal" data-target="#feedbackModal"
+                [style.color]="style?.baseColor" (click)="openUserFeedBack()">
+                {{'Feedback' | translate}}
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-4 footer-links">
+          <h3>Contact Us</h3>
+          <ul>
+            <li [style.color]="style.baseColor" class="cursor" (click)="onPhone()">{{contact?.phoneNumber}}</li>
+            <li [style.color]="style.baseColor" *ngIf="contact?.whatsAppNumber && settings?.enable_whatsapp_contact_us && settings.pickit_home_theme == 0"
+              class="cursor" (click)="onWhatsApp()">
+              <img src="/assets/social-icons/whatsapp.png" width="20px" style="margin-top:13px;">
+              {{contact?.whatsAppNumber}}
+            </li>
+            <li [style.color]="style.baseColor" class="cursor" (click)="onEmail()">{{contact?.email}}</li>
+            <li [style.color]="style.baseColor">{{contact?.country}}</li>
+            <li *ngIf="contact?.email && settings.email" class="help cursor" (click)="onHelp()">
+              {{"Help & Support" | translate}}
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-4 footer-links social-icon">
+          <h3>Follow Us On</h3>
+          <ul>
+            <li><a *ngIf="settings?.fackbook_link" [style.color]="style.primaryColor" target="_blank"
+                [href]="settings?.fackbook_link"><i class="fa fa-facebook" aria-hidden="true"></i>
+              </a></li>
+            <li><a *ngIf="settings?.twitter_link" [style.color]="style.primaryColor" target="_blank"
+                [href]="settings?.twitter_link"><i class="fa fa-twitter" aria-hidden="true"></i>
+              </a></li>
+            <li><a *ngIf="settings?.linkedin_link" [style.color]="style.primaryColor" target="_blank"
+                [href]="settings?.linkedin_link"><i class="fa fa-linkedin" aria-hidden="true"></i>
+              </a></li>
+            <li><a *ngIf="settings?.google_link" [style.color]="style.primaryColor" target="_blank"
+                [href]="settings?.google_link"><i class="fa fa-google-plus" aria-hidden="true"></i>
+              </a></li>
+            <li><a *ngIf="settings?.instagram_link" [style.color]="style.primaryColor" target="_blank"
+                [href]="settings?.instagram_link"><i class="fa fa-instagram" aria-hidden="true"></i>
+              </a></li>
+            <li><a *ngIf="settings?.youtube_link" [style.color]="style.primaryColor" target="_blank"
+                [href]="settings?.youtube_link"><i class="fa fa-youtube-play" aria-hidden="true"></i>
+              </a></li>
+          </ul><br>
+          <br>
+          <div *ngIf="settings.pickit_home_theme == 1">
+            <h3>We Accept</h3>
+            <ul>
+              <li>
+                <div><img src="./../../../../../assets/images/visa.png" width="100px"></div>
+              </li>
+              <li>
+                <div><img src="./../../../../../assets/images/Verified by Visa.jpg" width="100px"></div>
+              </li>
+              <li>
+                <div><img src="./../../../../../assets/images/MasterCard.jpg" width="100px"></div>
+              </li>
+            </ul>
+          </div>
+          <button class="btn float cursor" [style.color]="style.baseColor" 
+            *ngIf="contact?.whatsAppNumber && settings?.enable_whatsapp_contact_us && settings.pickit_home_theme == 1" (click)="onWhatsApp()">
+            <img src="/assets/social-icons/whatsapp.png" width="50px">
+          </button>
+
+        </div>
+
+      </div>
+      <div class="powered_by" *ngIf="settings.payment_card_images == 1">
+        <h2 class="text-center"><b><span>We Accept</span></b></h2>
+        <div class="row">
+          <div class="powered_by_img"><img src="./../../../../../assets/images/Amex.jpg"></div>
+          <div class="powered_by_img"><img src="./../../../../../assets/images/Mastercard SecureCode.jpg">
+          </div>
+          <div class="powered_by_img"><img src="./../../../../../assets/images/MasterCard.jpg"></div>
+          <div class="powered_by_img"><img src="./../../../../../assets/images/Verified by Visa.jpg"></div>
+          <div class="powered_by_img"><img src="./../../../../../assets/images/visa.png"></div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+
+<div class="modal fade" id="agentApp" tabindex="-1" role="dialog" aria-labelledby="agentApp" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="agentApp" style="text-align: center;">{{settings?.enable_pearwheel_theme==0 ? (('agent' | localization) + ' App Links') : 'Pearwheel Riders App'}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6">
+            <a *ngIf="appLink?.android_agent && !is_new_badge" target="_blank" [href]="appLink?.android_agent">
+              <img style="width: 100%;" src="/assets/images/google_play.png">
+            </a>
+            <a *ngIf="appLink?.android_agent && is_new_badge" target="_blank" [href]="appLink?.android_agent">
+              <img style="width: 100%;" src="/assets/images/food/play-store-new.png">
+            </a>
+          </div>
+          <div class="col-md-6">
+            <a *ngIf="appLink?.ios_agent && !is_new_badge" target="_blank" [href]="appLink?.ios_agent">
+              <img style="width: 100%;" src="/assets/images/app_store.png">
+            </a>
+            <a *ngIf="appLink?.ios_agent && is_new_badge" target="_blank" [href]="appLink?.ios_agent">
+              <img style="width: 100%;" src="/assets/images/food/app-store-new.png">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

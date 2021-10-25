@@ -1,0 +1,57 @@
+<ng-container [ngSwitch]="settings?.selected_template">
+    <ng-template [ngSwitchCase]="2">
+        <!------------bg section------------>
+        <section class="bg-mg">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-3 bg-icon">
+                        <a><img src="assets/images/pickkit/pickit icons/shopping-basket.png"><span>Easy shoping
+                                experience</span></a>
+                    </div>
+                    <div class="col-sm-3 bg-icon">
+                        <a><img src="assets/images/pickkit/pickit icons/shopping-bag.png"><span> Great Offer & Deals</span></a>
+                    </div>
+                    <div class="col-sm-3 bg-icon">
+                        <a><img src="assets/images/pickkit/pickit icons/tag.png"><span> Premium Quality</span></a>
+                    </div>
+                    <div class="col-sm-3 bg-icon">
+                        <a><img src="assets/images/pickkit/pickit icons/shop.png"> <span> Fast Home Delivery</span></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+ 
+        <!-- <section class="newsletter-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12 t-center newsletter-box">
+                        <div class="newsletter">
+                            <h3>Subscribe to newsletter</h3>
+                            <form (ngSubmit)="f.form.valid && onSubmitNewsLetter(f.value)" #f="ngForm" novalidate>
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <input type="email" class="form-control" name="email"
+                                            placeholder="Enter email address" #email="ngModel" ngModel required email>
+                                        <div *ngIf="f.submitted && email?.invalid" class="log-error mt-2">
+                                            <div *ngIf="email?.errors?.required">Email is required</div>
+                                            <div *ngIf="email?.errors?.email">Email must be a valid email address</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-10">
+                                        <button type="submit" class="btn btn-red btn-primary"
+                                            [ngStyle]="{'color': '#ffffff', 'backgroundColor': style?.primaryColor}">Subscribe</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section> -->
+
+
+    </ng-template>
+
+</ng-container>

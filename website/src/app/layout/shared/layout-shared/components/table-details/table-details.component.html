@@ -1,0 +1,31 @@
+<ng-container>
+    <div class="price_details"
+        [ngStyle]="{'background-color': style.cardBackgroundColor, 'border-color': style.secondaryColor }">
+
+        <p *ngIf="!settings?.table_book_mac_theme"> <span (click)="removeTableBooking()">
+                Remove table booking
+            </span>
+        </p>
+        <ul [style.color]="style.baseColor" class="b-n" *ngIf="!settings?.table_book_mac_theme">
+            <li>Table Id <span>:
+                    {{ tableDetails?.table_id || 'N/A' }}</span>
+            </li>
+            <li *ngIf="tableDetails?.table_booking_price">Table Booking Price <span>:
+                    {{ tableDetails?.table_booking_price || 'N/A' }}</span>
+            </li>
+            <li>Table Name <span>:
+                    {{ tableDetails?.table_name || 'N/A' }}</span>
+            </li>
+        </ul>
+
+        <ul [style.color]="style.baseColor" class="b-n" *ngIf="settings?.table_book_mac_theme">
+            <li>Table Slot <span>:
+                    {{ (tableDetails?.table_slot || '') | date:'MMM d, y h:mm a' }}</span>
+            </li>
+
+            <li>Number of Guests <span>:
+                    {{ tableDetails?.table_seating || 'N/A' }}</span>
+            </li>
+        </ul>
+    </div>
+</ng-container>

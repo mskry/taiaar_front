@@ -1,0 +1,36 @@
+<!-- <div class="social-login facebook_login" *ngIf="is_facebook_login">
+  <a (click)="socialSignIn('facebook')" style="cursor: pointer;">
+    <img src="/assets/images/fb_icon.png" >
+    Facebook
+  </a>
+</div>
+<div class="social-login google_login" *ngIf="is_google_login">
+  <a (click)="socialSignIn('google')" style="cursor: pointer;">
+    <img src="/assets/images/google_logo.png">
+     Google
+  </a>
+</div> -->
+
+<div class="mb-4">
+  <div class="row" *ngIf="is_facebook_login">
+    <div class="col-md-12">
+      <div class="facebook-login" (click)="socialSignIn('facebook')" style="cursor: pointer;">
+        <a>
+          <img src="/assets/images/fb_icon.png">
+          Facebook
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="is_google_login">
+    <div class="col-md-12">
+      <div class="google-login" (click)="socialSignIn('google')" style="cursor: pointer;">
+        <a>
+          <img src="/assets/images/google_logo.png">
+          Google
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

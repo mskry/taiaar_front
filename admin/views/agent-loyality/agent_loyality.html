@@ -1,0 +1,243 @@
+<div class="container-fluid back">
+
+</div>
+
+
+<div class="container">
+    <div class="row profile">
+        <div class="col-4">
+
+        </div>
+    </div>
+</div>
+
+
+<div class="wrapper">
+    <div class="category">
+        <div class="secnav">
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    <h1 class="bold">{{'Agent Loyality' | translate}}</h1>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="topfil">
+                        <ul>
+                            <li style="filter: grayscale(0)" ng-if="permissions('promotions', 'create') == 1">
+                                <button type="button" class="bold create" data-toggle="modal"
+                                    ng-click="changeView(true)" data-target="#addAgentLoyalityRef">{{'ADD AGENT LOYALTY'
+                                    |
+                                    translate}}</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="tab-content m-top-30">
+            <div class="tab-pane active">
+                <div class="tableouter">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>{{'ID' | translate}}</th>
+                                <th>{{'IMAGE' | translate}}</th>
+                                <th>{{'NAME' | translate}}</th>
+                                <th>{{'COMMISSION' | translate}}</th>
+                                <th>{{'DESCRIPTION' | translate}}</th>
+                                <th>{{'ACTION' | translate}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="loyality in agentLoyalityList">
+                                <td>{{loyality.id}}</td>
+                                <td>
+                                    <img src="{{loyality.image}}">
+                                </td>
+                                <td>{{loyality.name || 'N/A'}}</td>
+                                <td>{{loyality.commission}}</td>
+                                <td>{{loyality.description}}</td>
+                                <td>
+                                    <span class="delete" ng-click="deleteAgentLoyality(loyality)">
+                                        {{'Delete'}}
+                                    </span>
+                                    <br />
+                                    <span class="delete" ng-click="onUpdateAgentLoyality(loyality)">
+                                        {{'Update'}}
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="no-data-found" ng-if="agentLoyalityList.length == 0 && dataLoaded">
+                        {{'NO DATA FOUND' | translate}}
+                    </div>
+                    <div ng-if="agentLoyalityList.length > 0 && dataLoaded" class="row pagination">
+                        <ul ng-if="pager.pages && pager.pages.length">
+                            <li ng-class="{disabled:pager.currentPage === 1}">
+                                <a ng-click="setPage(1)">{{'FIRST' | translate}}</a>
+                            </li>
+                            <li ng-class="{disabled:pager.currentPage === 1}">
+                                <a ng-click="setPage(pager.currentPage - 1)">{{'PREVIOUS' | translate}}</a>
+                            </li>
+                            <li ng-repeat="page in pager.pages" ng-class="{active:pager.currentPage === page}">
+                                <a ng-click="setPage(page)">{{page}}</a>
+                            </li>
+                            <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                                <a ng-click="setPage(pager.currentPage + 1)">{{'NEXT' | translate}}</a>
+                            </li>
+                            <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                                <a ng-click="setPage(pager.totalPages)">{{'LAST' | translate}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+        <div class="mainbanner m-top-30">
+            <div class="row">
+                <div class="col-md-3" ng-repeat="loyalty in agentLoyalityList">
+                    <div class="bx loyalty">
+                        <a style="cursor: default">
+                            <img style="cursor: default" src="{{compressImage(loyalty.image, '300x180')}}">
+                            <p class="bold">{{loyalty.name}}</p>
+                            <p class="sup-name">Commission :
+                                {{loyalty.commission}}%</p>
+                        </a>
+
+                        <div class="actions text-center mt-3 mb-3">
+                            <a ng-click="onUpdateAgentLoyality(loyalty)"><i class="fa fa-edit"></i></a>
+                            <a ng-click="deleteAgentLoyality(loyalty)"><i class="fa fa-trash"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="no-data-found" ng-if="agentLoyalityList.length == 0 && dataLoaded">
+                {{'NO DATA FOUND' | translate}}
+            </div>
+
+            <div ng-if="agentLoyalityList.length > 0 && dataLoaded" class="row pagination">
+                <ul ng-if="pager.pages && pager.pages.length">
+                    <li ng-class="{disabled:pager.currentPage === 1}">
+                        <a ng-click="setPage(1)">{{'FIRST' | translate}}</a>
+                    </li>
+                    <li ng-class="{disabled:pager.currentPage === 1}">
+                        <a ng-click="setPage(pager.currentPage - 1)">{{'PREVIOUS' | translate}}</a>
+                    </li>
+                    <li ng-repeat="page in pager.pages" ng-class="{active:pager.currentPage === page}">
+                        <a ng-click="setPage(page)">{{page}}</a>
+                    </li>
+                    <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                        <a ng-click="setPage(pager.currentPage + 1)">{{'NEXT' | translate}}</a>
+                    </li>
+                    <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                        <a ng-click="setPage(pager.totalPages)">{{'LAST' | translate}}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="modal" id="addAgentLoyalityRef">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <div class="modhead" style="border: none;">
+                    <h3>{{is_updating?'UPDATE':'ADD'}}&nbsp;{{'AGENT LOYALTY' | translate}}</h3>
+                    <button type="button" class="close" data-dismiss="modal"><img
+                            src="img/v1_images/ic_cross.svg"></button>
+                </div>
+
+                <div class="modbody persinfo" style="border: none;">
+
+                    <form role="form" id="addAgentLoyalityForm" name="addAgentLoyalityForm"
+                        ng-submit="addAgentLoyality(addAgentLoyalityForm)" novalidate>
+                        <div class="form-group">
+                            <label>{{'Name' | translate}}<span class="star">*</span></label>
+                            <input type="text" name="name" ng-model="agent_loyality.name"
+                                placeholder="{{'NAME' | translate}}" required>
+                            <div class="error"
+                                ng-show="addAgentLoyalityForm.name.$invalid && addAgentLoyalityForm.$submitted">
+                                <small ng-show="addAgentLoyalityForm.name.$error.required">Please enter
+                                    name.</small>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>{{'COMMISSION' | translate}}&nbsp;%<span class="star">*</span></label>
+                            <input type="number" limit-to="60" name="commission" ng-model="agent_loyality.commission"
+                                placeholder="{{'COMMISSION' | translate}}" required>
+                            <div class="error"
+                                ng-show="addAgentLoyalityForm.commission.$invalid && addAgentLoyalityForm.$submitted">
+                                <small ng-show="addAgentLoyalityForm.commission.$error.required">Please enter
+                                    commission.</small>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>{{'DESCRIPTION' | translate}}<span class="star">*</span></label>
+                            <textarea limit-to="60" name="description" ng-model="agent_loyality.description"
+                                placeholder="{{'DESCRIPTION' | translate}}" required></textarea>
+                            <div class="error"
+                                ng-show="addAgentLoyalityForm.description.$invalid && addAgentLoyalityForm.$submitted">
+                                <small ng-show="addAgentLoyalityForm.description.$error.required">Please enter
+                                    description.</small>
+                            </div>
+                        </div>
+
+                        <div class="form-group pic">
+                            <div class="col-md-12">
+                                <label>{{'IMAGE' | translate}}</label>
+                                <input filestyle="" type="file" accept="image/*" name="image1" ng-model="logo"
+                                    class="cursor" style="width: 242px;"
+                                    onchange="angular.element(this).scope().file_to_upload_for_image(this.files)"
+                                    data-button-text="Single" data-class-button="btn btn-default"
+                                    data-classinput="form-control inline" nv-file-select="" uploader="uploader" />
+                                <span ng-if="agent_loyality.image" style="width: 100%;">
+                                    <img style="width: 100%; height: 100%; object-fit: contain;" id="croppr"
+                                        src="{{agent_loyality.image}}">
+                                </span>
+                                <span ng-if="!agent_loyality.image" style="width: 100%;">
+                                    <img src="img/v1_images/ic_dummy.png" style="width: auto; height: auto;">
+                                </span>
+                                <div class="error" ng-show="!agent_loyality.image && addAgentLoyalityForm.$submitted">
+                                    <small ng-show="!agent_loyality.image">{{'PLEASE UPLOAD
+                                        IMAGE' | translate}}</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="submit-plan mt-5">
+                            <button type="submit" style="width: 100%;" class="text-center">{{'SUBMIT' |
+                                translate}}</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<success-modal message="message"></success-modal>
+
+
+
+
+<style>
+    .delete {
+        cursor: pointer;
+    }
+
+    .delete:hover {
+        text-decoration: underline;
+        font-weight: 600;
+    }
+    .actions{
+        font-size: 24px;
+    }
+</style>

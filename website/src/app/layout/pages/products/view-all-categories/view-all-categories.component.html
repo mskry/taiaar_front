@@ -1,0 +1,23 @@
+<ng-container [ngSwitch]="settings?.selected_template">
+
+    <ng-template [ngSwitchCase]="2">
+        <!------------------service section-------------------->
+        <section class="bg-white p-0 m_top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12 main_heading t-center all_categories">
+                        <h1>Start your experience</h1>
+                    </div>
+                    <div class="col-sm-3 box cat-img"
+                        *ngFor="let category of categoryData;trackBy:trackByCategoryDataFn;">
+                        <img appImage [url]="category?.image" [size]="'260x200'" [src]="category?.image"
+                            [settings]="settings" onError="src = './assets/images/placeholder_image.svg';">
+                        <h3 style="cursor: pointer;" (click)="toProducts(category)"><a>{{category?.name}}<i
+                                    class="fa fa-long-arrow-right" aria-hidden="true"></i></a></h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </ng-template>
+
+</ng-container>

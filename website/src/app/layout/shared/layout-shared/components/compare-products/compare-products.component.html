@@ -1,0 +1,68 @@
+<section class="compare_products mb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="compare_content">
+                    <h2 [ngStyle]="{'color': style.primaryColor}" class="compare_heading">
+                        {{'Compare Price' | translate}}</h2>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="row mt-lg-4">
+            <div class="col-lg-9 offset-md-2">
+                <div class="row">
+                    <div class="col-lg-4" *ngFor="let prod of products">
+                        <div class="compare_img">
+                            <img class="img-fluid" src="{{prod.image_path}}" alt="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <div class="row mt-2">
+            <div class="col">
+                <div class="compare_price_table">
+                    <table class="table">
+                        <tbody *ngIf="products.length>0">
+                            <tr *ngFor="let cBy of compareByList;let last = last;trackBy:trackByCompareByListFn;">
+                                <th scope="row">
+                                    {{cBy}}
+                                </th>
+                                <td *ngFor="let prod of products;let i=index;trackBy:trackByProductsFn;">
+                                    <span *ngIf="cBy=='Image'">
+                                        <div class="compare_img">
+                                            <img class="img-fluid" src="{{prod.image_path}}" alt="" />
+                                        </div>
+                                    </span>
+                                    <span class="prod-name" *ngIf="cBy=='Product Name'">
+                                        {{prod.name}}
+                                    </span>
+                                    <span *ngIf="cBy=='Price'">
+                                        {{prod.display_price}}
+                                    </span>
+                                    <span *ngIf="cBy=='Sold By'">
+                                        {{prod.supplier_name}}
+                                    </span>
+                                    <span *ngIf="cBy=='Category'">
+                                        {{prod.category_name}}
+                                    </span>
+                                    <span *ngIf="cBy=='Specifications'">
+                                        <span [innerHtml]="prod.product_desc"></span>
+                                    </span>
+                                    <div *ngIf="last" class="mt-5">
+                                        <div class="des_btn_group d-flex align-items-center justify-content-between">
+                                            <a [ngStyle]="{'background-color': style.primaryColor}"
+                                                class="default_btn text-uppercase m-auto" (click)="addToCart(prod)">Add
+                                                to
+                                                cart</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

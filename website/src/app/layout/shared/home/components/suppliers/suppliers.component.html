@@ -1,0 +1,103 @@
+<ng-container *ngIf="settings?.app_type == 1">
+  <div class="reccom-main_section" *ngIf="settings.is_custom_category_template == '0'">
+    <div class="row">
+      <div class="col-md-5">
+        <h2 class="pizza-title" [style.color]="style.baseColor">{{'top_suppliers_near_you' | localization | translate}}
+        </h2>
+      </div>
+      <div class="col-md-7  text-right cat-fd" [ngStyle]="{'text-align': 'center','right': '20px'}">
+        <app-supplier-sorting [style]="style" (onSort)="onSortBy($event)" class="sorting-btn">
+        </app-supplier-sorting>
+        <app-supplier-cat-sorting [style]="style" [settings]="settings"
+            [catShortValue]="catShortValue" (onCatSort)="onCatSortBy($event)"
+            class="sorting-btn"></app-supplier-cat-sorting>
+        <!-- <app-supplier-sorting [style]="style" (onSort)="onSortBy($event)">
+        </app-supplier-sorting> -->
+      </div>
+    </div>
+
+    <div class="row">
+      <ng-container *ngIf="!isLoading; else skeleton">
+        <ng-container *ngIf="allSuppliers && allSuppliers.length > 0; then data else noData"></ng-container>
+        <ng-template #data>
+          <div class="col-6 col-md-6 col-xl-4 col-lg-4 col-sm-6" *ngFor="let supplier of allSuppliers.slice(0,8);trackBy:trackBySuppliersFn;">
+            <app-supplier [supplier]="supplier" [style]="style" [settings]="settings" [darkTheme]="isDarkTheme">
+            </app-supplier>
+          </div>
+          <div class="see_more-btn">
+            <button [ngStyle]="{'border-color': style.primaryColor, 'color': style.primaryColor}" class="btn btn-large"
+              (click)="onSeeMore()">{{'View All' | translate}}</button>
+          </div>
+        </ng-template>
+        <ng-template #noData>
+          <div class="home-no-data">
+            <h2 [style.color]="style.baseColor">{{'No'| translate}} {{'suppliers' | localization | translate}}
+              {{'Found' | translate}}</h2>
+          </div>
+        </ng-template>
+
+      </ng-container>
+
+      <ng-template #skeleton>
+        <div class="skeleton col-6 col-md-6 col-xl-4 col-lg-4 col-sm-6"
+          *ngFor="let supplier of util.generateFakeList(4);trackBy:trackByUtilSupplierFn;">
+          <app-supplier-skeleton [style]="style" [settings]="settings"></app-supplier-skeleton>
+        </div>
+      </ng-template>
+
+    </div>
+  </div>
+
+  <div class="reccom-main_section" *ngIf="settings.is_custom_category_template == '1'">
+    <div class="row">
+      <div class="col-md-6">
+
+      </div>
+      <div class="col-md-6" [ngStyle]="{'text-align': 'center','right': '20px'}">
+
+      </div>
+    </div>
+
+    <div class="row">
+      <ng-container *ngIf="!isLoading; else skeleton">
+        <ng-container *ngIf="allSuppliers && allSuppliers.length > 0; then data else noData"></ng-container>
+        <ng-template #data>
+          <div class="col-12 col-md-12 col-xl-12 col-lg-12 col-sm-12" *ngFor="let supplier of allSuppliers.slice(0,8);trackBy:trackByAllSuppliersFn;">
+            <ng-container *ngIf="supplier.suppliers && supplier.suppliers.length > 0; then data else ''">
+            </ng-container>
+            <ng-template #data>
+              <h5 class="mt-3 mb-4">
+                {{'Recommended '}}{{supplier.sub_category_name}}{{' Near You'}}
+              </h5>
+              <div class="col-6 col-md-6 col-xl-4 col-lg-4 col-sm-6 mb-4" *ngFor="let subCat of supplier.suppliers;trackBy:trackBySubCatFn;">
+                <app-supplier [supplier]="subCat" [style]="style" [settings]="settings" [darkTheme]="isDarkTheme">
+                </app-supplier>
+              </div>
+            </ng-template>
+          </div>
+          <div class="see_more-btn">
+            <button [ngStyle]="{'border-color': style.primaryColor, 'color': style.primaryColor}" class="btn btn-large"
+              (click)="onSeeMore()">{{'View All' | translate}}</button>
+          </div>
+        </ng-template>
+        <ng-template #noData>
+          <div class="home-no-data">
+            <h2 [style.color]="style.baseColor">{{'No'| translate}} {{'data' | translate}}
+              {{'Found' | translate}}</h2>
+          </div>
+        </ng-template>
+
+      </ng-container>
+
+      <ng-template #skeleton>
+        <div class="skeleton col-6 col-md-6 col-xl-4 col-lg-4 col-sm-6"
+          *ngFor="let supplier of util.generateFakeList(4);trackBy:trackByFakelistFn">
+          <app-supplier-skeleton [style]="style" [settings]="settings"></app-supplier-skeleton>
+        </div>
+      </ng-template>
+
+    </div>
+  </div>
+
+
+</ng-container>

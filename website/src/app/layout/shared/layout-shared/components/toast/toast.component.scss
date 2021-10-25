@@ -1,0 +1,103 @@
+:host ::ng-deep .custom-toast .ui-toast-message {
+    color: #ffffff !important;
+    background: var(--primaryColor) !important;
+    background-color: var(--primaryColor) !important;
+}
+
+
+
+body .ui-toast .ui-toast-message.ui-toast-message-info {
+    background-color: var(--primaryColor);
+    border: 0 none;
+    color: #ffffff !important;
+}
+
+body .ui-toast .ui-toast-message.ui-toast-message-info .ui-toast-close-icon {
+    color: #ffffff !important;
+}
+
+
+
+
+.dropdown {
+    button {
+        border: 1px solid var(--primaryColor) !important;
+        border: 4px;
+        padding: 5px 15px;
+    }
+}
+
+.price-container {
+    width: 200px;
+}
+.create-post button {
+    padding: 10px 15px;
+    border-radius: 4px;
+    background: red;
+    color: #fff;
+    font-size: 14px;
+    margin: 0px 5px;
+    text-transform: uppercase;
+    border: none;
+    width: 100%;
+}
+.creatpost_model .modal-dialog {
+    max-width: 600px;
+}
+.creatpost_model .modal-dialog label {
+    font-size: 14px;
+    color: #3333337a;
+}
+.creatpost_model .modal-dialog .ui-dropdown .ui-dropdown-label-container label {
+    background: #dddddd00;
+}
+.creatpost_model .modal-dialog .ui-dropdown {
+    border: 1px solid #dddddd4d;
+    padding: 5px 10px;
+    border-radius: 6px;
+    background: #dddddd4d;
+}
+.creatpost_model .modal-dialog .ui-dropdown .ui-dropdown-trigger {
+    background: #dddddd08;
+}
+
+.creatpost_model .modal-dialog input.form-control,
+.creatpost_model .modal-dialog textarea.form-control {
+    background: #dddddd4d;
+    border: 1px solid #dddddd4d;
+    padding: 8px 10px;
+    border-radius: 6px;
+    height: auto;
+}
+.creatpost_model .modal-dialog h2 {
+    font-size: 30px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+.create-post button {
+    padding: 14px 30px !important;
+    font-weight: 600;
+    letter-spacing: 1px;
+    font-size: 16px !important;
+}
+.creatpost_model .modal-dialog textarea.form-control {
+    height: 120px !important;
+}.modal {
+    text-align: center;
+  }
+  
+  @media screen and (min-width: 768px) { 
+    .modal:before {
+      display: inline-block;
+      vertical-align: middle;
+      content: " ";
+      height: 100%;
+    }
+  }
+  
+  .modal-dialog {
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
+  }

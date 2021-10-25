@@ -1,0 +1,29 @@
+<ng-container [ngSwitch]="settings?.selected_template">
+    <ng-template [ngSwitchCase]="5">
+        <section class="animate1">
+            <div class="home-doctors  clearfix">
+                <div class="container-fluid">
+                    <div class="row">
+                        <!-- entry1 -->
+                        <div class="col-md-4 col-sm-6  text-center doc-item" *ngFor="let category of categories.slice(0,3)">
+                            <div class="common-doctor animated fadeInUp clearfix ae-animation-fadeInUp">
+                                <figure>
+                                    <img style="width: 100%;"
+                                        class="doc-img animate attachment-gallery-post-single wp-post-image" appImage
+                                        [url]="category?.image" [settings]="settings" [size]="'355x320'"
+                                        [src]="category?.image" onError="src = '/assets/images/placeholder_image.svg';">
+                                </figure>
+                                <div class="text-content">
+                                    <h5>{{category?.name}} </h5>
+                                    <a data-seq (click)="toProducts(category)" [style.background-color]="style?.primaryColor" class="btn"><i class="fa fa-plus" aria-hidden="true"></i>
+                                        SHOP NOW</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="visible-sm clearfix margin-gap"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </ng-template>
+</ng-container>

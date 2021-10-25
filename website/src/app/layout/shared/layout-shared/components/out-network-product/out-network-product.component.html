@@ -1,0 +1,48 @@
+<div class="modal fade" id="modalRef" tabindex="-1" role="dialog" aria-labelledby="cartDateModalLabel"
+    aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered datetimemod" role="document">
+        <div class="modal-content" style="text-align: center">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                    (click)="onDismiss()"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="form">
+                    <div class="profile_form">
+                        <div class="form-group">
+                            <label class="text-left" [style.color]="style.baseColor">{{'Full Name' | translate}}</label>
+                            <input class="w-100" type="text" formControlName="product_owner_name"
+                                placeholder="{{'Enter Full Name' | translate}}"
+                                (keydown.space)="!form.controls.product_owner_name.value ? $event.preventDefault() : ''">
+                            <div class="text-error"
+                                *ngIf="(form.controls['product_owner_name'].errors?.required || form.controls['product_owner_name'].errors?.whitespace) && showError">
+                                {{'Please enter name' | translate}}</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="text-left"
+                                [style.color]="style.baseColor">{{'Product Dimensions' | translate}}</label>
+                            <input class="w-100" type="text" formControlName="product_dimensions"
+                                placeholder="{{'Enter Product Dimensions' | translate}}"
+                                (keydown.space)="!form.controls.product_dimensions.value ? $event.preventDefault() : ''">
+                            <div class="text-error"
+                                *ngIf="(form.controls['product_dimensions'].errors?.required || form.controls['product_dimensions'].errors?.whitespace) && showError">
+                                {{'Please enter product dimensions' | translate}}</div>
+                        </div>
+
+                        <div class="form-group image_uploaD_for_post">
+                            <app-uplaod-image [currentUser]="currentUser" [autoImages]="images" [style]="style"
+                                [settings]="settings" (onImageUpload)="onImageUpload($event)"
+                                (imageInProcess)="handleImageProcess($event)"> </app-uplaod-image>
+                        </div>
+
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <button type="button" (click)="onSubmit(true)"
+                        [ngStyle]="{'backgroundColor': style?.primaryColor, 'borderColor': style?.primaryColor, 'color': '#ffffff'}"
+                        class="btn" aria-label="Close">{{'Proceed' | translate}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+<ng-container>
+    <div class="dialog-model">
+        <div class="dialog-content">
+            <div class="container">
+                <div class="dialog-header">
+                    <h5>{{'Pay With' | translate}} payuLatam</h5>
+                    <a href="javascript:void(0)" class="dialog-close-button" (click)="close()">&times;</a>
+                </div>
+                <app-add-card *ngIf="showAddCard" [gatewayId]="'payuLatam'" (onSelect)="onCardSelect($event)">
+                </app-add-card>
+            </div>
+        </div>
+    </div>
+</ng-container>

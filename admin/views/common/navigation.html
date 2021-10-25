@@ -1,0 +1,934 @@
+<div class="side-menu" ng-if="enable_collapsed_navigation == 0">
+    <nav class="navbar">
+        <!-- Brand -->
+        <a class="navbar-brand"
+            ui-sref="{{['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) ? 'index.dashboard' : 'index.dashboardShipping'}}"
+            ng-style="{'backgroundColor': navBrandColor}">
+            <img ng-if="app_image" id="app_logo" ng-style="{'height' : logo_height}"
+                src="{{compressImage(app_image, '180x120', true)}}" style="object-fit: contain;">
+            <div ng-if="!app_image" class="app-image" ng-style="{'backgroundColor': logo_data.background}">
+                <p ng-style="{'color': logo_data.theme_color, 'fontFamily': logo_data.font_family}">{{business_name}}
+                </p>
+            </div>
+        </a>
+        <!-- Toggler/collapsibe Button -->
+        <span class="menu_bar" onclick="openNav()">&#9776;</span>
+        <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"> <img
+                src="img/v1_images/burger_menu.png"></button> -->
+        <!-- Navbar links -->
+        <div class="navbar-collapse sidenav" id="mySidenav" style="background-color: #ffffff">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <ul class="navbar-nav">
+                <li class="nav-item" ui-sref-active="active" ng-if="['ADMIN', 'SUPPLIER','BRANCH'].includes(profile)">
+                    <a class="nav-link" ui-sref="index.dashboard"><img
+                            src="img/v1_images/ic_dashboard.svg">{{'DASHBOARD' | translate}}</a>
+                </li>
+                <li class="nav-item" ui-sref-active="active" ng-if="['SHIPPING'].includes(profile)">
+                    <a class="nav-link" ui-sref="index.dashboardShipping"><img
+                            src="img/v1_images/ic_dashboard.svg">{{'DASHBOARD' | translate}}</a>
+                </li>
+                <li class="nav-item" ui-sref-active="active"
+                    ng-if="['ADMIN','BRANCH'].includes(profile) && permissions('catalogue', 'list') == 1">
+                    <a class="nav-link" ui-sref="production.productionSetup"><img
+                            src="img/v1_images/ic_orders.svg">{{localisation.catalogue | translate}}</a>
+                </li>
+                <li class="nav-item" ui-sref-active="active"
+                    ng-if="(profile === 'SUPPLIER' && (no_catalogue == 0 || hide_supplier_catalogue == 0)) && permissions('catalogue', 'list') == 1">
+                    <a class="nav-link" ui-sref="production.productionSetup"><img
+                            src="img/v1_images/ic_orders.svg">{{localisation.catalogue | translate}}</a>
+                </li>
+                <li ng-if="profile === 'ADMIN' && is_single_vendor == 0 && permissions('suppliers', 'list') == 1"
+                    class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="profile.supplier"><img
+                            src="img/v1_images/ic_suppliers.svg">{{localisation.suppliers | translate}}</a>
+                </li>
+                <li ng-if="profile === 'ADMIN' && is_single_vendor == 1 && permissions('suppliers', 'list') == 1"
+                    class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="profile.supplierSetup.step_one({id: single_vendor_id, tab: 1})"><img
+                            src="img/v1_images/ic_suppliers.svg">{{'MY PROFILE' | translate}}</a>
+                </li>
+                <li ng-if="profile === 'SUPPLIER' && !is_branch_login && permissions('suppliers', 'list') == 1 && hide_my_profile_for_supplier == 0"
+                    class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="profile.supplierSetup.step_one({id: active_supplier_id, tab: 1})"><img
+                            src="img/v1_images/ic_suppliers.svg">{{'MY PROFILE' | translate}}</a>
+                </li>
+
+                <li ng-if="profile === 'ADMIN' && permissions('suppliers', 'list') == 1 && is_delivery_company == 1"
+                    class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="profile.deliveryCompany"><img
+                            src="img/v1_images/ic_suppliers.svg">{{localisation.delivery_company | translate}}</a>
+                </li>
+
+                <li ng-if="profile === 'SHIPPING' && !is_branch_login && permissions('suppliers', 'list') == 1 && is_delivery_company == 1"
+                    class="nav-item" ui-sref-active="active">
+                    <a class="nav-link"
+                        ui-sref="profile.deliveryCompanySetup.step_one({id: delivery_company_id, tab: 1})"><img
+                            src="img/v1_images/ic_suppliers.svg">{{'MY PROFILE' | translate}}</a>
+                </li>
+                <li class="nav-item"
+                    ng-if="hide_agent_module == 0 && (app_type != 2 || (app_type == 2 && ecom_agent_module == 1)) && !is_branch_login && is_pickup != 1 && permissions('agents', 'list') == 1 && is_dine_in == 0 && (profile === 'ADMIN' || (hide_agent_supplier == 0 && profile === 'SUPPLIER') || (is_delivery_company == 1 && profile === 'SHIPPING'))
+                   && (profile == 'ADMIN' || (profile == 'SUPPLIER' && enable_dynamic_agent_section_in_supplier_by_admin == 0) || (profile == 'SUPPLIER' && enable_dynamic_agent_section_in_supplier_by_admin == 1 && allow_agent_section_in_supplier_by_admin == 1))"
+                    ui-sref-active="active"><a ui-sref="profile.agent" class="nav-link"> <img
+                            src="img/v1_images/ic_agents.svg">{{localisation.agents | translate}}</a>
+                </li>
+                <li ng-if="profile === 'ADMIN' && ([2].includes(app_type) || (app_type > 10 && flow_data_values.includes(2))) && permissions('brands', 'list') == 1"
+                    class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="production.brands"><img
+                            src="img/v1_images/ic_brands.svg">{{localisation.brands | translate}}</a>
+                </li>
+                <li class="nav-item" ui-sref-active="active"
+                    ng-if="['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) && permissions('orders', 'list') == 1">
+                    <a class="nav-link" ui-sref="orders.ordersManager"><img
+                            src="img/v1_images/ic_order.svg">{{localisation.orders | translate}}</a>
+                </li>
+                <li ng-if="['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) && permissions('banners', 'list') == 1 && no_banner_section == 0 && (profile === 'ADMIN' || no_supplier_banner_section == 0)"
+                    class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="production.banners"><img src="img/v1_images/ic_banner.svg">{{'BANNERS'
+                        | translate}}</a>
+                </li>
+                <li ng-if="['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) && permissions('promotions', 'list') == 1 && (profile === 'ADMIN' || no_supplier_promotion_section == 0) && hide_promo_module == 0"
+                    class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="promo.listpromo"><img
+                            src="img/v1_images/ic_promotions.svg">{{localisation.promotions | translate}}</a>
+                </li>
+
+                <li ng-if="['ADMIN'].includes(profile) && permissions('promotions', 'list') == 1 && enable_voucher_section"
+                    class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="voucher.listvoucher"><img
+                            src="img/v1_images/ic_promotions.svg">{{localisation.vouchers | translate}}</a>
+                </li>
+
+                <li ng-if="profile === 'ADMIN' && permissions('subscription', 'list') == 1 && is_subscription_plan == 1"
+                    class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="subscription.plans"><img
+                            src="img/v1_images/ic_promotions.svg">{{'SUBSCRIPTION PLANS' | translate}}</a>
+                </li>
+                <li ng-if="['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) && (profile === 'ADMIN' || hide_user_info_supplier == 0) && is_user_subscription == 1"
+                    class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="subscription.userPlans"><img
+                            src="img/v1_images/ic_promotions.svg">{{localisation.user_subscription | translate}}</a>
+                </li>
+                <li ng-if="profile === 'SUPPLIER' && is_subscription_plan == 1" class="nav-item"
+                    ui-sref-active="active">
+                    <a class="nav-link" ui-sref="subscription.supplierPlans"><img
+                            src="img/v1_images/ic_promotions.svg">{{'SUBSCRIPTIONS' | translate}}</a>
+                </li>
+                <li ng-if="profile === 'ADMIN' && is_loyality_enable  == 1" class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="loyalty.plans"><img src="img/v1_images/ic_promotions.svg">
+                        {{'LOYALTY CARDS' | translate}}</a>
+                </li>
+
+                <li ng-if="profile === 'ADMIN' && enable_agent_loyality  == 1" class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="agentLoyality.agentLoyality-list"><img
+                            src="img/v1_images/ic_promotions.svg">{{'AGENT LOYALITY' | translate}}</a>
+                </li>
+
+                <li ng-if="['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) && is_feedback_form_enabled  == 1"
+                    class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="feedback.list"><img src="img/v1_images/ic_promotions.svg">{{'FEEDBACK'
+                        | translate}}</a>
+                </li>
+                <li ng-if="['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) && gift_card == 1 && hide_gift_cards!=1"
+                    class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="giftCard.list"><img src="img/v1_images/ic_promotions.svg">{{'GIFT CARD'
+                        | translate}}</a>
+                </li>
+                <li class="nav-item"
+                    ng-if="['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) && (enable_homenet_theme == 0 || permissions('notifications', 'list') == 1) && (profile == 'ADMIN' || hide_notification_for_supplier == 0)"
+                    ui-sref-active="active">
+                    <a class="nav-link" ui-sref="notifications.list"><img
+                            src="img/v1_images/ic_promotions.svg">{{'NOTIFICATIONS' | translate}}</a>
+                </li>
+                <li ng-if="(profile === 'ADMIN' && permissions('users', 'list') == 1) || (profile == 'SUPPLIER' && (supplier_to_user_chat == 1 || is_user_type == 1) && hide_user_info_supplier == 0)"
+                    class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="profile.users"><img
+                            src="img/v1_images/ic_profile.svg">{{localisation.users | translate}}</a>
+                </li>
+                <li ng-if="(admin_to_user_chat == 1 && profile == 'ADMIN')">
+                    <a class="nav-link"
+                        ui-sref="orders.orderChat({created_id: user.user_created_id, name: user.firstname, type: 1, message_id: user.message_id, id: user.id})">
+                        <img src="img/v1_images/ic_profile.svg">{{'Chat' | translate}}
+                    </a>
+                </li>
+                <li ng-if="(supplier_to_user_chat == 1 && profile == 'SUPPLIER')">
+                    <a class="nav-link"
+                        ui-sref="orders.orderChat({created_id: user.user_created_id, name: user.firstname, type: 4, message_id: user.message_id, id: user.id})">
+                        <img src="img/v1_images/ic_profile.svg">{{'Chat' | translate}}
+                    </a>
+                </li>
+                <li ng-if="['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) && permissions('sub admins', 'list') == 1 && (profile === 'SUPPLIER' ?  restriction_view_only_for_restaurant !== '1' : true) && (profile === 'ADMIN' || no_supplier_sub_admins == 0)"
+                    class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="profile.admin"><img src="img/v1_images/ic_profile.svg">{{'SUB ADMINS' |
+                        translate}}</a>
+                </li>
+                <li ng-if="['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) && (is_supplier_rating == 1 || is_product_rating == 1 || is_agent_rating == 1) && (enable_homenet_theme == 0 || permissions('Ratings', 'list') == 1)"
+                    class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="ratings.ratingList.products"><img
+                            src="img/v1_images/ic_promotions.svg">{{'RATINGS' | translate}}</a>
+                </li>
+                <li class="nav-item" ui-sref-active="active"
+                    ng-if="permissions('reports', 'list') == 1 && ['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) && (profile == 'ADMIN' || hide_reports_for_supplier == 0)">
+                    <a ng-if="profile === 'ADMIN'" class="nav-link" ui-sref="reports.reportsTab.user"><img
+                            src="img/v1_images/ic_reports_active.svg">{{'REPORTS' | translate}}</a>
+                    <a ng-if="profile === 'SUPPLIER'" class="nav-link" ui-sref="reports.reportsTab.order"><img
+                            src="img/v1_images/ic_reports_active.svg">{{'REPORTS' | translate}}</a>
+                </li>
+                <li class="nav-item"
+                    ng-if="['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) && hide_supplier_accounting == 0 && is_single_vendor == 0 && permissions('accounting', 'list') == 1 && (profile === 'SUPPLIER' ?  restriction_view_only_for_restaurant !== '1' : true)"
+                    ui-sref-active="active">
+                    <a class="nav-link" ui-sref="account.accountSettings.supPayable"><img
+                            src="img/v1_images/ic_accounts_active.svg">{{'ACCOUNTING' | translate}}</a>
+                </li>
+                <li class="nav-item"
+                    ng-if="['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) && is_single_vendor == 1 && permissions('accounting', 'list') == 1  && (profile === 'SUPPLIER' ?  restriction_view_only_for_restaurant !== '1' : true)"
+                    ui-sref-active="active">
+                    <a class="nav-link" ui-sref="account.accountSettings.driversStatement"><img
+                            src="img/v1_images/ic_accounts_active.svg">{{'ACCOUNTING' | translate}}</a>
+                </li>
+                <li ng-if="profile === 'ADMIN' && is_survey_monkey_enabled == 1" class="nav-item"
+                    ui-sref-active="active">
+                    <a class="nav-link" ui-sref="surveyMonkey.survey-monkey"><img
+                            src="img/v1_images/ic_profile.svg">{{'Survey Monkey' | translate}}</a>
+                </li>
+
+
+                <li ng-if="profile === 'ADMIN' && enable_updation_vendor_approval == 1 && (enable_homenet_theme == 0 || permissions('VENDOR_APPROVAL', 'list') == 1)"
+                    class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="vendorApproval.vendorApproval-list"><img
+                            src="img/v1_images/ic_profile.svg">{{'Vendor Approval' | translate}}</a>
+                </li>
+
+
+                <li ng-if="profile === 'ADMIN' && is_social_ecommerce == 1" class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="socialEcommerce.post-report"><img
+                            src="img/v1_images/ic_profile.svg">{{'Social Ecommerce' | translate}}</a>
+                </li>
+                <li ng-if="profile === 'ADMIN' && is_sos_allow == 1" class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="sos.sos-list"><img
+                            src="img/v1_images/ic_profile.svg">{{'SOS Notifications' | translate}}</a>
+                </li>
+
+                <li ng-if="profile === 'ADMIN' && permissions('settings', 'list') == 1" class="nav-item"
+                    ui-sref-active="active">
+                    <a class="nav-link" ui-sref="index.settings"><img
+                            src="img/v1_images/ic_settings_active.svg">{{'SETTINGS' | translate}}</a>
+                </li>
+                <li class="nav-item"  ng-if="enable_logout_in_navigation == 1" ng-click="Logout()">
+                    <a class="nav-link"><i class="fa fa-sign-out" aria-hidden="true" style="margin-right: 8px;"></i>
+                        {{'LOGOUT' | translate}}</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+</div>
+
+<div class="side-menu" ng-if="enable_collapsed_navigation == 1"
+    style="overflow-y: auto !important;overflow-x: hidden !important;">
+    <a class="navbar-brand"
+        ui-sref="{{['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) ? 'index.dashboard' : 'index.dashboardShipping'}}"
+        ng-style="{'backgroundColor': navBrandColor}">
+        <img ng-if="app_image" id="app_logo" ng-style="{'height' : logo_height}"
+            src="{{compressImage(app_image, '180x120', true)}}" style="object-fit: contain;">
+        <div ng-if="!app_image" class="app-image" ng-style="{'backgroundColor': logo_data.background}">
+            <p ng-style="{'color': logo_data.theme_color, 'fontFamily': logo_data.font_family}">{{business_name}}
+            </p>
+        </div>
+    </a>
+    <div class="nav-side-menu">
+        <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
+        <div class="menu-list">
+            <ul id="menu-content" class="menu-content collapse out">
+                <li class="nav-item" ui-sref-active="active" ng-if="['ADMIN', 'SUPPLIER','BRANCH'].includes(profile)"
+                    ui-sref="index.dashboard">
+                    <a>
+                        <img class="active_icon" src="img/v1_images/nav_icons/Home - Selected.png">
+                        <img class="inactive_icon" src="img/v1_images/nav_icons/Home - Deselected.png">
+                        {{'Home' | translate}}</a>
+                </li>
+                <li ui-sref-active="active" ng-if="['SHIPPING'].includes(profile)" ui-sref="index.dashboardShipping">
+                    <a><img class="active_icon" src="img/v1_images/nav_icons/Home - Selected.png">
+                        <img class="inactive_icon"
+                            src="img/v1_images/nav_icons/Home - Deselected.png">{{'HOME' | translate}}</a>
+                </li>
+                <li ui-sref-active="active" ui-sref="orders.ordersManager"
+                    ng-if="['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) && permissions('orders', 'list') == 1">
+                    <a>
+                        <img class="active_icon" src="img/v1_images/nav_icons/Orders - Selected.png">
+                        <img class="inactive_icon" src="img/v1_images/nav_icons/Orders - Deselected.png">
+                        {{localisation.orders | translate}}</a>
+                </li>
+                <li ui-sref-active="active"
+                    ng-if="['ADMIN','BRANCH'].includes(profile) && permissions('catalogue', 'list') == 1"
+                    ui-sref="production.productionSetup">
+                    <a>
+                        <img class="active_icon" src="img/v1_images/nav_icons/Products - Selected.png">
+                        <img class="inactive_icon" src="img/v1_images/nav_icons/Products - Deselected.png">
+                        {{localisation.catalogue | translate}}</a>
+                </li>
+                <li ui-sref-active="active"
+                    ng-if="(profile === 'SUPPLIER' && (no_catalogue == 0 || hide_supplier_catalogue == 0)) && permissions('catalogue', 'list') == 1"
+                    ui-sref="production.productionSetup">
+                    <a>
+                        <img class="active_icon" src="img/v1_images/nav_icons/Products - Selected.png">
+                        <img class="inactive_icon" src="img/v1_images/nav_icons/Products - Deselected.png">
+                        {{localisation.catalogue | translate}}</a>
+                </li>
+                <li ng-if="profile === 'ADMIN' && is_single_vendor == 0 && permissions('suppliers', 'list') == 1"
+                    ui-sref-active="active" ui-sref="profile.supplier">
+                    <a>
+                        <img class="active_icon" src="img/v1_images/nav_icons/Farms - Selected.png">
+                        <img class="inactive_icon" src="img/v1_images/nav_icons/Farms - Deselected.png">
+                        {{localisation.suppliers | translate}}</a>
+                </li>
+                <li ng-if="(profile === 'ADMIN' && permissions('users', 'list') == 1) || (profile == 'SUPPLIER' && (supplier_to_user_chat == 1 || is_user_type == 1) && hide_user_info_supplier == 0)"
+                    ui-sref-active="active" ui-sref="profile.users">
+                    <a><img class="active_icon" src="img/v1_images/nav_icons/Customers - Selected.png">
+                        <img class="inactive_icon" src="img/v1_images/nav_icons/Customers - Deselected.png">
+                        {{localisation.users | translate}}</a>
+                </li>
+                <li ng-if="profile === 'ADMIN' && permissions('suppliers', 'list') == 1 && is_delivery_company == 1"
+                    ui-sref-active="active" ui-sref="profile.deliveryCompany">
+                    <a><img class="active_icon" src="img/v1_images/nav_icons/Delivery Team - Selected.png">
+                        <img class="inactive_icon" src="img/v1_images/nav_icons/Delivery Team - Deselected.png">
+                        {{localisation.delivery_company | translate}}</a>
+                </li>
+                <li ng-if="hide_agent_module == 0 && (app_type != 2 || (app_type == 2 && ecom_agent_module == 1)) && !is_branch_login && is_pickup != 1 && permissions('agents', 'list') == 1 && is_dine_in == 0 && (profile === 'ADMIN' || (hide_agent_supplier == 0 && profile === 'SUPPLIER') || (is_delivery_company == 1 && profile === 'SHIPPING'))
+                && (profile == 'ADMIN' || (profile == 'SUPPLIER' && enable_dynamic_agent_section_in_supplier_by_admin == 0) || (profile == 'SUPPLIER' && enable_dynamic_agent_section_in_supplier_by_admin == 1 && allow_agent_section_in_supplier_by_admin == 1))"
+                    ui-sref-active="active" ui-sref="profile.agent">
+                    <a>
+                        <img class="active_icon" src="img/v1_images/nav_icons/Delivery Team - Selected.png">
+                        <img class="inactive_icon" src="img/v1_images/nav_icons/Delivery Team - Deselected.png">
+                        {{localisation.agents | translate}}</a>
+                </li>
+
+
+                <!-- <li data-toggle="collapse" data-target="#home" class="collapsed">
+                    <a><i class="fa fa-home fa-lg" style="color: #7CF4FF;"></i> HOME <span class="arrow"></span></a>
+                </li> -->
+                <!-- <ul class="sub-menu collapse" id="home">
+                    <li ui-sref-active="active"
+                        ng-if="['ADMIN','BRANCH'].includes(profile) && permissions('catalogue', 'list') == 1" ui-sref="production.productionSetup">
+                        <a><img
+                                src="img/v1_images/ic_orders.svg">{{localisation.catalogue | translate}}</a>
+                    </li>
+                    <li ui-sref-active="active"
+                        ng-if="(profile === 'SUPPLIER' && (no_catalogue == 0 || hide_supplier_catalogue == 0)) && permissions('catalogue', 'list') == 1" ui-sref="production.productionSetup">
+                        <a ><img
+                                src="img/v1_images/ic_orders.svg">{{localisation.catalogue | translate}}</a>
+                    </li>
+                    <li ng-if="profile === 'ADMIN' && permissions('suppliers', 'list') == 1 && is_delivery_company == 1"
+                        ui-sref-active="active" ui-sref="profile.deliveryCompany">
+                        <a><img
+                                src="img/v1_images/ic_suppliers.svg">{{localisation.delivery_company | translate}}</a>
+                    </li>
+                    <li ng-if="hide_agent_module == 0 && (app_type != 2 || (app_type == 2 && ecom_agent_module == 1)) && !is_branch_login && is_pickup != 1 && permissions('agents', 'list') == 1 && is_dine_in == 0 && (profile === 'ADMIN' || (hide_agent_supplier == 0 && profile === 'SUPPLIER') || (is_delivery_company == 1 && profile === 'SHIPPING'))"
+                        ui-sref-active="active" ui-sref="profile.agent">
+                        <a> <img
+                                src="img/v1_images/ic_agents.svg">{{localisation.agents | translate}}</a>
+                    </li>
+                    <li ui-sref-active="active" ui-sref="orders.ordersManager"
+                        ng-if="['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) && permissions('orders', 'list') == 1">
+                        <a><img
+                                src="img/v1_images/ic_order.svg">{{localisation.orders | translate}}</a>
+                    </li>
+                </ul> -->
+
+
+                <li data-toggle="collapse" data-target="#analytics" class="collapsed"
+                    ng-class="{active:$state.includes('reports') || $state.includes('account') }">
+                    <a>
+                        <img class="active_icon" src="img/v1_images/nav_icons/Analytics - Selected.png">
+                        <img class="inactive_icon" src="img/v1_images/nav_icons/Analytics - Deselected.png">
+                        Analytics</span></a>
+                </li>
+                <ul class="sub-menu collapse" id="analytics">
+                    <li ng-if="['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) && (is_supplier_rating == 1 || is_product_rating == 1 || is_agent_rating == 1) && (enable_homenet_theme == 0 || permissions('Ratings', 'list') == 1)"
+                        ui-sref-active="active" ui-sref="ratings.ratingList.products">
+                        <a><img src="img/v1_images/ic_promotions.svg">{{'RATINGS' | translate}}</a>
+                    </li>
+                    <li ui-sref-active="active"
+                        ng-if="profile === 'ADMIN' && permissions('reports', 'list') == 1 && ['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) && (profile == 'ADMIN' || hide_reports_for_supplier == 0)"
+                        ui-sref="reports.reportsTab.user">
+                        <a ng-if="profile === 'ADMIN'">
+                            {{'REPORTS' | translate}}</a>
+                    </li>
+                    <li ui-sref-active="active"
+                        ng-if="profile === 'SUPPLIER' &&permissions('reports', 'list') == 1 && ['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) && (profile == 'ADMIN' || hide_reports_for_supplier == 0)"
+                        ui-sref="reports.reportsTab.order">
+                        <a ng-if="profile === 'SUPPLIER'">{{'REPORTS' | translate}}</a>
+                    </li>
+                    <li ng-if="['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) && hide_supplier_accounting == 0 && is_single_vendor == 0 && permissions('accounting', 'list') == 1 && (profile === 'SUPPLIER' ?  restriction_view_only_for_restaurant !== '1' : true)"
+                        ui-sref-active="active" ui-sref="account.accountSettings.supPayable">
+                        <a>
+                            {{'ACCOUNTING' | translate}}</a>
+                    </li>
+                    <li ng-if="['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) && is_single_vendor == 1 && permissions('accounting', 'list') == 1  && (profile === 'SUPPLIER' ?  restriction_view_only_for_restaurant !== '1' : true)"
+                        ui-sref-active="active" ui-sref="account.accountSettings.driversStatement">
+                        <a><img class="active_icon" src="img/v1_images/nav_icons/Analytics - Selected.png">
+                            <img class="inactive_icon" src="img/v1_images/nav_icons/Analytics - Deselected.png">
+                            {{'ACCOUNTING' | translate}}</a>
+                    </li>
+                    <li ng-if="profile === 'ADMIN' && is_survey_monkey_enabled == 1" ui-sref-active="active"
+                        ui-sref="surveyMonkey.survey-monkey">
+                        <a><img src="img/v1_images/ic_profile.svg">{{'Survey Monkey' | translate}}</a>
+                    </li>
+                </ul>
+
+
+                <li data-toggle="collapse" data-target="#marketing" class="collapsed"
+                    ng-class=" {active:['/production/banners','/promotions/list-promotions'].includes(active_route)}">
+                    <a>
+                        <i class="fa fa-bullhorn fa-lg img_icon_active active_icon"></i>
+                        <i class="fa fa-bullhorn fa-lg img_icon_inactive inactive_icon"></i>
+                        Marketing</span></a>
+                </li>
+                <ul class="sub-menu collapse" id="marketing">
+                    <li ng-if="['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) && permissions('banners', 'list') == 1 && no_banner_section == 0 && (profile === 'ADMIN' || no_supplier_banner_section == 0)"
+                        ui-sref-active="active" ui-sref="production.banners">
+                        <a>
+
+                            {{'BANNERS'
+                    | translate}}</a>
+                    </li>
+                    <li ng-if="['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) && permissions('promotions', 'list') == 1 && (profile === 'ADMIN' || no_supplier_promotion_section == 0) && hide_promo_module == 0"
+                        ui-sref-active="active" ui-sref="promo.listpromo">
+                        <a>
+
+                            {{localisation.promotions | translate}}</a>
+                    </li>
+
+                    <li ng-if="['ADMIN'].includes(profile) && permissions('promotions', 'list') == 1 && enable_voucher_section"
+                        ui-sref-active="active" ui-sref="voucher.listvoucher">
+                        <a>
+                            <i class="fa fa-bullhorn fa-lg img_icon_active active_icon"></i>
+                            <i class="fa fa-bullhorn fa-lg img_icon_inactive inactive_icon"></i>
+                            {{localisation.vouchers | translate}}</a>
+                    </li>
+                </ul>
+
+                <li ng-if="profile === 'ADMIN' && is_survey_monkey_enabled == 1" ui-sref-active="active"
+                    ui-sref="surveyMonkey.survey-monkey">
+                    <a><img src="img/v1_images/ic_profile.svg">{{'Survey Monkey' | translate}}</a>
+                </li>
+
+
+                <li ng-if="profile === 'ADMIN' && enable_updation_vendor_approval == 1 && (enable_homenet_theme == 0 || permissions('VENDOR_APPROVAL', 'list') == 1)"
+                    ui-sref-active="active" ui-sref="vendorApproval.vendorApproval-list">
+                    <a><img src="img/v1_images/ic_profile.svg">{{'Vendor Approval' | translate}}</a>
+                </li>
+
+
+                <li ng-if="profile === 'ADMIN' && is_social_ecommerce == 1" ui-sref-active="active"
+                    ui-sref="socialEcommerce.post-report">
+                    <a><img src="img/v1_images/ic_profile.svg">{{'Social Ecommerce' | translate}}</a>
+                </li>
+                <li ng-if="profile === 'ADMIN' && is_sos_allow == 1" ui-sref-active="active" ui-sref="sos.sos-list">
+                    <a><img src="img/v1_images/ic_profile.svg">{{'SOS Notifications' | translate}}</a>
+                </li>
+                <li ng-if="profile === 'ADMIN' && permissions('subscription', 'list') == 1 && is_subscription_plan == 1"
+                    ui-sref-active="active" ui-sref="subscription.plans">
+                    <a><img src="img/v1_images/ic_promotions.svg">{{'SUBSCRIPTION PLANS' | translate}}</a>
+                </li>
+                <li ng-if="['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) && (profile === 'ADMIN' || hide_user_info_supplier == 0) && is_user_subscription == 1"
+                    ui-sref-active="active" ui-sref="subscription.userPlans">
+                    <a><img src="img/v1_images/ic_promotions.svg">{{localisation.user_subscription | translate}}</a>
+                </li>
+                <li ng-if="profile === 'SUPPLIER' && is_subscription_plan == 1" ui-sref="subscription.supplierPlans"
+                    ui-sref-active="active">
+                    <a><img src="img/v1_images/ic_promotions.svg">{{'SUBSCRIPTIONS' | translate}}</a>
+                </li>
+                <li ng-if="profile === 'ADMIN' && is_loyality_enable  == 1" ui-sref-active="active"
+                    ui-sref="loyalty.plans">
+                    <a><img src="img/v1_images/ic_promotions.svg">
+                        {{'LOYALTY CARDS' | translate}}</a>
+                </li>
+
+                <li ng-if="profile === 'ADMIN' && enable_agent_loyality  == 1" ui-sref-active="active"
+                    ui-sref="agentLoyality.agentLoyality-list">
+                    <a><img src="img/v1_images/ic_promotions.svg">{{'AGENT LOYALITY' | translate}}</a>
+                </li>
+
+                <li ng-if="['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) && is_feedback_form_enabled  == 1"
+                    ui-sref-active="active" ui-sref="feedback.list">
+                    <a>
+                        <i class="fa fa-comments-o fa-lg img_icon_active active_icon"></i>
+                        <i class="fa fa-comments-o fa-lg img_icon_inactive inactive_icon"></i>
+                        {{'FEEDBACK'
+                    | translate}}</a>
+                </li>
+                <li ng-if="['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) && gift_card == 1 && hide_gift_cards!=1"
+                    ui-sref-active="active" ui-sref="giftCard.list">
+                    <a><img src="img/v1_images/ic_promotions.svg">{{'GIFT CARD'
+                    | translate}}</a>
+                </li>
+                <li ng-if="['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) && (enable_homenet_theme == 0 || permissions('notifications', 'list') == 1) && (profile == 'ADMIN' || hide_notification_for_supplier == 0)"
+                    ui-sref-active="active" ui-sref="notifications.list">
+                    <a> <img class="active_icon" src="img/v1_images/nav_icons/Notification - Selected.png">
+                        <img class="inactive_icon" src="img/v1_images/nav_icons/Notification - Deselected.png">
+                        {{'NOTIFICATIONS' | translate}}</a>
+                </li>
+            </ul>
+            <div class="settings_option">
+                <ul id="menu-content" class="menu-content collapse out sticky_option" style="max-height: 500px;
+            overflow-y: scroll;">
+                    <li data-toggle="collapse" data-target="#settings" class="collapsed"
+                        ng-class="{active:$state.includes('profile') || $state.includes('orders') || ['/index/settings'].includes(active_route) }">
+                        <a>
+                            <img class="active_icon" src="img/v1_images/nav_icons/Settings - Selected.png">
+                            <img class="inactive_icon" src="img/v1_images/nav_icons/Settings - Deselected.png">
+                            Settings</span></a>
+                    </li>
+                    <ul class="sub-menu collapse" id="settings">
+                        <li ng-if="profile === 'ADMIN' && is_single_vendor == 1 && permissions('suppliers', 'list') == 1"
+                            ui-sref-active="active"
+                            ui-sref="profile.supplierSetup.step_one({id: single_vendor_id, tab: 1})">
+                            <a> <img class="active_icon" src="img/v1_images/nav_icons/Products - Selected.png">
+                                <img class="inactive_icon"
+                                    src="img/v1_images/nav_icons/Products - Deselected.png">{{'MY PROFILE' | translate}}</a>
+                        </li>
+                        <li ng-if="profile === 'SUPPLIER' && !is_branch_login && permissions('suppliers', 'list') == 1"
+                            ui-sref-active="active"
+                            ui-sref="profile.supplierSetup.step_one({id: active_supplier_id, tab: 1})">
+                            <a> <img class="active_icon" src="img/v1_images/nav_icons/Products - Selected.png">
+                                <img class="inactive_icon"
+                                    src="img/v1_images/nav_icons/Products - Deselected.png">{{'MY PROFILE' | translate}}</a>
+                        </li>
+
+
+                        <li ng-if="profile === 'SHIPPING' && !is_branch_login && permissions('suppliers', 'list') == 1 && is_delivery_company == 1"
+                            ui-sref-active="active"
+                            ui-sref="profile.deliveryCompanySetup.step_one({id: delivery_company_id, tab: 1})">
+                            <a> <img class="active_icon" src="img/v1_images/nav_icons/Products - Selected.png">
+                                <img class="inactive_icon"
+                                    src="img/v1_images/nav_icons/Products - Deselected.png">{{'MY PROFILE' | translate}}</a>
+                        </li>
+                        <li ng-if="(admin_to_user_chat == 1 && profile == 'ADMIN') ||
+                        (supplier_to_user_chat == 1 && profile == 'SUPPLIER')"
+                            ui-sref="orders.orderChat({created_id: user.user_created_id, name: user.firstname, type: 1, message_id: user.message_id, id: user.id})">
+                            <a>
+                                <img src="img/v1_images/ic_profile.svg">{{'Chat' | translate}}
+                            </a>
+                        </li>
+                        <li ng-if="['ADMIN', 'SUPPLIER','BRANCH'].includes(profile) && permissions('sub admins', 'list') == 1 && (profile === 'SUPPLIER' ?  restriction_view_only_for_restaurant !== '1' : true) && (profile === 'ADMIN' || no_supplier_sub_admins == 0)"
+                            ui-sref-active="active" ui-sref="profile.admin">
+                            <a>
+
+                                {{'SUB ADMINS' |
+                    translate}}</a>
+                        </li>
+                        <li ng-if="profile === 'ADMIN' && permissions('settings', 'list') == 1" ui-sref-active="active"
+                            ui-sref="index.settings" ui-sref-active="active">
+                            <a>
+                                <!-- <img class="active_icon" src="img/v1_images/nav_icons/Settings - Selected.png">
+                                <img class="inactive_icon" src="img/v1_images/nav_icons/Settings - Deselected.png"> -->
+                                {{'Configurations' | translate}}</a>
+                        </li>
+                    </ul>
+
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- For enable_collapsed_navigation -->
+<style>
+    .nav-side-menu ul .active,
+    .nav-side-menu li .active {
+        color: #239F6C !important;
+        background-color: #E8E8E8 !important;
+        border-left: 5px solid #239F6C !important;
+    }
+
+    ul#analytics li {
+        padding: 6px 65px;
+        display: block;
+        font-weight: 200;
+    }
+
+    ul#analytics li.active {
+        padding: 6px 60px;
+        display: block;
+        font-weight: 200;
+    }
+
+    ul#marketing li a {
+        padding-left: 35px;
+        font-weight: 200;
+    }
+
+    ul#settings li a {
+        padding-left: 40px;
+        font-weight: 200;
+    }
+
+    .collapse.show {
+        display: block !important;
+    }
+
+    /* a.active{
+    border-left: 3px solid#239f6c
+} */
+    ul#analytics li:hover {
+        background-color: #F1F1F1 !important;
+    }
+
+    ul#marketing li {
+        padding-left: 40px;
+    }
+
+    ul#settings li {
+        padding-left: 30px;
+    }
+
+    ul#marketing li.active {
+        padding-left: 35px;
+    }
+
+    ul#settings li {
+        padding-left: 25px;
+    }
+
+    /* .nav-side-menu ul .sub-menu li.active, .nav-side-menu li .sub-menu li.active {
+    border-left: 3px solid#2acc8c !important;
+}
+.nav-side-menu li .sub-menu li.active{
+    border-left: 3px solid#2acc8c !important;
+} */
+    /* .nav-side-menu ul .sub-menu li.active, .nav-side-menu li .sub-menu li.active{border:none !important;}
+.nav-side-menu ul, .nav-side-menu li{border:none !important;} */
+    .nav-side-menu {
+        overflow-y: scroll;
+        font-family: verdana;
+        font-size: 12px;
+        font-weight: 200;
+        position: relative;
+        top: -15px;
+        width: 238px;
+        background-color: #F6F6F7 !important;
+    }
+
+    .nav-side-menu ul :not(collapsed) .arrow:before,
+    .nav-side-menu li :not(collapsed) .arrow:before {
+        padding-right: 0 !important;
+    }
+
+    .nav-side-menu .brand {
+        background-color: #23282e;
+        line-height: 50px;
+        display: block;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    .nav-side-menu .toggle-btn {
+        display: none;
+    }
+
+    .nav-side-menu ul,
+    .nav-side-menu li {
+        list-style: none;
+        padding: 4px 0;
+        margin: 0px;
+        line-height: 35px;
+        cursor: pointer;
+        /* border-bottom: 1px solid #ececec; */
+
+        /*    
+    .collapsed{
+       .arrow:before{
+                 font-family: FontAwesome;
+                 content: "\f053";
+                 display: inline-block;
+                 padding-left:10px;
+                 padding-right: 10px;
+                 vertical-align: middle;
+                 float:right;
+            }
+     }
+*/
+    }
+
+    .menu-content li a img {
+        margin-right: 8px;
+    }
+
+
+
+    .nav-side-menu ul :not(collapsed) .arrow:before,
+    .nav-side-menu li :not(collapsed) .arrow:before {
+        font-family: FontAwesome;
+        content: "\f078";
+        display: inline-block;
+        padding-left: 10px;
+        padding-right: 10px;
+        vertical-align: middle;
+        float: right;
+    }
+
+    .nav-side-menu ul .active,
+    .nav-side-menu li .active {
+        color: #239F6C !important;
+        background-color: #E8E8E8 !important;
+        /* border-left: 5px solid var(--primary-color); */
+        /* padding: .5rem 1rem; */
+        /* background-color: #4f5b69; */
+
+    }
+
+    .nav-side-menu ul .active .active_icon,
+    .nav-side-menu li .active .active_icon,
+    .nav-side-menu .settings_option ul .active .active_icon,
+    .nav-side-menu .settings_option li .active .active_icon {
+        display: block;
+    }
+
+    .nav-side-menu ul .active_icon,
+    .nav-side-menu li .active_icon,
+    .nav-side-menu .settings_option ul .active_icon,
+    .nav-side-menu .settings_option li .active_icon {
+        display: none;
+    }
+
+    .nav-side-menu ul .active .inactive_icon,
+    .nav-side-menu li .active .inactive_icon,
+    .settings_option ul .active .inactive_icon .settings_option li .active .inactive_icon {
+        display: none;
+    }
+
+    .nav-side-menu ul .inactive_icon,
+    .nav-side-menu li .inactive_icon,
+    .settings_option ul .inactive_icon,
+    .settings_option li .inactive_icon {
+        display: block;
+    }
+
+    .active_icon,
+    .inactive_icon {
+        width: 23px !important;
+        float: left;
+        vertical-align: middle;
+        position: relative;
+        margin-left: 5px;
+        top: 7px;
+    }
+
+    .nav-side-menu ul .sub-menu li.active,
+    .nav-side-menu li .sub-menu li.active {
+        color: var(--primary-color);
+        background-color: var(--shadow-color);
+        border-left: 5px solid var(--primary-color);
+
+    }
+
+    /* .nav-side-menu ul .sub-menu li.active a,
+    .nav-side-menu li .sub-menu li.active a {
+        color: black;
+    } */
+
+    .nav-side-menu ul .sub-menu li,
+    .nav-side-menu li .sub-menu li {
+        /* background-color: var(--shadow-color); */
+        border: none;
+        line-height: 28px;
+        border-bottom: 1px solid var(--shadow-color);
+        margin-left: 0px;
+        /* color: var(--primary-color); */
+    }
+
+    .nav-side-menu ul .sub-menu li:hover,
+    .nav-side-menu li .sub-menu li:hover {
+        background-color: var(--shadow-color);
+    }
+
+    /* .nav-side-menu ul .sub-menu li:before,
+    .nav-side-menu li .sub-menu li:before {
+        font-family: FontAwesome;
+        content: "\f105";
+        display: inline-block;
+        padding-left: 10px;
+        padding-right: 10px;
+        vertical-align: middle;
+    } */
+
+    .nav-side-menu li {
+        padding-left: 0px;
+        /* border-left: 3px solid #2e353d;
+        border-bottom: 1px solid #23282e; */
+        padding: 5px 15px;
+    }
+
+    .nav-side-menu li.active {
+        padding-left: 0px;
+        /* border-left: 3px solid #2e353d;
+        border-bottom: 1px solid #23282e; */
+        padding: 5px 10px;
+        color: #239F6C !important;
+        background-color: #E8E8E8 !important;
+    }
+    .nav-side-menu li.active a{
+        color: #239F6C !important;
+    }
+
+    .navbar-brand img {
+        width: 90% !important;
+    }
+
+    .navbar-brand {
+        padding: 13px !important;
+    }
+
+    .nav-side-menu li a {
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        padding-left: 10px;
+        color: #4d4d4d !important;
+        font-family: 'Poppins';
+    }
+
+    .active_icon,
+    .inactive_icon {
+        width: 19px !important;
+    }
+
+    /* .nav-side-menu li:hover a img.active_icon{
+display:block !important;
+}
+.nav-side-menu li:hover a img.inactive_icon{
+    display:none !important;
+} */
+    .nav-side-menu li a i {
+        padding-left: 10px;
+        width: 20px;
+        padding-right: 20px;
+    }
+
+    .nav-side-menu li:hover {
+        /* border-left: 3px solid #36838A; */
+        /* background-color: #4f5b69; */
+        -webkit-transition: all 1s ease;
+        -moz-transition: all 1s ease;
+        -o-transition: all 1s ease;
+        -ms-transition: all 1s ease;
+        transition: all 1s ease;
+        background-color: #F1F1F1;
+    }
+
+    /* .nav-side-menu li:hover a{
+        color: #239F6C !important;
+    } */
+    /* .sticky_option {
+        position: absolute;
+        bottom: 150px;
+        width: 100%;
+    } */
+
+    .img_icon_active {
+        color: var(--primary-color);
+        font-weight: 900;
+        font-size: 20px;
+        margin-right: 5px !important;
+        padding: 0px !important;
+    }
+
+    .img_icon_inactive {
+        color: #4d4d4d;
+        font-weight: 900;
+        font-size: 20px;
+        margin-right: 5px !important;
+        padding: 0px !important;
+    }
+
+    @media (max-width: 767px) {
+        .nav-side-menu {
+            position: relative;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .nav-side-menu .toggle-btn {
+            display: block;
+            cursor: pointer;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            z-index: 10 !important;
+            padding: 3px;
+            background-color: #ffffff;
+            color: #000;
+            width: 40px;
+            text-align: center;
+        }
+
+        .brand {
+            text-align: left !important;
+            font-size: 22px;
+            padding-left: 20px;
+            line-height: 50px !important;
+        }
+    }
+
+    @media screen and (min-width: 1366px) {
+        .side-menu {
+            width: 232px;
+
+        }
+
+        /* .collapsed_menu {
+            overflow-y: auto;
+            overflow-x: hidden;
+        } */
+        .side-body {
+            margin-left: 226px;
+            height: 100%;
+        }
+
+        .tableouter.m-top-30 {
+            width: 100%;
+            overflow: scroll;
+        }
+    }
+
+    @media only screen and (min-width: 1200px) {
+        .side-menu {
+            width: 230px;
+        }
+
+        .side-body {
+            margin-left: 217px;
+            height: 100%;
+        }
+    }
+
+    @media (min-width: 767px) {
+        .nav-side-menu .menu-list .menu-content {
+            display: block;
+            border: none;
+        }
+    }
+
+    body {
+        margin: 0px;
+        padding: 0px;
+    }
+
+    @media (min-width: 1600px) {
+        .side-body {
+            margin-left: 235px;
+        }
+
+        .side-menu {
+            width: 234px;
+        }
+    }
+
+    @media (max-width: 1199px) {
+        .nav-side-menu {
+            width: 160px;
+        }
+    }
+</style>

@@ -1,0 +1,14 @@
+<ng-container>
+    <div class="dialog-model">
+        <div class="dialog-content" style="max-width: 570px;">
+            <div class="container">
+                <div class="dialog-header">
+                    <a href="javascript:void(0)" class="dialog-close-button" (click)="close()">&times;</a>
+                </div>
+                <h2>{{'Allergies' | translate}}</h2>
+                <div class="container" [innerHtml]="allergy | safe: 'html'"></div>
+
+            </div>
+        </div>
+    </div>
+</ng-container>

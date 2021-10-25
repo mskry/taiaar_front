@@ -1,0 +1,38 @@
+<div id="auth" #auth class="modal fade" id="filter_preparation" role="dialog" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" #closeModal
+                    (click)="closeFilterModal()"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="filterForm" (ngSubmit)="onSubmit()">
+                    <h2>{{'FILTER' | translate}}</h2>
+                    <div class="price-container">
+                        <div class="container mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="exampleCheck2" [checked]="isChecked"
+                                    formControlName="freeDelivery">
+                                <label class="form-check-label" for="exampleCheck2">Free delivery</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" [formControl]="preparationTimeControl" id="exampleCheck1" [checked]="isPreparationChecked">
+                                <label class="form-check-label" for="exampleCheck1">Preparation Time</label>
+                            </div>
+                            <div class="form-group" *ngIf="showPreparationTimeRange">
+                                <ngx-slider [(value)]="value" [(highValue)]="highValue" [options]="options"
+                                    formControlName="sliderValue"></ngx-slider>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group create-post cursor">
+                        <button [ngStyle]="{'backgroundColor': style.primaryColor}" type="submit">
+                            {{'FILTER'| translate}}
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

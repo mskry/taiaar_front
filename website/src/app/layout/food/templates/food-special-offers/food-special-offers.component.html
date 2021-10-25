@@ -1,0 +1,443 @@
+<ng-container [ngSwitch]="settings?.selected_template">
+
+    <ng-template [ngSwitchCase]="1">
+
+        <section id="gernal-product-slider" class="spechil-offer" [style.padding-bottom.px]="settings?.home_section_padding_bottom">
+            <div class="container">
+
+                <div class="row" *ngIf="specialOffers && specialOffers.length">
+                    <div class="col-md-4">
+                        <div class="gernal-product-title">
+                            <h1 *ngIf="settings?.special_offer_section">
+                                {{settings?.special_offer_section?.section_name | translate}} {{'For You' | translate}}
+                            </h1>
+                            <h1 *ngIf="!settings?.special_offer_section">
+                                {{'special_offers' | localization | translate}} {{'For You' | translate}}
+                            </h1>
+                            <a style="color: #ffffff; cursor: pointer;" [style.background-color]="style?.primaryColor"
+                                class="main_btn" (click)="onSeeMore()">{{'View All' | translate}}</a>
+                        </div>
+                    </div>
+                    <div class="col-md-8 rec-sup">
+
+                        <div *ngIf="!isLoading; else skeleton2">
+                            <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
+                                <div ngxSlickItem
+                                    *ngFor="let offer of specialOffers.slice(0,6); let i = index;trackBy:trackBySpecialOffersFn"
+                                    class="slide">
+                                    <div class="item">
+                                        <div class="product-item"
+                                            [ngClass]="{'product-stock-out': offer?.quantity <= offer?.purchased_quantity}"
+                                            style="margin-right: 30px; position: relative;">
+                                            <img style="width: 100%; cursor: pointer;"
+                                                (click)="porductDescription(offer)" appImage
+                                                [url]="offer?.image_path || offer?.supplier_image" [settings]="settings"
+                                                [size]="'355x320'" [src]="offer?.image_path || offer?.supplier_image"
+                                                onError="src = '/assets/images/placeholder_image.svg';">
+                                            <div *ngIf="offer?.quantity <= offer?.purchased_quantity"
+                                                class="product-stock-out-msg">
+                                                <p>{{'Out Of Stock' | translate}}</p>
+                                            </div>
+                                            <h2 class="ellipsis d-inline-flex">{{offer?.name}}</h2>
+                                            <a *ngIf="settings.is_product_wishlist == 1"
+                                                class="favourite-icon float-right"
+                                                (click)="wishlist(!offer?.is_favourite, offer)">
+                                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                    <g id="Page-1" stroke="none" stroke-width="2"
+                                                        [attr.fill]="offer?.is_favourite ? style.primaryColor : 'none'"
+                                                        fill-rule="evenodd">
+                                                        <g id="Group-4" transform="translate(2.000000, 3.000000)"
+                                                            [attr.stroke]="offer?.is_favourite ? style.primaryColor : style.baseColor">
+                                                            <g id="ic_heart_fill">
+                                                                <path
+                                                                    d="M10,18 L1.71572875,9.84452689 C-0.571909584,7.59245518 -0.571909584,3.9411255 1.71572875,1.68905378 C4.00336709,-0.563017928 7.71236166,-0.563017928 10,1.68905378 C12.2876383,-0.563017928 15.9966329,-0.563017928 18.2842712,1.68905378 C20.5719096,3.9411255 20.5719096,7.59245518 18.2842712,9.84452689 L10,18 Z"
+                                                                    id="Combined-Shape-Copy"></path>
+                                                            </g>
+                                                        </g>
+                                                    </g>
+                                                </svg>
+                                            </a>
+                                            <p class="ellipsis" style="opacity: 1; margin-bottom: 5px;">
+                                                {{offer?.supplier_name}}</p>
+                                            <p *ngIf="settings?.hide_supplier_address == 0" class="ellipsis">
+                                                {{offer?.address}}</p>
+                                            <span *ngIf="offer.product_desc">
+                                                <p *ngIf="((offer?.product_desc)?.trim()).length > 100"
+                                                    [innerHtml]="(offer?.product_desc) | innerHtmlLimit: 100 | safe: 'html'">
+                                                </p>
+                                                <p *ngIf="((offer?.product_desc)?.trim()).length <= 100"
+                                                    [innerHtml]="(offer?.product_desc) | safe: 'html'"></p>
+
+                                            </span>
+                                            <!-- <p class="ellipsis" [innerHtml]="offer?.product_desc | safe: 'html'"></p> -->
+                                            <div class="product-price-tag">
+                                                <h6 *ngIf="offer.offerValue">{{offer.offerValue}} % OFF
+                                                </h6>
+                                                <h6 *ngIf="offer.display_price || offer.fixed_price"><span
+                                                        style="font-size: 16px; margin-right: 8px; text-decoration: line-through; opacity: 0.8;">
+                                                        {{currency}}{{(offer.display_price*
+                                                        selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)}}</span>
+                                                    {{currency}}{{(offer.fixed_price*
+                                                    selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)}}
+                                                </h6>
+
+                                                <div style="position: absolute; right: 30px;">
+                                                    <app-quantity-buttons
+                                                        *ngIf="offer?.quantity > offer?.purchased_quantity"
+                                                        [disabled]="!!productstate.hideQuantity" [style]="style"
+                                                        [settings]="settings"
+                                                        [selectedQuantity]="offer?.selectedQuantity"
+                                                        (onAdd)="increaseValue(offer)"
+                                                        (onRemove)="decreaseValue(offer)">
+                                                    </app-quantity-buttons>
+                                                    <div class="customisable"> <span
+                                                            *ngIf="offer.adds_on && offer.adds_on.length"
+                                                            class="float-right customize-txt"
+                                                            [ngStyle]="{'color': style.primaryColor}">{{'Customizable' |
+                                                            translate}}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <!-- <a href="">Add</a> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ngx-slick-carousel>
+                        </div>
+
+                        <ng-template #skeleton2>
+                            <div class="skeleton">
+                                <ngx-slick-carousel class="carousel" #slickModal="slick-carousel"
+                                    [config]="slideConfig">
+                                    <div ngxSlickItem
+                                        *ngFor="let item of util.generateFakeList(2); let i = index;trackBy:trackByutilFakeFn"
+                                        class="slide">
+                                        <div class="item">
+                                            <div class="product-item" style="padding-right: 30px; position: relative;">
+                                                <img style="width: 100%; cursor: pointer;">
+                                                <h2 style="width: 50%; height: 16px;"></h2>
+                                                <p style="width: 80%; height: 14px;"></p>
+                                                <div class="product-price-tag">
+                                                    <h6
+                                                        style="width: 40%; font-size: 16px; margin-right: 8px; text-decoration: line-through;">
+                                                    </h6>
+                                                    <div style="position: absolute; right: 30px;">
+                                                        <div style="height: 18px; width: 80px;"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ngx-slick-carousel>
+                            </div>
+                        </ng-template>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </ng-template>
+
+    <!-- new added -->
+    <ng-template [ngSwitchCase]="3">
+
+        <section id="gernal-product-slider" class="spechil-offer">
+            <div class="container">
+
+                <div class="row" *ngIf="specialOffers && specialOffers.length">
+                    <div class="col-md-3">
+                        <div class="gernal-product-title">
+                            <h1 *ngIf="settings?.special_offer_section">
+                                {{settings?.special_offer_section?.section_name | translate}}
+                            </h1>
+                            <h1 *ngIf="!settings?.special_offer_section">
+                                {{'special_offers' | localization | translate}} {{'For You' | translate}}
+                            </h1>
+                            <p class="mb-0"
+                                *ngIf="settings?.eligible_order_amount && settings?.is_eligible_order_amount">
+                                {{'Eligible on orders of $'}}{{settings?.eligible_order_amount+'+'}}</p>
+                            <br />
+                            <a style="color: #ffffff; cursor: pointer;" [style.background-color]="style?.primaryColor"
+                                class="main_btn" (click)="onSeeMore()">{{'View All' | translate}}</a>
+                        </div>
+                    </div>
+                    <div class="col-md-9 rec-sup">
+
+                        <div *ngIf="!isLoading; else skeleton2">
+                            <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
+                                <div ngxSlickItem
+                                    *ngFor="let offer of specialOffers.slice(0,6); let i = index;trackBy:trackBySpOffersFn"
+                                    class="slide">
+                                    <div class="item">
+                                        <div class="product-item"
+                                            [ngClass]="{'product-stock-out': offer?.quantity <= offer?.purchased_quantity}"
+                                            style="margin-right: 30px; position: relative;">
+                                            <img style="width: 100%; cursor: pointer;"
+                                                (click)="porductDescription(offer)" appImage
+                                                [url]="offer?.image_path || offer?.supplier_image" [settings]="settings"
+                                                [size]="'355x320'" [src]="offer?.image_path || offer?.supplier_image"
+                                                onError="src = '/assets/images/placeholder_image.svg';">
+                                            <span class="offer_text position-absolute">{{offer?.offerValue ||
+                                                offer?.discountPercentage}}%</span>
+                                            <div *ngIf="offer?.quantity <= offer?.purchased_quantity"
+                                                class="product-stock-out-msg">
+                                                <p>{{'Out Of Stock' | translate}}</p>
+                                            </div>
+                                            <h2 class="ellipsis d-inline-flex">{{offer?.name}}</h2>
+                                            <span class="rating_text_offr">
+                                                <span class="rating_text"><i class="fa fa-star ng-tns-c84-11 mr-2"></i>
+                                                    {{offer?.avg_rating || offer?.rating || 0 | number}}
+                                                    </span>
+                                            </span>
+                                            <a *ngIf="settings.is_product_wishlist == 1"
+                                                class="favourite-icon float-right"
+                                                (click)="wishlist(!offer?.is_favourite, offer)">
+                                                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                    <g id="Page-1" stroke="none" stroke-width="2"
+                                                        [attr.fill]="offer?.is_favourite ? style.primaryColor : 'none'"
+                                                        fill-rule="evenodd">
+                                                        <g id="Group-4" transform="translate(2.000000, 3.000000)"
+                                                            [attr.stroke]="offer?.is_favourite ? style.primaryColor : style.baseColor">
+                                                            <g id="ic_heart_fill">
+                                                                <path
+                                                                    d="M10,18 L1.71572875,9.84452689 C-0.571909584,7.59245518 -0.571909584,3.9411255 1.71572875,1.68905378 C4.00336709,-0.563017928 7.71236166,-0.563017928 10,1.68905378 C12.2876383,-0.563017928 15.9966329,-0.563017928 18.2842712,1.68905378 C20.5719096,3.9411255 20.5719096,7.59245518 18.2842712,9.84452689 L10,18 Z"
+                                                                    id="Combined-Shape-Copy"></path>
+                                                            </g>
+                                                        </g>
+                                                    </g>
+                                                </svg>
+                                            </a>
+                                            <!-- <p class="ellipsis" style="opacity: 1; margin-bottom: 5px;">
+                                                {{offer?.supplier_name}}</p> -->
+                                            <span *ngIf="offer.product_desc">
+                                                <p class="ellipsis" *ngIf="((offer.product_desc).trim()).length > 100"
+                                                    [innerHtml]="(offer.product_desc) | innerHtmlLimit: 100 | safe: 'html'">
+                                                </p>
+                                                <p class="ellipsis" *ngIf="((offer.product_desc).trim()).length <= 100"
+                                                    [innerHtml]="(offer.product_desc) | safe: 'html'"></p>
+                                            </span>
+
+                                            <!-- <p class="ellipsis" [innerHtml]="offer?.product_desc | safe: 'html'"></p> -->
+                                            <div class="product-price-tag">
+                                                <h6 *ngIf="offer.display_price || offer.fixed_price"><span
+                                                        style="font-size: 16px; margin-right: 8px; text-decoration: line-through; opacity: 0.8;">
+                                                        {{currency}}{{(offer.display_price *
+                                                        selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)}}
+                                                    </span>
+                                                    {{currency}}{{(offer.fixed_price*
+                                                    selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)}}
+                                                </h6>
+
+                                                <div style="position: absolute; right: 30px;">
+                                                    <app-quantity-buttons
+                                                        *ngIf="offer?.quantity > offer?.purchased_quantity"
+                                                        [disabled]="!!productstate.hideQuantity" [style]="style"
+                                                        [settings]="settings"
+                                                        [selectedQuantity]="offer?.selectedQuantity"
+                                                        (onAdd)="increaseValue(offer)"
+                                                        (onRemove)="decreaseValue(offer)">
+                                                    </app-quantity-buttons>
+                                                    <div class="customisable"> <span
+                                                            *ngIf="offer.adds_on && offer.adds_on.length"
+                                                            class="float-right customize-txt"
+                                                            [ngStyle]="{'color': style.primaryColor}">{{'Customizable' |
+                                                            translate}}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <!-- <a href="">Add</a> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ngx-slick-carousel>
+                        </div>
+
+                        <ng-template #skeleton2>
+                            <div class="skeleton">
+                                <ngx-slick-carousel class="carousel" #slickModal="slick-carousel"
+                                    [config]="slideConfig">
+                                    <div ngxSlickItem
+                                        *ngFor="let item of util.generateFakeList(2); let i = index;trackBy:trackByGenerateFakeFn"
+                                        class="slide">
+                                        <div class="item">
+                                            <div class="product-item" style="padding-right: 30px; position: relative;">
+                                                <img style="width: 100%; cursor: pointer;">
+                                                <h2 style="width: 50%; height: 16px;"></h2>
+                                                <p style="width: 80%; height: 14px;"></p>
+                                                <div class="product-price-tag">
+                                                    <h6
+                                                        style="width: 40%; font-size: 16px; margin-right: 8px; text-decoration: line-through;">
+                                                    </h6>
+                                                    <div style="position: absolute; right: 30px;">
+                                                        <div style="height: 18px; width: 80px;"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ngx-slick-carousel>
+                            </div>
+                        </ng-template>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </ng-template>
+
+
+
+    <!-- mac designs -->
+    <ng-template [ngSwitchCase]="4">
+
+        <section id="gernal-product-slider" class="spechil-offer">
+            <section class="t-center bg-gray">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12 heading">
+                            <h3>{{'special_offers' | localization | translate}} {{'For You' | translate}}</h3>
+                            <a (click)="onSeeMore()" [style.background-color]="style?.primaryColor" class="main_btn m-btn
+                                cursor">{{'View All' | translate}}</a>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+            <section class="testimonials">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div id="customers-testimonials" class="owl-carousel">
+                                <div *ngIf="!isLoading; else skeleton2">
+                                    <ngx-slick-carousel class="carousel" #slickModal="slick-carousel"
+                                        [config]="slideConfig">
+                                        <div ngxSlickItem
+                                            *ngFor="let offer of specialOffers.slice(0,12); let i = index;"
+                                            class="slide">
+                                            <div class="item">
+                                                <div class="shadow-effect">
+                                                    <img style="width: 100%; cursor: pointer;" title="VIEW DESCRIPTION"
+                                                        (click)="porductDescription(offer)" appImage
+                                                        [url]="offer?.image_path || offer?.supplier_image"
+                                                        [settings]="settings" [size]="'355x320'"
+                                                        [src]="offer?.image_path || offer?.supplier_image"
+                                                        onError="src = '/assets/images/placeholder_image.svg';">
+                                                    <!-- <span title="VIEW DESCRIPTION" class="sp-info"><i
+                                                            class="fa fa-info"></i></span>
+                                                    <span class="sp-info-offr">
+                                                        <span
+                                                            *ngIf="offer?.offerValue">{{offer?.offerValue||'0'}}</span>
+                                                        <span
+                                                            *ngIf="!offer?.offerValue">{{offer?.discountPercentage||'0'}}</span>%
+                                                    </span> -->
+                                                    <div class="post-content slide-txt">
+                                                        <h5>{{offer?.name}}</h5>
+                                                        <p>{{offer?.supplier_name}}</p>
+                                                        <p class="post-description">1.9 miles away</p>
+                                                        <span class="post-date flt"><i class="fa fa-star"
+                                                                aria-hidden="true"></i>
+                                                            {{offer?.avg_rating || offer?.rating || 0 | number}}
+                                                            </span>
+                                                            <a [style.background-color]="style?.primaryColor"
+                                                                (click)="productList(offer)"
+                                                                class="read-more btns cursor main_btn txt_size">{{'VIEW'
+                                                                | translate}}</a>
+                                                        <!-- <a *ngIf="offer?.is_dine_in &&  
+                                                        settings?.is_table_booking && offer?.is_scheduled;else view"
+                                                            [style.background-color]="style?.primaryColor"
+                                                            (click)="openSchedulingModal(offer)"
+                                                            class="read-more btns cursor main_btn txt_size">{{'BOOK NOW'
+                                                            | translate}}</a>
+
+                                                        <ng-template #view>
+                                                            <a [style.background-color]="style?.primaryColor"
+                                                                (click)="productList(offer)"
+                                                                class="read-more btns cursor main_btn txt_size">{{'VIEW'
+                                                                | translate}}</a>
+                                                        </ng-template> -->
+
+                                                        <ng-template #qtyBtns>
+                                                            <div class="mc-qty-btn">
+                                                                <app-quantity-buttons
+                                                                    *ngIf="offer?.quantity > offer?.purchased_quantity"
+                                                                    [disabled]="!!productstate.hideQuantity"
+                                                                    [style]="style" [settings]="settings"
+                                                                    [selectedQuantity]="offer?.selectedQuantity"
+                                                                    (onAdd)="increaseValue(offer)"
+                                                                    (onRemove)="decreaseValue(offer)">
+                                                                </app-quantity-buttons>
+                                                                <div class="customisable"> <span
+                                                                        *ngIf="offer.adds_on && offer.adds_on.length"
+                                                                        class="float-right customize-txt"
+                                                                        [ngStyle]="{'color': style.primaryColor}">{{'Customizable'
+                                                                        | translate}}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </ng-template>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ngx-slick-carousel>
+                                </div>
+
+                                <app-cart-schedule-time [style]="style" [settings]="settings"
+                                    [table_flow]="settings?.table_book_mac_theme" *ngIf="showScheduleTime"
+                                    [schedulingData]="schedulingData" (onScheduling)="onSchedulingProcess($event)"
+                                    (onClose)="this.showScheduleTime = false"></app-cart-schedule-time>
+
+                                <ng-template #skeleton2>
+                                    <div class="skeleton">
+                                        <ngx-slick-carousel class="carousel" #slickModal="slick-carousel"
+                                            [config]="slideConfig">
+                                            <div ngxSlickItem
+                                                *ngFor="let item of util.generateFakeList(2); let i = index;trackBy:trackByFakeListFn"
+                                                class="slide">
+                                                <div class="item">
+                                                    <div class="product-item"
+                                                        style="padding-right: 30px; position: relative;">
+                                                        <img style="width: 100%; cursor: pointer;">
+                                                        <h2 style="width: 50%; height: 16px;"></h2>
+                                                        <p style="width: 80%; height: 14px;"></p>
+                                                        <div class="product-price-tag">
+                                                            <h6
+                                                                style="width: 40%; font-size: 16px; margin-right: 8px; text-decoration: line-through;">
+                                                            </h6>
+                                                            <div style="position: absolute; right: 30px;">
+                                                                <div style="height: 18px; width: 80px;"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </ngx-slick-carousel>
+                                    </div>
+                                </ng-template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+    </ng-template>
+
+</ng-container>
+
+
+
+
+<app-out-network-product *ngIf="is_out_network_show" [style]="style" [currentUser]="currentUser" [settings]="settings"
+    (onProcess)="onProcessOutNetEvent($event)">
+</app-out-network-product>

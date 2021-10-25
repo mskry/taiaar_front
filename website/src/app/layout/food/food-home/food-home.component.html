@@ -1,0 +1,344 @@
+<ng-container *ngIf="!settings?.is_single_vendor else singleVendor">
+
+    <ng-container *ngIf="!is_serving_area && settings?.enable_zone_geofence">
+        <div class="w-100">
+            <app-food-banner [style]="style" [settings]="settings"></app-food-banner>
+        </div>
+        <div class="text-center mt-5">
+            {{'Sorry We Do Not Serve In This Area, Please Choose Another Location!'}}
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="is_serving_area || !settings?.enable_zone_geofence" [ngSwitch]="settings?.selected_template">
+
+        <ng-template [ngSwitchCase]="0">
+
+            <div class="w-100" *ngIf="settings?.is_custom_category_template=='0'">
+                <app-banner></app-banner>
+                <app-banner-video *ngIf="settings?.enable_video_in_banner == 1 && settings.enable_cravv_theme == 0"></app-banner-video>
+            </div>
+
+            <div *ngIf="settings?.show_user_subscription_home_button === '1' || settings.show_reward_home_button ==='1'">
+                <ng-container [ngTemplateOutlet]="subscription_rewards"></ng-container>
+            </div>
+            <section class="recoomond_section recomand-2">
+                <div class="container food-home-container">
+                    <div class="row" *ngIf="settings?.is_custom_category_template=='0'">
+                        <div class="col-lg-3 col-md-4">
+                            <div class="left_section-pizza sticky">
+                                <ul>
+                                    <li *ngIf="homeData?.offerEnglish && homeData?.offerEnglish?.length && settings?.hide_offers_category_home == 0" [ngStyle]="selectedTab == 1 ? {'backgroundColor': style.primaryColor,  color: '#ffffff', opacity: '1'} : {'backgroundColor': style.backgroundColor, color: style.baseColor}"
+                                        (click)="scrollTo(1)">
+                                        {{'Offers Only For You' | translate}}</li>
+                                    <li [ngStyle]="selectedTab == 2 ? {'backgroundColor': style.primaryColor,  color: '#ffffff', opacity: '1'} : {'backgroundColor': style.backgroundColor, color: style.baseColor}" (click)="scrollTo(2)">
+                                        {{'top_suppliers_near_you' | localization | translate}}</li>
+                                    <li *ngFor="let category of homeCategoryList;trackBy:trackByCatFn;" class="category" (click)="onCategorySelect(category)">
+                                        {{category?.name}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-9 col-md-8">
+                            <app-special-offers id="1" *ngIf="homeData?.offerEnglish && homeData?.offerEnglish?.length && settings?.hide_offers_category_home == 0" [offerData]="homeData?.offerEnglish" [isLoading]="isLoading">
+                            </app-special-offers>
+
+                            <!-- <div class="home-self-pickup" *ngIf="settings.is_pickup_order == 2">
+                                <label [ngStyle]="{'border-color': style.primaryColor, 'color': style.primaryColor}"
+                                    class="custom-checkbox cursor">{{'Self Pickup' | translate}}
+                                    <input class="cursor" type="checkbox" name="selfPickup" [checked]="selfPickup"
+                                        [(ngModel)]="selfPickup">
+                                    <span class="checkmark cursor"
+                                        [ngStyle]="{'border-color': style.primaryColor, '--background-color': style.primaryColor}"></span>
+                                </label>
+                            </div> -->
+                            <app-suppliers id="2"></app-suppliers>
+                        </div>
+                    </div>
+
+                    <div *ngIf="settings?.is_custom_category_template=='1'">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="marketplace-categories_heading">
+                                    <h3 *ngIf="clientCode != 'expactor_0485'">
+                                        {{'categories' | localization | translate}}</h3>
+                                    <h3 *ngIf="clientCode == 'expactor_0485'">What Would You Like To Do?</h3>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4" *ngFor="let category of homeCategoryList;trackBy:trackByHomeCatFn;">
+                                <div class="Grocery-outter" (click)="onCategorySelect(category)">
+                                    <a class="pointer">
+                                        <img appImage [url]="category.image" [size]="'255x180'" [src]="category.image" [settings]="settings" onError="src = './assets/images/placeholder_image.svg';">
+                                        <span>{{category.name}}</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 col-md-12 mt-5">
+                            <app-special-offers id="1" *ngIf="homeData?.offerEnglish && homeData?.offerEnglish?.length && settings?.hide_offers_category_home == 0" [offerData]="homeData?.offerEnglish" [isLoading]="isLoading">
+                            </app-special-offers>
+                            <app-suppliers id="2"></app-suppliers>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </ng-template>
+
+        <ng-template [ngSwitchCase]="1">
+
+            <div class="w-100">
+                <app-food-banner [style]="style" [settings]="settings"></app-food-banner>
+            </div>
+            <div *ngIf="settings?.show_user_subscription_home_button === '1' || settings.show_reward_home_button ==='1'">
+                <ng-container [ngTemplateOutlet]="subscription_rewards"></ng-container>
+            </div>
+            <div *ngIf="settings?.dynamic_home_screen_sections">
+                <div *ngFor="let pos of settings?.home_screen_sections;trackBy:trackBySectionFn;">
+                    <div *ngIf="pos?.code=='trending_rest'">
+                        <app-food-recommended-suppliers *ngIf="pos?.is_active && !settings?.is_single_vendor && homeData?.SupplierInArabic && homeData?.SupplierInArabic?.length" [style]="style" [settings]="settings" [recommendedData]="homeData?.SupplierInArabic" [isLoading]="isLoading">
+                        </app-food-recommended-suppliers>
+                    </div>
+                    <div *ngIf="pos?.code=='special_offer'">
+                        <app-food-special-offers *ngIf="pos?.is_active && homeData?.offerEnglish && homeData?.offerEnglish?.length" [settings]="settings" [offerData]="homeData" [isLoading]="isLoading" [style]="style">
+                        </app-food-special-offers>
+                    </div>
+                    <div *ngIf="pos?.code=='fastest_del'">
+                        <app-food-fast-delivery *ngIf="pos?.is_active && !settings?.is_single_vendor && homeData?.SupplierInArabic && homeData?.SupplierInArabic?.length" [style]="style" [settings]="settings" [isLoading]="isLoading">
+                        </app-food-fast-delivery>
+                    </div>
+                    <div *ngIf="pos?.code=='best_seller'">
+                        <app-food-best-seller *ngIf="pos?.is_active && !settings?.is_single_vendor && settings?.enable_best_sellers=='1' && homeData?.bestSellersSuppliers && homeData?.bestSellersSuppliers.length" [style]="style" [settings]="settings" [bestSellers]="homeData?.bestSellersSuppliers">
+                        </app-food-best-seller>
+                    </div>
+                    <div *ngIf="pos?.code=='top_selling'">
+                        <app-food-top-selling-dishes *ngIf="pos?.is_active && !settings?.is_single_vendor" [style]="style" [settings]="settings">
+                        </app-food-top-selling-dishes>
+                    </div>
+                    <div *ngIf="pos?.code=='near_you'">
+                        <app-food-suppliers *ngIf="pos?.is_active && !settings?.is_single_vendor" [style]="style" [settings]="settings">
+                        </app-food-suppliers>
+                    </div>
+                    <div *ngIf="pos?.code=='recomm_items'">
+                        <app-recommended-food *ngIf="pos?.is_active && !settings?.is_single_vendor" [style]="style" [settings]="settings">
+                        </app-recommended-food>
+                    </div>
+                    <div *ngIf="pos?.code=='category_wise_rest'">
+                        <app-food-category-wise-vendor *ngIf="pos?.is_active && !settings?.is_single_vendor" [style]="style" [settings]="settings">
+                        </app-food-category-wise-vendor>
+                    </div>
+                    <div *ngIf="pos?.code=='highest_rating_resturant'">
+                        <app-food-highest-rating-restaurant *ngIf="pos?.is_active && !settings?.is_single_vendor" [style]="style" [settings]="settings">
+                        </app-food-highest-rating-restaurant>
+                    </div>
+                    <div *ngIf="pos?.code=='new_resturant'">
+                        <app-food-new-restaurant *ngIf="pos?.is_active && !settings?.is_single_vendor" [style]="style" [settings]="settings">
+                        </app-food-new-restaurant>
+                    </div>
+                    <div *ngIf="pos?.code=='recent_orders'">
+                        <app-food-recent-order *ngIf="pos?.is_active && !settings?.is_single_vendor" [style]="style" [settings]="settings">
+                        </app-food-recent-order>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="!settings?.dynamic_home_screen_sections">
+
+                <app-food-recommended-suppliers *ngIf="!settings?.is_single_vendor && homeData?.SupplierInArabic && homeData?.SupplierInArabic?.length" [style]="style" [settings]="settings" [recommendedData]="homeData?.SupplierInArabic" [isLoading]="isLoading">
+                </app-food-recommended-suppliers>
+
+                <app-food-special-offers *ngIf="homeData?.offerEnglish && homeData?.offerEnglish?.length" [settings]="settings" [offerData]="homeData" [isLoading]="isLoading" [style]="style">
+                </app-food-special-offers>
+
+                <app-food-best-seller *ngIf="!settings?.is_single_vendor && settings?.enable_best_sellers=='1' && homeData?.bestSellersSuppliers && homeData?.bestSellersSuppliers.length" [style]="style" [settings]="settings" [bestSellers]="homeData?.bestSellersSuppliers">
+                </app-food-best-seller>
+
+                <app-food-suppliers *ngIf="!settings?.is_single_vendor" [style]="style" [settings]="settings">
+                </app-food-suppliers>
+
+                <!-- <app-food-recent-order *ngIf="!settings?.is_single_vendor" [style]="style" [settings]="settings">
+                </app-food-recent-order> -->
+            </div>
+
+            <app-food-home-options *ngIf="settings?.is_flavor_of_week_enable" [style]="style" [settings]="settings">
+            </app-food-home-options>
+
+
+        </ng-template>
+
+        <ng-template [ngSwitchCase]="2">
+
+            <div class="w-100">
+                <app-food-banner [style]="style" [settings]="settings"></app-food-banner>
+            </div>
+
+            <div *ngIf="settings?.show_user_subscription_home_button === '1' || settings.show_reward_home_button ==='1'">
+                <ng-container [ngTemplateOutlet]="subscription_rewards"></ng-container>
+            </div>
+
+            <app-food-recommended-suppliers *ngIf="!settings?.is_single_vendor && homeData?.SupplierInArabic && homeData?.SupplierInArabic?.length" [style]="style" [settings]="settings" [recommendedData]="homeData?.SupplierInArabic" [isLoading]="isLoading">
+            </app-food-recommended-suppliers>
+
+            <app-food-home-options *ngIf="settings?.is_flavor_of_week_enable" [style]="style" [settings]="settings">
+            </app-food-home-options>
+
+            <app-food-special-offers *ngIf="homeData?.offerEnglish && homeData?.offerEnglish?.length" [settings]="settings" [offerData]="homeData" [isLoading]="isLoading" [style]="style">
+            </app-food-special-offers>
+
+            <app-food-best-seller *ngIf="!settings?.is_single_vendor && settings?.enable_best_sellers=='1' && homeData?.bestSellersSuppliers && homeData?.bestSellersSuppliers.length" [style]="style" [settings]="settings" [bestSellers]="homeData?.bestSellersSuppliers">
+            </app-food-best-seller>
+
+            <app-food-suppliers *ngIf="!settings?.is_single_vendor" [style]="style" [settings]="settings">
+            </app-food-suppliers>
+
+        </ng-template>
+
+        <!-- new added -->
+        <ng-template [ngSwitchCase]="3">
+
+            <div class="w-100">
+                <app-food-banner [style]="style" [settings]="settings"></app-food-banner>
+            </div>
+
+            <div *ngIf="settings?.show_user_subscription_home_button === '1' || settings.show_reward_home_button ==='1'">
+                <ng-container [ngTemplateOutlet]="subscription_rewards"></ng-container>
+            </div>
+
+            <div *ngIf="settings?.dynamic_home_screen_sections">
+                <div *ngFor="let pos of settings?.home_screen_sections;trackBy:trackByhomeScreenFn;">
+                    <div *ngIf="pos?.code=='trending_rest'">
+                        <app-food-recommended-suppliers *ngIf="pos?.is_active && !settings?.is_single_vendor && homeData?.SupplierInArabic && homeData?.SupplierInArabic?.length" [style]="style" [settings]="settings" [recommendedData]="recommendedData" [isLoading]="isLoading">
+                        </app-food-recommended-suppliers>
+                    </div>
+                    <div *ngIf="pos?.code=='special_offer'">
+                        <app-food-special-offers *ngIf="pos?.is_active && homeData?.offerEnglish && homeData?.offerEnglish?.length" [settings]="settings" [offerData]="homeData" [isLoading]="isLoading" [style]="style">
+                        </app-food-special-offers>
+                    </div>
+                    <div *ngIf="pos?.code=='fastest_del'">
+                        <app-food-fast-delivery *ngIf="pos?.is_active && !settings?.is_single_vendor && homeData?.SupplierInArabic && homeData?.SupplierInArabic?.length" [style]="style" [settings]="settings" [isLoading]="isLoading">
+                        </app-food-fast-delivery>
+                    </div>
+                    <div *ngIf="pos?.code=='best_seller'">
+                        <app-food-best-seller *ngIf="pos?.is_active && !settings?.is_single_vendor && settings?.enable_best_sellers=='1' && homeData?.bestSellersSuppliers && homeData?.bestSellersSuppliers.length" [style]="style" [settings]="settings" [bestSellers]="homeData?.bestSellersSuppliers">
+                        </app-food-best-seller>
+                    </div>
+                    <div *ngIf="pos?.code=='top_selling'">
+                        <app-food-top-selling-dishes *ngIf="pos?.is_active && !settings?.is_single_vendor" [style]="style" [settings]="settings">
+                        </app-food-top-selling-dishes>
+                    </div>
+                    <div *ngIf="pos?.code=='near_you'">
+                        <app-food-suppliers *ngIf="pos?.is_active && !settings?.is_single_vendor" [style]="style" [settings]="settings">
+                        </app-food-suppliers>
+                    </div>
+                    <div *ngIf="pos?.code=='recomm_items'">
+                        <app-recommended-food *ngIf="pos?.is_active && !settings?.is_single_vendor" [style]="style" [settings]="settings">
+                        </app-recommended-food>
+                    </div>
+                    <div *ngIf="pos?.code=='category_wise_rest'">
+                        <app-food-category-wise-vendor *ngIf="pos?.is_active && !settings?.is_single_vendor" [style]="style" [settings]="settings">
+                        </app-food-category-wise-vendor>
+                    </div>
+                    <div *ngIf="pos?.code=='highest_rating_resturant'">
+                        <app-food-highest-rating-restaurant *ngIf="pos?.is_active && !settings?.is_single_vendor" [style]="style" [settings]="settings">
+                        </app-food-highest-rating-restaurant>
+                    </div>
+                    <div *ngIf="pos?.code=='new_resturant'">
+                        <app-food-new-restaurant *ngIf="pos?.is_active && !settings?.is_single_vendor" [style]="style" [settings]="settings">
+                        </app-food-new-restaurant>
+                    </div>
+                    <!-- <div *ngIf="pos?.code=='recent_orders'">
+                        <app-food-recent-order *ngIf="pos?.is_active && !settings?.is_single_vendor" [style]="style"
+                            [settings]="settings">
+                        </app-food-recent-order>
+                    </div> -->
+                </div>
+            </div>
+
+            <div *ngIf="!settings?.dynamic_home_screen_sections">
+                <app-food-recommended-suppliers *ngIf="!settings?.is_single_vendor && homeData?.SupplierInArabic && homeData?.SupplierInArabic?.length" [style]="style" [settings]="settings" [recommendedData]="recommendedData" [isLoading]="isLoading">
+                </app-food-recommended-suppliers>
+
+                <app-food-special-offers *ngIf="homeData?.offerEnglish && homeData?.offerEnglish?.length" [settings]="settings" [offerData]="homeData" [isLoading]="isLoading" [style]="style">
+                </app-food-special-offers>
+
+                <app-food-fast-delivery *ngIf="!settings?.is_single_vendor && homeData?.SupplierInArabic && homeData?.SupplierInArabic?.length" [style]="style" [settings]="settings" [isLoading]="isLoading">
+                </app-food-fast-delivery>
+
+                <app-food-top-selling-dishes *ngIf="!settings?.is_single_vendor" [style]="style" [settings]="settings">
+                </app-food-top-selling-dishes>
+
+                <app-recommended-food *ngIf="!settings?.is_single_vendor" [style]="style" [settings]="settings">
+                </app-recommended-food>
+
+                <!-- <app-food-recent-order *ngIf="!settings?.is_single_vendor" [style]="style" [settings]="settings">
+                </app-food-recent-order> -->
+            </div>
+
+
+
+            <app-food-home-options *ngIf="settings?.is_flavor_of_week_enable" [style]="style" [settings]="settings">
+            </app-food-home-options>
+
+        </ng-template>
+
+        <!-- mac designs -->
+        <ng-template [ngSwitchCase]="4">
+
+            <div class="w-100">
+                <app-food-banner [style]="style" [settings]="settings"></app-food-banner>
+            </div>
+
+            <div *ngIf="settings?.show_user_subscription_home_button === '1' || settings.show_reward_home_button ==='1'">
+                <ng-container [ngTemplateOutlet]="subscription_rewards"></ng-container>
+            </div>
+
+            <app-food-recommended-suppliers *ngIf="!settings?.is_single_vendor && homeData?.SupplierInArabic && homeData?.SupplierInArabic?.length" [style]="style" [settings]="settings" [recommendedData]="recommendedData" [isLoading]="isLoading">
+            </app-food-recommended-suppliers>
+
+            <app-food-special-offers *ngIf="homeData?.offerEnglish && homeData?.offerEnglish?.length" [settings]="settings" [offerData]="homeData" [isLoading]="isLoading" [style]="style">
+            </app-food-special-offers>
+
+            <app-food-suppliers *ngIf="!settings?.is_single_vendor" [style]="style" [settings]="settings">
+            </app-food-suppliers>
+
+            <app-food-recommneded-supplier-mc *ngIf="!settings?.is_single_vendor" [style]="style" [settings]="settings">
+            </app-food-recommneded-supplier-mc>
+
+            <app-food-home-options *ngIf="settings?.is_flavor_of_week_enable" [style]="style" [settings]="settings">
+            </app-food-home-options>
+
+        </ng-template>
+
+    </ng-container>
+
+
+
+</ng-container>
+
+<ng-template #subscription_rewards>
+    <section class="btn-position" style="padding-top: 30px;">
+        <div class="container mt-3">
+            <div class="row">
+                <div class="col-sm-2" *ngIf="settings?.show_user_subscription_home_button === '1'">
+                    <a [style.background-color]="style?.primaryColor" class="main_btn btn-center" (click)="buySubsc()" style="position: relative;left: 400px;top: -16px;color: #ffffff; cursor: pointer;z-index: 9;">{{'Buy
+                        Subscription' | translate}}</a>
+
+                </div>
+                <div class="col-sm-3" *ngIf="settings.show_reward_home_button ==='1'">
+                    <a [style.background-color]="style?.primaryColor" class="main_btn btn-center" (click)="rewards()" style="position: relative;left: 400px;top: -16px;color: #ffffff; cursor: pointer;z-index: 9;">{{'Rewards'
+                        | translate}}</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</ng-template>
+
+<ng-template #singleVendor>
+
+    <app-single-vendor *ngIf="homeData" [offerData]="homeData?.offerEnglish">
+    </app-single-vendor>
+
+    <div *ngIf="!homeData && isLoading && settings?.selected_template == 2" style="height: 800px; width: 100%; background-color: rgb(220, 220, 220);"></div>
+
+</ng-template>

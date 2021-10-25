@@ -1,0 +1,304 @@
+<div class="container-fluid back">
+
+</div>
+
+
+<div class="container">
+    <div class="row profile">
+        <div class="col-4">
+        </div>
+    </div>
+</div>
+
+
+<div class="wrapper">
+    <div class="category">
+        <div class="secnav">
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    <h1 class="bold">{{'Vendor Update List' | translate}}</h1>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12"  ng-if="permissions('VENDOR_APPROVAL', 'list') == 1">
+                    <div class="topfil">
+                        <ul>
+                            <li>
+                                <button type="button" class="simple" ng-click="refresh()"><img
+                                        src="img/v1_images/ic_rotate.svg">{{'REFRESH' | translate}}</button>
+                            </li>
+                            <li style="filter: grayscale(0)" ng-if="permissions('promotions', 'create') == 1">
+                                <button type="button" class="bold create" data-toggle="modal"
+                                    ng-click="changeView(true)"
+                                    ui-sref="vendorApproval.vendorProductApproval-list">{{'View Product Updation Request' | translate}}</button>
+                            </li>
+                            <li style="filter: grayscale(0)" ng-if="permissions('promotions', 'create') == 1">
+                                <button type="button" class="bold create" data-toggle="modal"
+                                    ng-click="changeView(true)"
+                                    ui-sref="vendorApproval.vendorProductPriceApprovalList">{{'View Product Price Updation Request' | translate}}</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content m-top-30">
+            <div class="tab-pane active updateList">
+                <div class="tableouter">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>{{'ID' | translate}}</th>
+                                <th>{{'SUPPLIER ID' | translate}}</th>
+                                <th>{{'LOGO'| translate}}</th>
+                                <th>{{'EMAIL' | translate}}</th>
+                                <th>{{'NAME' | translate}}</th>
+                                <th>{{'COUNTRY CODE' | translate}}</th>
+                                <th>{{'ISO' | translate}}</th>
+                                <th>{{'PHONE' | translate}}</th>
+                                <th>{{'ADDRESS' | translate}}</th>
+                                <th>{{'BASE DELIVERY CHARGES' | translate}}</th>
+                                <th>{{'BRAND' | translate}}</th>
+                                <th>{{'CURRENCY EXCHAGE RATE' | translate}}</th>
+                                <th>{{'DELIVERY RADIUS' | translate}}</th>
+                                <th>{{'DELIVERY TYPE' | translate}}</th>
+                                <th>{{'DESCRIPTION' | translate}}</th>
+                                <th>{{'DISTANCE VALUE' | translate}}</th>
+                                <!-- <th>{{'FB LINK' | translate}}</th> -->
+                                <!-- <th>{{'GST' | translate}}</th> -->
+                                <!-- <th>{{'HANDLING SUPPLIER' | translate}}</th> -->
+                                <!-- <th>{{'IS DINE IN' | translate}}</th> -->
+                                <!-- <th>{{'FLAVOR OF THE WEEK' | translate}}</th> -->
+                                <!-- <th>{{'FREE DELIVERY' | translate}}</th> -->
+                                <!-- <th>{{'OUT NETWORK' | translate}}</th> -->
+                                <!-- <th>{{'OWN DELIVERY' | translate}}</th> -->
+                                <th ng-if="enable_supplier_in_special_offer_admin==1">{{'PRODUCT OFFER' | translate}}
+                                </th>
+                                <th ng-if="is_schdule_order == 1 && !is_hide_pickup && profile == 'ADMIN'">
+                                    {{'SCHEDULED' | translate}}</th>
+                                <!-- <th>{{'SERVICE FLAT CHARGES' | translate}}</th> -->
+                                <th ng-if="enable_supplier_in_special_offer_admin==1">{{'OFFER VALUE' | translate}}</th>
+                                <th>{{'PICK-UP COMMISSION' | translate}}</th>
+                                <th>{{'BASE DELIVERY CHARGE DISTANCE' | translate}}
+                                    ({{delivery_distance_unit == 1 ? 'Mile' : 'KM'}})</th>
+                                <!-- <th>{{'SELF PICK-UP' | translate}}</th> -->
+                                <!-- <th>{{'SPECIALITY' | translate}}</th> -->
+                                <!-- <th>{{'TABLE BOOKING DISCOUNT' | translate}}</th> -->
+                                <!-- <th>{{'TABLE BOOKING PRICE' | translate}}</th> -->
+                                <!-- <th>{{'URGENT DELIVERY TIME' | translate}}</th> -->
+                                <th>{{'USER SERVICE CHARGES' | translate}}</th>
+                                <th>{{'STATUS' | translate}}</th>
+                                <th
+                                    ng-if="profile==='ADMIN' && (enable_homenet_theme == 0 || permissions('VENDOR_APPROVAL', 'update') == 1)">
+                                    {{'ACTION' | translate}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="request in vendorUpdateList">
+                                <td>{{request.id}}</td>
+                                <td>{{request.supplier_id}}</td>
+                                <td>
+                                    <img src="{{request.logo || '/../../../img/no_photo_icon.jpg'}}">
+                                </td>
+                                <td>{{request.email || 'N/A'}}</td>
+                                <td>{{request.name || 'N/A'}}</td>
+                                <td>{{request.country_code || 'N/A'}}</td>
+                                <td>{{request.iso || 'N/A'}}</td>
+                                <td>{{request.mobile_number_1 || 'N/A'}}</td>
+                                <td>{{request.address || 'N/A'}}</td>
+                                <td
+                                    ng-if="client_code != 'bodyformula_0497' && is_dine_in == 0 && is_enabled_multiple_base_delivery_charges == 0 && hide_delivery_charges == 0 && (app_type == 1 || app_type > 10 || (app_type == 2 && ecom_agent_module == 1)) && delivery_charge_type == 0 && [0,2].includes(supplier_info.self_pickup) 
+                                    && (profile === 'ADMIN' || hide_delivery_charges_supplier == 0) && is_free_delivery !== 1">
+                                    {{request.base_delivery_charges || 'N/A'}}</td>
+                                <td>{{request.brand || 'N/A'}}</td>
+                                <td>{{request.currency_exchange_rate || 'N/A'}}</td>
+
+                                <td>{{request.delivery_radius || 'N/A'}}</td>
+                                <td>{{request.delivery_type || 'N/A'}}</td>
+                                <td>{{request.description || 'N/A'}}</td>
+                                <td>{{request.distance_value || 'N/A'}}</td>
+                                <!-- <td>{{request.facebook_link || 'N/A'}}</td> -->
+                                <!-- <td>{{request.gst_price || 'N/A'}}</td> -->
+                                <!-- <td>{{request.handling_supplier || 'N/A'}}</td> -->
+                                <!-- <td>{{request.is_dine_in || 'N/A'}}</td>
+                                <td>{{request.is_flavor_of_week || 'N/A'}}</td>
+                                <td>{{request.is_free_delivery || 'N/A'}}</td>
+                                <td>{{request.is_out_network || 'N/A'}}</td>
+                                <td>{{request.is_own_delivery || 'N/A'}}</td> -->
+                                <td ng-if="enable_supplier_in_special_offer_admin==1">
+                                    {{request.is_products_offer || 'N/A'}}</td>
+                                <td ng-if="is_schdule_order == 1 && !is_hide_pickup && profile == 'ADMIN'">
+                                    {{request.is_scheduled || 'N/A'}}</td>
+                                <!-- <td>{{request.is_user_service_charge_flat || 'N/A'}}</td> -->
+                                <td ng-if="enable_supplier_in_special_offer_admin==1">{{request.offerValue || 'N/A'}}
+                                </td>
+                                <td>{{request.payment_method || 'N/A'}}</td>
+                                <td>{{request.pickup_commission || 'N/A'}}</td>
+                                <td>{{request.radius_price || 'N/A'}}</td>
+                                <!-- <td>{{request.self_pickup || 'N/A'}}</td>
+                                <td>{{request.speciality || 'N/A'}}</td>
+                                <td>{{request.table_booking_discount || 'N/A'}}</td>
+                                <td>{{request.table_booking_price || 'N/A'}}</td>
+                                <td>{{request.urgent_delivery_time || 'N/A'}}</td> -->
+                                <td>{{request.user_service_charge || 'N/A'}}</td>
+                                <td>
+                                    <span ng-if="profile==='ADMIN' && request.update_request_approved==0"
+                                        class="pending">
+                                        {{'Pending'}}
+                                    </span>
+                                    <span ng-if="profile==='ADMIN' && request.update_request_approved==1"
+                                        class="approved">
+                                        {{'Approved'}}
+                                    </span>
+                                    <span ng-if="profile==='ADMIN' && request.update_request_approved==2"
+                                        class="rejected">
+                                        {{'Rejected'}}
+                                    </span>
+                                </td>
+
+                                <td
+                                    ng-if="profile==='ADMIN' && (enable_homenet_theme == 0 || permissions('VENDOR_APPROVAL', 'update') == 1)">
+                                    <button class="btn btn-primary" class="delete" ng-click="viewChanges(request)">
+                                        {{'View Changes'}}
+                                    </button>
+                                    <button class="btn btn-primary"
+                                        ng-if="profile==='ADMIN' && request.update_request_approved==0" class="delete"
+                                        ng-click="approveRejectUpdation(request,1)">
+                                        {{'Approve'}}
+                                    </button>
+                                    <button class="btn btn-danger"
+                                        ng-if="profile==='ADMIN' && request.update_request_approved==0" class="delete"
+                                        ng-click="approveRejectUpdation(request, 2)">
+                                        {{'Reject'}}
+                                    </button>
+                                    
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="no-data-found" ng-if="vendorUpdateList.length == 0 && dataLoaded">
+                        {{'NO DATA FOUND' | translate}}
+                    </div>
+                    <div ng-if="vendorUpdateList.length > 0 && dataLoaded" class="row pagination">
+                        <ul ng-if="pager.pages && pager.pages.length">
+                            <li ng-class="{disabled:pager.currentPage === 1}">
+                                <a ng-click="setPage(1)">{{'FIRST' | translate}}</a>
+                            </li>
+                            <li ng-class="{disabled:pager.currentPage === 1}">
+                                <a ng-click="setPage(pager.currentPage - 1)">{{'PREVIOUS' | translate}}</a>
+                            </li>
+                            <li ng-repeat="page in pager.pages" ng-class="{active:pager.currentPage === page}">
+                                <a ng-click="setPage(page)">{{page}}</a>
+                            </li>
+                            <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                                <a ng-click="setPage(pager.currentPage + 1)">{{'NEXT' | translate}}</a>
+                            </li>
+                            <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                                <a ng-click="setPage(pager.totalPages)">{{'LAST' | translate}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<success-modal message="message"></success-modal>
+
+<div class="modal" id="view_vendor_change_diff" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="modhead">
+                    <h6 class="text-center">Vendor Approval Changes</h6>
+                    <button type="button" class="close" id="closeBrandModal" data-dismiss="modal"><img
+                            src="img/v1_images/ic_cross.svg"></button>
+                </div>
+                <div class="tableouter">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Key</th>
+                                <th>Old </th>
+                                <th>New</th>
+                            </tr>
+                            <tr ng-class="{flages: selectedVendor.name != selectedVendorOldData.name}">
+                                <th>Name</th>
+                                <td>{{selectedVendorOldData.name || 'NA'}}</td>
+                                <td>{{selectedVendor.name}}</td>
+                            </tr>
+                            <tr ng-class="{flages: selectedVendor.email != selectedVendorOldData.email}">
+                                <th>Email</th>
+                                <td>{{selectedVendorOldData.email || 'NA'}}</td>
+                                <td>{{selectedVendor.email}}</td>
+                            </tr>
+                            <tr
+                                ng-class="{flages: selectedVendor.mobile_number_1 != selectedVendorOldData.mobile_number_1}">
+                                <th>Phone</th>
+                                <td>{{selectedVendorOldData.mobile_number_1 || 'NA'}}</td>
+                                <td>{{selectedVendor.mobile_number_1}}</td>
+                            </tr>
+                            <tr ng-class="{flages: selectedVendor.address != selectedVendorOldData.address}">
+                                <th>Address</th>
+                                <td>{{selectedVendorOldData.address || 'NA'}}</td>
+                                <td>{{selectedVendor.address}}</td>
+                            </tr>
+                            <tr
+                                ng-class="{flages: selectedVendor.mobile_number_1 != selectedVendorOldData.mobile_number_1}">
+                                <th>Phone</th>
+                                <td>{{selectedVendorOldData.mobile_number_1 || 'NA'}}</td>
+                                <td>{{selectedVendor.mobile_number_1}}</td>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modfooter">
+                <button class="btn btn-danger" ng-if="profile==='ADMIN' && selectedVendor.update_request_approved==0"
+                    ng-click="approveRejectUpdation(selectedVendor, 2)">
+                    {{'Reject'}}
+                </button>
+                <button class="btn btn-primary" ng-if="profile==='ADMIN' && selectedVendor.update_request_approved==0"
+                    ng-click="approveRejectUpdation(selectedVendor,1)">
+                    {{'Approve'}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+    .delete {
+        cursor: pointer;
+    }
+
+    .delete:hover {
+        text-decoration: underline;
+        font-weight: 600;
+    }
+
+    .btn {
+        font-size: 12px
+    }
+
+    .approved {
+        color: green;
+    }
+
+    .rejected {
+        color: red;
+    }
+
+    .updateList {
+        width: 100%;
+        overflow-x: scroll;
+    }
+
+    .flages {
+        background-color: rgb(243, 243, 112);
+        ;
+    }
+</style>

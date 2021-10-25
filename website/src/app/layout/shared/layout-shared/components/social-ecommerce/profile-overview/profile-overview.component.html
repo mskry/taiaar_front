@@ -1,0 +1,41 @@
+<app-processing-indicator *ngIf="showLoader"></app-processing-indicator>
+
+<div class="royo_create_post_left">
+    <div class="royo_create_post_profile">
+        <div class="edit_post_profile">
+            <!-- <i class="fa fa-pencil" aria-hidden="true"></i> -->
+        </div>
+        <div class="userimage_post_profile">
+
+            <img appImage onError="src = './assets/images/placeholder-user.png';" [url]="currentUser?.user_image"
+                [size]="'160x160'" [src]="currentUser?.user_image" [settings]="settings">
+
+            <input type="file" accept="image/*" (change)="onImageSelect($event)" #fileInput style="display: none;">
+            <span (click)="fileInput.click()" class="cursor">
+                {{(currentUser?.user_image ? 'Change Image' : 'Add Image') | translate}</span>
+        </div>
+        <h5>{{currentUser?.firstname}}</h5>
+        <span>@{{currentUser?.firstname}}</span>
+        <div class="user_folloers">
+        </div>
+        <div class="user_joining_date">
+            <span>Joined : June 2020</span>
+        </div>
+    </div>
+    <div class="tranding_posts">
+        <h4>{{'Trending posts' |translate}}</h4>
+        <ul>
+            <!-- <li *ngFor="let tPost of trendingPost" class="cursor">
+                <a><img src="{{tPost.post_images[0]?.image || '../../../../assets/images/food.png'}}"></a>
+            </li> -->
+            <p>
+                <span *ngIf="!viewTrend" (click)="viewAllTrendPost(true)" class="view_post_type cursor pr-4">
+                    View Trending Post
+                </span>
+                <span *ngIf="viewTrend" (click)="viewAllTrendPost(false)" class="view_post_type cursor">
+                    View All Post
+                </span>
+            </p>
+        </ul>
+    </div>
+</div>

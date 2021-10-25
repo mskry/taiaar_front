@@ -1,0 +1,14 @@
+<div class="privacy_policy_page container">
+    <div class="row">
+        <div [ngClass]="settings?.enable_video_in_banner == 1 && settings.enable_cravv_theme == 1 && heading == 'About Us' ? 'col-md-8' : 'col-md-12'">
+            <h2>{{heading}}</h2>
+            <div class="container" [innerHtml]="terms | safe: 'html'"></div>
+        </div>
+        <div [ngClass]="settings?.enable_video_in_banner == 1 && settings.enable_cravv_theme == 1 ? 'col-md-4' : ''">
+            <app-banner-video *ngIf="settings?.enable_video_in_banner == 1 && settings.enable_cravv_theme == 1"></app-banner-video>
+        </div>
+    </div>
+    
+
+</div>
+

@@ -1,0 +1,45 @@
+.app-dwnld {
+    margin-right: 20px;
+    a {
+        img {
+            height: 30px;
+        }
+    }
+}
+.add-header-search {
+    display: flex;
+}
+.cust_location {
+    // position: absolute;
+    // bottom: 1%;
+    // right: 51%;
+    display: inline-block;
+    position: relative;
+    bottom: -18%;
+}
+// .search input{
+//     box-shadow: 0 0 28px -1px rgb(0 0 0 / 52%);
+// }
+.headerCustomMenu .search {
+    position: absolute;
+    z-index: 1;
+    top: 260px;
+    width: 70%;
+    left: 46%;
+  }
+  .headerCustomMenu .search p {
+    color: #fff;
+    font-size: 25px;
+    font-weight: 700;
+  }
+  .search .go {
+    position: absolute;
+    right: 8px;
+    bottom: 23px;
+    padding: 5px 29px 3px 29px;
+    background-color: red;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: 700;
+  }

@@ -1,0 +1,348 @@
+<ng-container [ngSwitch]="settings?.selected_template">
+
+    <ng-template [ngSwitchCase]="1">
+
+        <section id="product-categories"
+            [ngClass]="settings?.categories_above_supplier == 1 ? 'single_line_categories' : ''">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="Restaurants-heading">
+                                    <h2 *ngIf="settings?.rating_wise_rest_section">
+                                        {{settings?.rating_wise_rest_section?.section_name  | translate}}</h2>
+                                    <h2 *ngIf="!settings?.rating_wise_rest_section">
+                                        {{'Highest Rating Restaurants' | localization | translate}}</h2>
+                                </div>
+                            </div>
+                            <!-- <div class="col-md-3">
+                                <app-supplier-sorting [style]="style" (onSort)="onSortBy($event)">
+                                </app-supplier-sorting>
+                            </div> -->
+                            <div class="col-md-7">
+                                <!-- <div class="Restaurants-status" *ngIf="settings.is_pickup_order == 2">
+                                    <p>{{'Delivery' | translate}}</p>
+                                    <label class="switch">
+                                        <input type="checkbox" [checked]="selfPickup" [(ngModel)]="selfPickup">
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <p>{{'Self Pickup' | translate}}</p>
+                                </div> -->
+                            </div>
+
+                            <ng-container *ngIf="!isLoading; else skeleton2">
+                                <div class="col-md-4" *ngFor="let supplier of allSuppliers.slice(0,6);trackBy:trackByAllSupliersFn;">
+                                    <app-supplier [supplier]="supplier" [style]="style" [settings]="settings"
+                                        [darkTheme]="isDarkTheme">
+                                    </app-supplier>
+                                </div>
+                            </ng-container>
+
+                            <ng-template #skeleton2>
+                                <div class="skeleton col-md-6" *ngFor="let supplier of util.generateFakeList(4);trackBy:trackByUtilGenFakeFn;">
+                                    <app-supplier-skeleton [style]="style" [settings]="settings">
+                                    </app-supplier-skeleton>
+                                </div>
+                            </ng-template>
+
+                            <div class="col-md-12">
+                                <div class="see-more">
+                                    <a (click)="onSeeMore()" style="cursor: pointer;">{{'View All' | translate}}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </ng-template>
+
+    <ng-template [ngSwitchCase]="2">
+
+        <section id="product-categories">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="Restaurants-heading">
+                                    <h2>{{'top_suppliers_near_you' | localization | translate}}</h2>
+                                </div>
+                            </div>
+
+                            <ng-container *ngIf="!isLoading; else skeleton2">
+                                <div class="col-md-10" *ngFor="let supplier of allSuppliers.slice(0,4);trackBy:trackByAllSuppFn;">
+                                    <app-supplier [supplier]="supplier" [style]="style" [settings]="settings"
+                                        [darkTheme]="isDarkTheme">
+                                    </app-supplier>
+                                </div>
+                            </ng-container>
+
+                            <ng-template #skeleton2>
+                                <div class="skeleton col-md-12" *ngFor="let supplier of util.generateFakeList(4);trackBy:trackByUtilGenerateFn;">
+                                    <app-supplier-skeleton [style]="style" [settings]="settings">
+                                    </app-supplier-skeleton>
+                                </div>
+                            </ng-template>
+
+                            <div class="col-md-12">
+                                <div class="see-more">
+                                    <a (click)="onSeeMore()" style="cursor: pointer;">{{'View All' | translate}}</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="product-categories product-categories-theme2"
+                            [ngClass]="cat_fixed ? 'product-categories-scroll' : ''">
+                            <h2 *ngIf="settings?.show_tags_for_suppliers">{{'tags' | localization | translate}}</h2>
+                            <h2 *ngIf="!settings?.show_tags_for_suppliers">
+                                {{'categories' | localization | translate}}
+                            </h2>
+                            <ul *ngIf="categoryData && categoryData.length">
+                                <li *ngFor="let category of categoryData.slice(0, category_length);trackBy:trackByCategoryDataFn;">
+                                    <a (click)="supplierList(category)" style="cursor: pointer;">
+                                        <div class="Categories-img">
+                                            <img appImage [url]="category?.image" [size]="'50x50'" [settings]="settings"
+                                                [src]="category?.image"
+                                                onError="src = '/assets/images/placeholder_image.svg';">
+                                        </div>
+                                        <p class="ellipsis" data-toggle="tooltip" [title]="category?.name">
+                                            {{category?.name}}</p>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="see-more see-more-theme2" *ngIf="categoryData.length > 12">
+                                <a *ngIf="categoryData.length > category_length"
+                                    (click)="category_length = categoryData.length" style="cursor: pointer;"><i
+                                        class="fa fa-long-arrow-right"
+                                        aria-hidden="true"></i><span>{{'View More' | translate}}</span></a>
+                                <a *ngIf="categoryData.length <= category_length" (click)="category_length = 12"
+                                    style="cursor: pointer;"><i class="fa fa-long-arrow-right"
+                                        aria-hidden="true"></i><span>{{'View Less' | translate}}</span></a>
+                                <!-- <a href="">
+                                    <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+                                    <span>View All</span>
+                                </a> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </ng-template>
+
+
+
+
+    <!-- new added -->
+    <ng-template [ngSwitchCase]="3">
+
+        <!-- <section id="product-categories" class="spechil-offer"
+            [ngClass]="settings?.categories_above_supplier == 1 ? 'single_line_categories' : ''">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="Restaurants-heading">
+                                    <h2 *ngIf="settings?.rating_wise_rest_section">
+                                        {{settings?.rating_wise_rest_section?.section_name  | translate}}</h2>
+                                    <h2 *ngIf="!settings?.rating_wise_rest_section">
+                                        {{'Highest Rating Restaurants' | localization | translate}}</h2>
+                                </div>
+                            </div>
+
+                            <div class="col-md-7">
+
+                            </div>
+
+                            <ng-container *ngIf="!isLoading; else skeleton2">
+                                <div class="col-md-4" *ngFor="let supplier of allSuppliers.slice(0,6)">
+                                    <app-supplier [supplier]="supplier" [style]="style" [settings]="settings"
+                                        [darkTheme]="isDarkTheme">
+                                    </app-supplier>
+                                </div>
+                            </ng-container>
+
+                            <ng-template #skeleton2>
+                                <div class="skeleton col-md-6" *ngFor="let supplier of util.generateFakeList(4)">
+                                    <app-supplier-skeleton [style]="style" [settings]="settings">
+                                    </app-supplier-skeleton>
+                                </div>
+                            </ng-template>
+
+                            <div class="col-md-12">
+                                <div class="see-more">
+                                    <a (click)="onSeeMore()" style="cursor: pointer;">{{'View All' | translate}}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section> -->
+
+        <section id="gernal-product-slider">
+            <div class="container">
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="gernal-product-title">
+                            <h1 *ngIf="settings?.dynamic_home_screen_sections">
+                                {{settings?.rating_wise_rest_section?.section_name | translate}}</h1>
+                            <h1 *ngIf="!settings?.dynamic_home_screen_sections">
+                                {{'Highest Rating Restaurants' | localization | translate}}
+                            </h1>
+                            <p class="mb-0"
+                                *ngIf="settings?.eligible_order_amount && settings?.is_eligible_order_amount">
+                                {{'Eligible on orders of $'}}{{settings?.eligible_order_amount+'+'}}</p>
+                            <br />
+                            <a [style.background-color]="style?.primaryColor" style="color: #ffffff; cursor: pointer;"
+                                class="main_btn" (click)="onSeeMore()">{{'View All' | translate}}</a>
+                        </div>
+                    </div>
+                    <div class="col-md-9 rec-sup">
+
+                        <div *ngIf="!isLoading; else skeleton2">
+                            <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
+                                <div ngxSlickItem *ngFor="let supplier of allSuppliers.slice(0, 6); let i = index;trackBy:trackByAllSuppliersFn;"
+                                    class="slide">
+                                    <div class="item">
+                                        <div class="product-item" style="padding-right: 30px; cursor: pointer;">
+                                            <img style="width: 100%;" appImage [url]="supplier?.logo" [size]="'355x320'"
+                                                [settings]="settings" [src]="supplier?.logo"
+                                                onError="src = '/assets/images/placeholder_image.svg';"
+                                                (click)="productList(supplier)">
+                                            <!-- <div class="product_right">
+                                                <span class="time mr-1">15-30</span><span>min</span>
+                                            </div> -->
+                                            <h2 class="ellipsis d-inline-flex">{{supplier?.name}}</h2>
+                                            <span *ngIf="settings.is_supplier_wishlist == 1"
+                                                class="favourite favourite-icon float-right">
+                                                <a (click)="wishlist(!supplier?.Favourite, supplier)">
+                                                    <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                        <g id="Page-1" stroke="none" stroke-width="2"
+                                                            [attr.fill]="supplier?.Favourite ? style.primaryColor : 'none'"
+                                                            fill-rule="evenodd">
+                                                            <g id="Group-4" transform="translate(2.000000, 3.000000)"
+                                                                [attr.stroke]="supplier?.Favourite ? style.primaryColor : style.baseColor">
+                                                                <g id="ic_heart_fill">
+                                                                    <path
+                                                                        d="M10,18 L1.71572875,9.84452689 C-0.571909584,7.59245518 -0.571909584,3.9411255 1.71572875,1.68905378 C4.00336709,-0.563017928 7.71236166,-0.563017928 10,1.68905378 C12.2876383,-0.563017928 15.9966329,-0.563017928 18.2842712,1.68905378 C20.5719096,3.9411255 20.5719096,7.59245518 18.2842712,9.84452689 L10,18 Z"
+                                                                        id="Combined-Shape-Copy"></path>
+                                                                </g>
+                                                            </g>
+                                                        </g>
+                                                    </svg>
+                                                </a>
+                                            </span>
+                                            <p *ngIf="settings?.hide_supplier_address == 0"
+                                                class="ellipsis m-0 d-block">
+                                                {{supplier?.address}}</p>
+                                            <span class="rating_text"><i
+                                                    class="fa fa-star ng-tns-c84-11 mr-2"></i>{{supplier?.rating}}
+                                                Review</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ngx-slick-carousel>
+                        </div>
+
+                        <ng-template #skeleton2>
+                            <div class="skeleton">
+                                <ngx-slick-carousel class="carousel" #slickModal="slick-carousel"
+                                    [config]="slideConfig">
+                                    <div ngxSlickItem *ngFor="let item of util.generateFakeList(2); let i = index;trackBy:trackByUtilGenerateFakeListFn;"
+                                        class="slide">
+                                        <div class="item">
+                                            <div class="product-item" style="padding-right: 30px; position: relative;">
+                                                <img style="width: 100%; cursor: pointer;">
+                                                <h2 style="width: 50%; height: 16px;"></h2>
+                                                <p style="width: 80%; height: 14px;"></p>
+                                                <div class="product-price-tag">
+                                                    <h6
+                                                        style="width: 40%; font-size: 16px; margin-right: 8px; text-decoration: line-through;">
+                                                    </h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ngx-slick-carousel>
+                            </div>
+                        </ng-template>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+    </ng-template>
+
+
+
+
+
+    <!-- new added -->
+    <ng-template [ngSwitchCase]="4">
+
+        <section id="product-categories" class="spechil-offer"
+            [ngClass]="settings?.categories_above_supplier == 1 ? 'single_line_categories' : ''">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="Restaurants-heading">
+                                    <h2 *ngIf="settings?.rating_wise_rest_section">
+                                        {{settings?.rating_wise_rest_section?.section_name  | translate}}</h2>
+                                    <h2 *ngIf="!settings?.rating_wise_rest_section">
+                                        {{'Highest Rating Restaurants' | localization | translate}}</h2>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+
+                            </div>
+
+                            <ng-container *ngIf="!isLoading; else skeleton2">
+                                <div class="col-md-4" *ngFor="let supplier of allSuppliers.slice(0,6);trackBy:trackByAllSupFn;">
+                                    <app-supplier [supplier]="supplier" [style]="style" [settings]="settings"
+                                        [darkTheme]="isDarkTheme">
+                                    </app-supplier>
+                                </div>
+                            </ng-container>
+
+                            <ng-template #skeleton2>
+                                <div class="skeleton col-md-6" *ngFor="let supplier of util.generateFakeList(4);trackBy:trackByUtilListFn;">
+                                    <app-supplier-skeleton [style]="style" [settings]="settings">
+                                    </app-supplier-skeleton>
+                                </div>
+                            </ng-template>
+
+                            <div class="col-md-12">
+                                <div class="see-more text-center">
+                                    <a (click)="onSeeMore()" style="cursor: pointer;">{{'View All' | translate}}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </ng-template>
+
+</ng-container>

@@ -1,0 +1,22 @@
+.check input {
+    width: 24px;
+    height: 35px;
+}
+.check span {
+    position: relative;
+    bottom: 12px;
+    left: 10px;
+}
+.dialog-model {
+    display: block;
+    position: fixed;
+    z-index: 999;
+    padding-top: 90px !important;
+    padding-bottom: 50px !important;
+}
+.dialog-header h5 {
+    opacity: 0.8;
+    width: 90%;
+    display: inline-block;
+    text-align: center;
+}

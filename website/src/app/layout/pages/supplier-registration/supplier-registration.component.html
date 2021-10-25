@@ -1,0 +1,366 @@
+<app-processing-indicator *ngIf="isLoading"></app-processing-indicator>
+
+<section id="become_A_Driver_page">
+    <div class="container">
+
+        <form [formGroup]="supplierForm" (ngSubmit)="onSubmit()">
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="become_a_driver_info_outter">
+                        <div class="become_a_driver_info">
+                            <h1>Partner With Us</h1>
+                        </div>
+
+                        <div class="Chossee_resturants_form">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="Chossee_resturants_group">
+                                        <label>{{'supplier' | localization | translate}} Name</label>
+                                        <input type="text" placeholder="{{'supplier' | localization | translate}} Name"
+                                            formControlName="supplierName">
+                                        <div *ngIf="submitted && form.supplierName.errors"
+                                            class="alert alert-danger error">
+                                            <div *ngIf="form.supplierName.errors.required">Please enter Name.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="Chossee_resturants_group">
+                                        <label>{{'supplier' | localization | translate}} Email</label>
+                                        <input type="email"
+                                            placeholder="{{'supplier' | localization | translate}} Email"
+                                            formControlName="supplierEmail">
+                                        <div *ngIf="submitted && form.supplierEmail.errors"
+                                            class="alert alert-danger error">
+                                            <div *ngIf="form.supplierEmail.errors.required">Please enter Email.</div>
+                                            <div *ngIf="form.supplierEmail.errors.email">Please enter valid Email.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="Chossee_resturants_group">
+                                        <label>{{'supplier' | localization | translate}} Mobile number</label>
+                                        <div class="input-group" *ngIf="settings?.cutom_country_code">
+                                            <div class="row">
+                                                <div class="col-sm-3 select-box1">
+                                                    <!-- <select class="input-large input-large-altered select-box"
+                                                        formControlName="supplierCountryCode">
+                                                        <option value="">Select </option>
+                                                        <option *ngFor="let opt of preferredCountries"
+                                                            [value]="opt.country_code">{{opt.country_code}}&nbsp;
+                                                            {{opt.country_name | slice:0:7}}</option>
+                                                    </select> -->
+
+                                                    <div class="country_dropbox home-page-search-restorent dropdown">
+                                                        <a class=" dropdown-toggle pointer"
+                                                            data-toggle="dropdown"><img class="country_flag" *ngIf="countryCodeFlag" src="{{countryCodeFlag}}"> {{countryCodeString || 'Select'}}
+                                                            <img src="/assets/images/down_black.png"></a>
+                                                        <ul class="dropdown-menu country_text">
+                                                            <li class="pointer"><a *ngFor="let opt of preferredCountries" 
+                                                                    (click)="setCountryCode(opt)"><img src="{{opt.flag_image}}"><p>{{opt.country_code}}</p>&nbsp;
+                                                                    {{opt.country_name}}</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-8 input-number" style="margin-left: 26px;">
+                                                    <input name="TypeCode" placeholder="Phone Number" type="text"
+                                                        formControlName="supplierMobileNo" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="!settings?.cutom_country_code">
+                                            <ngx-intl-tel-input [selectedCountryISO]="countryISO"
+                                            [preferredCountries]="preferredCountries" (focus)="submitted= false"
+                                            [searchCountryFlag]="true" placeholder="Phone Number"
+                                            [enableAutoCountrySelect]="false" [enablePlaceholder]="true"
+                                            [separateDialCode]="true" [phoneValidation]="true"
+                                            formControlName="supplierMobileNo">
+                                        </ngx-intl-tel-input>
+                                        </div>
+                                        <div *ngIf="submitted && form.supplierMobileNo?.errors"
+                                            class="alert alert-danger error">
+                                            <div *ngIf="form.supplierMobileNo?.errors.required">
+                                                {{'Please enter Phone Number.' | translate}}</div>
+                                            <div *ngIf="settings?.cutom_country_code && form.supplierCountryCode?.errors.required">
+                                                {{'Please select a country code.' | translate}}</div>
+                                            <div
+                                                *ngIf="!form.supplierMobileNo?.errors.required && form.supplierMobileNo?.invalid">
+                                                {{'Please Enter a Valid Phone Number.' | translate}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="Chossee_resturants_group">
+                                        <label>{{'supplier' | localization | translate}} Address</label>
+                                        <input type="text" formControlName="supplierAddress"
+                                            placeholder="{{'supplier' | localization | translate}} Address"
+                                            appGoogleplace (onSelect)="address($event)">
+                                        <div *ngIf="submitted && form.supplierAddress.errors"
+                                            class="alert alert-danger error">
+                                            <div *ngIf="form.supplierAddress.errors.required">Please enter Address.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="Chossee_resturants_group">
+                                        <label>FEIN * (Federal Employer Identification Number)</label>
+                                        <input type="text" placeholder="FEIN * (Federal Employer Identification Number)"
+                                            formControlName="fein">
+                                        <div *ngIf="submitted && form.fein.errors" class="alert alert-danger error">
+                                            <div *ngIf="form.fein.errors.required">Please enter Federal Employer
+                                                Identification Number.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="Chossee_resturants_group">
+                                        <label>{{'supplier_service_fee' | localization |
+                                            translate}}&nbsp;({{'%'}})</label>
+                                        <input type="text"
+                                            placeholder="{{'supplier_service_fee' | localization | translate}}({{'%'}})"
+                                            formControlName="user_service_fee">
+                                        <div *ngIf="submitted && form.user_service_fee.errors"
+                                            class="alert alert-danger error">
+                                            <div *ngIf="form.user_service_fee.errors.required">Please enter
+                                                {{'supplier_service_fee' | localization | translate}}.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="Chossee_resturants_group car-insured-outter">
+                                        <label>What opportunities fit your business goals?</label>
+                                        <ul class="car-insured">
+                                            <li>
+                                                <label class="container-Chossee_resturants"> Pick up only
+                                                    <input type="radio" [checked]="supplierForm.value.self_pickup == 1"
+                                                        formControlName="self_pickup" value="1">
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                            </li>
+                                            <li>
+                                                <label class="container-Chossee_resturants">Delivery and pick up
+                                                    <input type="radio" [checked]="supplierForm.value.self_pickup == 2"
+                                                        formControlName="self_pickup" value="2">
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="Chossee_resturants_group car-insured-outter">
+                                        <label>Do You Wish To Have Branches?</label>
+                                        <ul class="car-insured">
+                                            <li>
+                                                <label class="container-Chossee_resturants"> Single Branch
+                                                    <input type="radio"
+                                                        [checked]="supplierForm.value.is_multibranch == 0"
+                                                        formControlName="is_multibranch" value="0">
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                            </li>
+                                            <li>
+                                                <label class="container-Chossee_resturants">Multi Branch
+                                                    <input type="radio"
+                                                        [checked]="supplierForm.value.is_multibranch == 1"
+                                                        formControlName="is_multibranch" value="1">
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 supplier-reg">
+                    <div class="persinfo" style="padding: 0px 34px">
+                        <div class="row suppro" *ngIf="categoryData.length"
+                            style="margin-bottom: 15px; margin-top: 20px;">
+                            <div class="col-md-4" style="margin-bottom: 15px;"
+                                *ngFor="let catData of categoryData; let i = index;trackBy:trackByCategoryFn;">
+                                <div class="form-group">
+                                    <div class="box">
+                                        <div class="top">
+                                            <h2 class="bold">
+                                                {{i > 0 ? catData.category.name : ('categories' | localization |
+                                                translate)}}
+                                            </h2>
+                                            <!-- <label style="margin-top: 12px;"
+                                                *ngIf="catData?.category?.checked || i == 0">Mark
+                                                All<input type="checkbox" style="margin-left: 8px;" (click)="markAll(i)"
+                                                    [(ngModel)]="catData.mark_all" [ngModelOptions]="{standalone: true}">
+                                                <span style="margin-left: 8px; top: 2px;"></span>
+                                            </label> -->
+                                        </div>
+                                        <div class="scroll">
+                                            <ul class="items">
+                                                <li [ngClass]="(category?.sub_category)?.length ? 'cursor' : ''"
+                                                    (click)="viewSubCat(i, category)"
+                                                    *ngFor="let category of catData.arr; let j = index;trackBy:trackByCatDataFn;">
+                                                    {{category.name}}
+                                                    <label *ngIf="catData?.category?.checked || i == 0"><input
+                                                            type="checkbox" (click)="selectCat(category)"
+                                                            [checked]="category?.checked">
+                                                        <span></span>
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row" *ngIf="settings?.show_tags_for_suppliers">
+                <div class="col-md-12 supplier-reg" *ngIf="supplierTagsList.length">
+                    <div class="persinfo" style="padding: 0px 34px">
+                        <div class="row suppro" style="margin-bottom: 15px; margin-top: 20px;">
+                            <div class="col-md-4">
+                                <div style="margin-bottom: 15px;">
+                                    <div class="form-group">
+                                        <div class="box">
+                                            <div class="top">
+                                                <h2 class="bold">
+                                                    {{'tags' | localization | translate}}
+                                                </h2>
+                                            </div>
+                                            <div class="scroll">
+                                                <ul class="items">
+                                                    <li>
+                                                        <p class="text-right cursor" (click)="markAllTags()">
+                                                            {{!mark_all_tags?'Mark All':'Un Mark All' | translate}}
+                                                            <label class="ml-3"><input type="checkbox"
+                                                                    (click)="markAllTags()" [checked]="mark_all_tags">
+                                                                <span></span>
+                                                            </label>
+                                                        </p>
+                                                    </li>
+                                                    <li
+                                                        *ngFor="let tag of supplierTagsList; let i = index;trackBy:trackByTagsListFn;">
+                                                        {{tag.name}}
+                                                        <label><input type="checkbox" (click)="selectTag(tag)"
+                                                                [checked]="tag.checked">
+                                                            <span></span>
+                                                        </label>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="submit_value" style="padding: 0px 34px">
+                        <button [ngStyle]="primaryButton" type="submit" class="btn">Submit</button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+</section>
+<section id="become_driver" class="Become_Flavor">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="become_driver_text" *ngIf="flavorOfTheWeek.become_flavor_signup_text">
+                    <h3>{{'become_a_flavor' | localization | translate}}</h3>
+                    <p [innerHtml]="flavorOfTheWeek.become_flavor_signup_text"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="key_benifits">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="key_text">
+                    <h3><strong>Key</strong> Benefits</h3>
+                </div>
+            </div>
+            <div class="row key_benifits_box">
+                <div class="col-md-4 col-sm-4">
+                    <div class="Key_Benifits_outter">
+                        <div class="Key_Benifits_image">
+                            <img src="/assets/images/food/first.svg">
+                        </div>
+                        <h5>Access a wide customer base
+                            in your area</h5>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-4">
+                    <div class="Key_Benifits_outter">
+                        <div class="Key_Benifits_image">
+                            <img src="/assets/images/food/Second.svg">
+                        </div>
+                        <h5>Access to a large delivery fleet</h5>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-4">
+                    <div class="Key_Benifits_outter">
+                        <div class="Key_Benifits_image">
+                            <img src="/assets/images/food/Third.svg">
+                        </div>
+                        <h5>All your business matrics on your
+                            finger tips in real time</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="Success_your_story">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="Success_your_story_text">
+                    <h3>OUR SUCCESS <strong>IS YOUR SUCCESS</strong></h3>
+                </div>
+            </div>
+            <div class="row Success_your_story_box">
+                <div class="col-md-6">
+                    <div class="Success_your_story_outter">
+                        <img src="/assets/images/food/map-1.svg">
+                        <h5>Globally Expanding</h5>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="Success_your_story_outter">
+                        <img src="/assets/images/food/store-1.svg">
+                        <h5>covering multiple restaurants
+                            and expanding</h5>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</section>

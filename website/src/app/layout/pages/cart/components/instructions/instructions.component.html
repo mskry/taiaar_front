@@ -1,0 +1,8 @@
+<div class="instructions">
+    <h4 [ngStyle]="{color: style.baseColor}" translate>
+        {{title ? title : 'instruction' | localization}}
+    </h4>
+    <hr>
+    <textarea rows="5" class="form-control" placeholder="{{placeholder | translate}}"
+        [(ngModel)]="instructions" (ngModelChange)="onInstructionChange($event)"></textarea>
+</div>

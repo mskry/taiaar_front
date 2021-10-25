@@ -1,0 +1,303 @@
+<ng-container [ngSwitch]="settings?.selected_template">
+
+    <ng-template [ngSwitchCase]="1">
+
+        <div class="cafe-Restaurants-outter">
+            <div class="cafe-Restaurants-detail cursor" (click)="productList(supplier)">
+                <div class="cafe-Restaurants-img mobile-img">
+                    <img appImage [url]="supplier?.logo" [size]="'440x400'" [src]="supplier?.logo" [settings]="settings"
+                        onError="src = '/assets/images/placeholder_image.svg';" @fade>
+                </div>
+                <div class="cafe-Restaurants-title">
+                        <!-- d-inline-flex -->
+                    <h3 class="ellipsis" data-toggle="tooltip" [title]="isBranch ? supplier?.supplier_branch_name : supplier?.name" @fade>
+                        {{isBranch ? supplier?.supplier_branch_name : supplier?.name}}</h3>
+
+                    <p *ngIf="settings?.hide_supplier_address == 0" class="ellipsis" @fade>{{supplier?.address}}</p>
+                    
+                    <div *ngIf="supplier?.category?.length>0 && !settings?.show_tags_for_suppliers">
+                        <span *ngIf="settings?.enable_comma_separation_text == 0">
+                            <p style="width: 90px;" class="mr-2">{{'categories' | localization | translate}}:</p> <span
+                                style="width: 40%;" *ngFor="let cats of supplier?.category.slice(0,2)"
+                                @fade>&nbsp;{{cats?.name || cats?.category_name}}</span>
+                        </span>
+                        
+                        
+                        <p *ngIf="settings?.enable_comma_separation_text == 1" style="width: 100%;" class="mr-2">{{'categories' | localization | translate}}: <span
+                                *ngFor="let cats of supplier?.category.slice(0,2);let i=index"
+                                @fade>&nbsp;{{cats?.name || cats?.category_name}}{{(i == 0 && supplier?.category.length > 2) ? ',' : ''}}</span></p>
+                        
+                    </div>
+
+                    <div *ngIf="supplier?.supplier_tags?.length>0 && settings?.show_tags_for_suppliers">
+                        <p style="width: 90px;">{{'tags' | localization | translate}} :</p> <span style="width: 60%;"
+                            *ngFor="let tag of supplier?.supplier_tags.slice(0,2);trackBy:trackBySTFn;"
+                            @fade>&nbsp;{{tag?.name}}</span>
+                    </div>
+                </div>
+                <div class="cafe-Restaurants-img desktop-img cursor">
+                    <img appImage [url]="supplier?.logo" [size]="'200x120'" [src]="supplier?.logo" [settings]="settings"
+                        onError=" src='/assets/images/placeholder_image.svg' ;">
+                </div>
+            </div>
+            <div class="cafe-Restaurants-delivery">
+                <ul>
+                    <li>
+                        <span [style.background-color]="style?.primaryColor" @fade><i class="fa fa-star"
+                                aria-hidden="true"></i>
+                            {{supplier?.rating ? supplier?.rating : 0}}
+                        </span>
+                    </li>
+                    <li>
+                        <a (click)="addToWishList()" class="cursor" *ngIf="settings?.is_supplier_wishlist">
+                            <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <g id="Page-1" stroke="none" stroke-width="2"
+                                    [attr.fill]="supplier?.Favourite ? style.primaryColor : 'none'" fill-rule="evenodd">
+                                    <g id="Group-4" transform="translate(2.000000, 3.000000)"
+                                        [attr.stroke]="supplier?.Favourite ? style.primaryColor : style.baseColor">
+                                        <g id="ic_heart_fill">
+                                            <path
+                                                d="M10,18 L1.71572875,9.84452689 C-0.571909584,7.59245518 -0.571909584,3.9411255 1.71572875,1.68905378 C4.00336709,-0.563017928 7.71236166,-0.563017928 10,1.68905378 C12.2876383,-0.563017928 15.9966329,-0.563017928 18.2842712,1.68905378 C20.5719096,3.9411255 20.5719096,7.59245518 18.2842712,9.84452689 L10,18 Z"
+                                                id="Combined-Shape-Copy"></path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </a>
+                    </li>
+                    <li *ngIf="supplier?.todayTimes">
+                        <p [style.color]="supplier?.todayTimes?.is_open == 1 ? 'green' : 'red'">
+                            {{(supplier?.todayTimes?.is_open == 1 ? 'Open' : 'Closed') | translate}} {{supplier?.is_open |
+                            translate}}
+                        </p>
+                    </li>
+                    <li (click)="productList(supplier)" style="float: right; margin-top: 3px; margin-right: 0px;">
+                        <p><a style="cursor: pointer;"><img src="/assets/images/food/ic_cart.svg">{{'order' |
+                                localization | translate}}
+                                {{'Now' | translate}}</a></p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template [ngSwitchCase]="2">
+
+        <div class="cafe-Restaurants-outter">
+            <div class="cafe-Restaurants-detail">
+                <div class="cafe-Restaurants-img mobile-img" (click)="productList(supplier)">
+                    <img appImage [url]="supplier?.logo" [size]="'130x120'" [src]="supplier?.logo" [settings]="settings"
+                        onError="src = '/assets/images/placeholder_image.svg';" @fade>
+                </div>
+                <div class="cafe-Restaurants-title">
+                    <h3 class="ellipsis d-inline-flex" @fade (click)="productList(supplier)">
+                        {{isBranch ? supplier?.supplier_branch_name : supplier?.name}}</h3>
+                    <a (click)="onFavourite.emit()" class="float-right cursor" *ngIf="settings?.is_supplier_wishlist">
+                        <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+                            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <g id="Page-1" stroke="none" stroke-width="2"
+                                [attr.fill]="supplier?.Favourite ? style.primaryColor : 'none'" fill-rule="evenodd">
+                                <g id="Group-4" transform="translate(2.000000, 3.000000)"
+                                    [attr.stroke]="supplier?.Favourite ? style.primaryColor : style.baseColor">
+                                    <g id="ic_heart_fill">
+                                        <path
+                                            d="M10,18 L1.71572875,9.84452689 C-0.571909584,7.59245518 -0.571909584,3.9411255 1.71572875,1.68905378 C4.00336709,-0.563017928 7.71236166,-0.563017928 10,1.68905378 C12.2876383,-0.563017928 15.9966329,-0.563017928 18.2842712,1.68905378 C20.5719096,3.9411255 20.5719096,7.59245518 18.2842712,9.84452689 L10,18 Z"
+                                            id="Combined-Shape-Copy"></path>
+                                    </g>
+                                </g>
+                            </g>
+                        </svg>
+                    </a>
+                    <p class="ellipsis" @fade>{{supplier?.address}}</p>
+                    <div *ngIf="supplier?.category_names">
+                        <p style="width: 90px;">{{'categories' | localization | translate} :</p> <span
+                            style="width: 70%;" @fade>{{supplier?.category_names}}</span>
+                    </div>
+                </div>
+                <div class="cafe-Restaurants-img desktop-img" (click)="productList(supplier)">
+                    <img appImage [url]="supplier?.logo" [size]="'300x220'" [src]="supplier?.logo" [settings]="settings"
+                        onError=" src='/assets/images/placeholder_image.svg' ;">
+                </div>
+            </div>
+            <div class="cafe-Restaurants-delivery">
+                <ul>
+                    <li>
+                        <span [style.background-color]="style?.primaryColor" @fade><i class="fa fa-star"
+                                aria-hidden="true"></i>
+                            {{supplier?.rating ? supplier?.rating : 0}}
+                        </span>
+                    </li>
+                    <li (click)="productList(supplier)" style="float: right; margin-top: 3px; margin-right: 0px;">
+                        <p><a style="cursor: pointer;"><img src="/assets/images/food/ic_cart.svg">{{'order' |
+                                localization | translate}}
+                                {{'Now' | translate}}</a></p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template [ngSwitchCase]="3">
+
+        <div class="cafe-Restaurants-outter">
+            <div class="cafe-Restaurants-detail">
+                <div class="cafe-Restaurants-img mobile-img" (click)="productList(supplier)">
+                    <img appImage [url]="supplier?.logo" [size]="'440x400'" [src]="supplier?.logo" [settings]="settings"
+                        onError="src = '/assets/images/placeholder_image.svg';" @fade>
+                </div>
+                <div class="cafe-Restaurants-title">
+                    <p class="pl-2 pr-2 sponser" [style.background-color]="style?.primaryColor">
+                        {{supplier?.is_subscribed?'Sponsored':''}}</p>
+                    <h3 class="ellipsis d-inline-flex" @fade (click)="productList(supplier)">
+                        {{isBranch ? supplier?.supplier_branch_name : supplier?.name}}
+                    </h3>
+                    <a (click)="onFavourite.emit()" class="float-right cursor" *ngIf="settings?.is_supplier_wishlist">
+                        <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+                            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <g id="Page-1" stroke="none" stroke-width="2"
+                                [attr.fill]="supplier?.Favourite ? style.primaryColor : 'none'" fill-rule="evenodd">
+                                <g id="Group-4" transform="translate(2.000000, 3.000000)"
+                                    [attr.stroke]="supplier?.Favourite ? style.primaryColor : style.baseColor">
+                                    <g id="ic_heart_fill">
+                                        <path
+                                            d="M10,18 L1.71572875,9.84452689 C-0.571909584,7.59245518 -0.571909584,3.9411255 1.71572875,1.68905378 C4.00336709,-0.563017928 7.71236166,-0.563017928 10,1.68905378 C12.2876383,-0.563017928 15.9966329,-0.563017928 18.2842712,1.68905378 C20.5719096,3.9411255 20.5719096,7.59245518 18.2842712,9.84452689 L10,18 Z"
+                                            id="Combined-Shape-Copy"></path>
+                                    </g>
+                                </g>
+                            </g>
+                        </svg>
+                    </a>
+                    <p *ngIf="settings?.hide_supplier_address == 0" class="ellipsis" @fade>{{supplier?.address}}</p>
+                    <div *ngIf="supplier?.category?.length>0 && !settings?.show_tags_for_suppliers">
+                        <p style="width: 90px;" class="mr-2">{{'categories' | localization}}:</p> <span
+                            style="width: 40%;"
+                            *ngFor="let cats of supplier?.category.slice(0,3);trackBy:trackByCategoryFn;"
+                            @fade>{{cats?.name || cats?.category_name}}</span>
+                    </div>
+                    <div *ngIf="supplier?.supplier_tags?.length>0 && settings?.show_tags_for_suppliers">
+                        <p style="width: 90px;">{{'tags' | localization | translate}} :</p> <span style="width: 60%;"
+                            *ngFor="let tag of supplier?.supplier_tags.slice(0,3);trackBy:trackBySupplierTagFn;"
+                            @fade>{{tag?.name}}</span>
+                    </div>
+                    <!-- <div *ngIf="supplier?.category_names">
+                        <p style="width: 90px;">{{'categories' | localization}} :</p> <span style="width: 70%;"
+                            @fade>{{supplier?.category_names}}</span>
+                    </div> -->
+                </div>
+                <div class="cafe-Restaurants-img desktop-img cursor" (click)="productList(supplier)">
+                    <img appImage [url]="supplier?.logo" [size]="'200x120'" [src]="supplier?.logo" [settings]="settings"
+                        onError=" src='/assets/images/placeholder_image.svg' ;">
+                </div>
+            </div>
+            <div class="cafe-Restaurants-delivery">
+                <ul>
+                    <li>
+                        <span [style.background-color]="style?.primaryColor" @fade><i class="fa fa-star"
+                                aria-hidden="true"></i>
+                            {{supplier?.rating ? supplier?.rating : 0}}
+                        </span>
+                    </li>
+                    <li style="margin-right: 0px;">
+                        <p><a style="cursor: pointer;">30 min. Free Delivery</a></p>
+                    </li>
+                    <li (click)="productList(supplier)" style="float: right; margin-top: 3px; margin-right: 0px;">
+                        <p><a style="cursor: pointer;"><img src="/assets/images/food/ic_cart.svg">{{'order' |
+                                localization | translate}}
+                                {{'Now' | translate}}</a></p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </ng-template>
+
+
+
+    <ng-template [ngSwitchCase]="4">
+        <div class="cafe-Restaurants-outter">
+            <div class="cafe-Restaurants-detail">
+                <div class="cafe-Restaurants-img mobile-img" (click)="productList(supplier)">
+                    <img appImage [url]="supplier?.logo" [size]="'440x400'" [src]="supplier?.logo" [settings]="settings"
+                        onError="src = '/assets/images/placeholder_image.svg';" @fade>
+                </div>
+                <div class="cafe-Restaurants-title">
+                    <h3 class="ellipsis d-inline-flex" @fade (click)="productList(supplier)">
+                        {{isBranch ? supplier?.supplier_branch_name : supplier?.name}}
+                    </h3>
+                    <a (click)="onFavourite.emit()" class="float-right cursor" *ngIf="settings?.is_supplier_wishlist">
+                        <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+                            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <g id="Page-1" stroke="none" stroke-width="2"
+                                [attr.fill]="supplier?.Favourite ? style.primaryColor : 'none'" fill-rule="evenodd">
+                                <g id="Group-4" transform="translate(2.000000, 3.000000)"
+                                    [attr.stroke]="supplier?.Favourite ? style.primaryColor : style.baseColor">
+                                    <g id="ic_heart_fill">
+                                        <path
+                                            d="M10,18 L1.71572875,9.84452689 C-0.571909584,7.59245518 -0.571909584,3.9411255 1.71572875,1.68905378 C4.00336709,-0.563017928 7.71236166,-0.563017928 10,1.68905378 C12.2876383,-0.563017928 15.9966329,-0.563017928 18.2842712,1.68905378 C20.5719096,3.9411255 20.5719096,7.59245518 18.2842712,9.84452689 L10,18 Z"
+                                            id="Combined-Shape-Copy"></path>
+                                    </g>
+                                </g>
+                            </g>
+                        </svg>
+                    </a>
+                    <p *ngIf="settings?.hide_supplier_address == 0" class="ellipsis" @fade>{{supplier?.address}}</p>
+                    <div *ngIf="supplier?.category?.length>0 && !settings?.show_tags_for_suppliers">
+                        <p style="width: 90px;" class="mr-2">{{'categories' | localization}}:</p> <span
+                            style="width: 40%;"
+                            *ngFor="let cats of supplier?.category.slice(0,3);trackBy:trackBySupplierCatFn;let i = index;" @fade>{{cats?.name
+                            || cats?.category_name}}{{i < 2 ? ',' : ''}}</span>
+                    </div>
+                    <div *ngIf="supplier?.supplier_tags?.length>0 && settings?.show_tags_for_suppliers">
+                        <p style="width: 90px;">{{'tags' | localization | translate}} :</p> <span style="width: 60%;"
+                            *ngFor="let tag of supplier?.supplier_tags.slice(0,3);trackBy:trackByTagsFn;"
+                            @fade>{{tag?.name}}</span>
+                    </div>
+                    <!-- <div *ngIf="supplier?.category_names">
+                        <p style="width: 90px;">{{'categories' | localization}} :</p> <span style="width: 70%;"
+                            @fade>{{supplier?.category_names}}</span>
+                    </div> -->
+                </div>
+                <div class="cafe-Restaurants-img desktop-img cursor" (click)="productList(supplier)">
+                    <img appImage [url]="supplier?.logo" [size]="'200x120'" [src]="supplier?.logo" [settings]="settings"
+                        onError=" src='/assets/images/placeholder_image.svg' ;">
+                </div>
+            </div>
+            <div class="cafe-Restaurants-delivery">
+                <ul>
+                    <li>
+                        <span [style.background-color]="style?.primaryColor" @fade><i class="fa fa-star"
+                                aria-hidden="true"></i>
+                            {{supplier?.rating ? supplier?.rating : 0}}
+                        </span>
+                    </li>
+                    <!-- <li style="margin-right: 0px;" *ngIf="selected_order_type==1">
+                        <p><a
+                                style="cursor: pointer;">{{'Prep Time' | translate}}&nbsp;{{supplier?.preparation_time}}</a>
+                        </p>
+                    </li> -->
+                    <li style="float: right; margin-top: 3px; margin-right: 0px;" (click)="productList(supplier)" *ngIf="supplier?.is_dine_in && settings?.is_table_booking && 
+                        supplier?.is_scheduled && selected_order_type==2;else orderNow">
+                        <p class="mb-0"><a style="cursor: pointer;display: flex;" [style.color]="style?.primaryColor"
+                                class="boo">{{'View' | translate}}</a></p>
+                    </li>
+                    <ng-template #orderNow>
+                        <li (click)="productList(supplier)" style="float: right; margin-top: 3px; margin-right: 0px;">
+                            <p class="mb-0"><a [style.color]="style?.primaryColor"
+                                    style="cursor: pointer;display: flex;"><img class="mr-1"
+                                        src="/assets/images/food/ic_cart.svg">{{'order' | localization | translate}}
+                                    {{'Now' | translate}}</a></p>
+                        </li>
+                    </ng-template>
+                </ul>
+            </div>
+        </div>
+
+
+        <app-cart-schedule-time [style]="style" [settings]="settings" [table_flow]="settings?.table_book_mac_theme"
+            *ngIf="showScheduleTime" [schedulingData]="schedulingData" (onScheduling)="onSchedulingProcess($event)"
+            (onClose)="this.showScheduleTime = false"></app-cart-schedule-time>
+
+
+    </ng-template>
+
+</ng-container>

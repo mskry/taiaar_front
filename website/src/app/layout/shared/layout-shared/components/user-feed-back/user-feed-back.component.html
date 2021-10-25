@@ -1,0 +1,127 @@
+<!-- <div id="feedbackModal" #feedbackModal class="modal fade" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" style="text-align: center">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                    (click)="onDismiss()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="tab-content pt-3 pb-3 px-sm-0" id="nav-tabContent">
+                    <div class="tab-pane fade show active">
+                        <div class="tab-content">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                        [ngStyle]="{'backgroundColor': style?.primaryColor, 'borderColor': style?.primaryColor, 'color': '#ffffff'}"
+                        class="btn" aria-label="Close">{{'Proceed' | translate}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<ng-container>
+    <div class="dialog-model">
+        <div class="dialog-content" style="max-width: 700px;">
+            <div class="container">
+                <div class="dialog-header" style="width: 100%;">
+                    <h5 [style.color]="style.baseColor">Share Your Feedback</h5>
+                    <a href="javascript:void(0)" class="dialog-close-button" (click)="onDismiss()">&times;</a>
+                </div>
+                <div class="modal-body">
+                    <app-processing-indicator *ngIf="isLoading"></app-processing-indicator>
+
+                    <div id="personal_info" class="profile-left-right">
+                        <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+                            <div class="">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label [style.color]="style.baseColor">Name</label>
+                                            <input type="text" placeholder="Name" class="form-control"
+                                                formControlName="name">
+                                            <div class="text-error"
+                                                *ngIf="form.controls['name'].errors?.required && showError">
+                                                {{'Please enter name' | translate}}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label [style.color]="style.baseColor">Email</label>
+                                            <input (keydown.space)="$event.preventDefault()" class="form-control"
+                                                type="email" placeholder="Email" formControlName="email_id">
+                                            <div class="text-error"
+                                                *ngIf="form.controls['email_id'].errors?.required && showError">
+                                                {{'Please enter email' | translate}}</div>
+                                            <div class="text-error"
+                                                *ngIf="!form.controls['email_id'].errors?.required && form.controls['email_id'].errors?.email && showError">
+                                                {{'Please enter valid email' | translate}}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label [style.color]="style.baseColor">Phone</label>
+                                            <input class="form-control" (keydown.space)="$event.preventDefault()"
+                                                type="tel" placeholder="Phone" numbersOnly formControlName="phone">
+                                            <div class="text-error"
+                                                *ngIf="form.controls['phone'].errors?.required && showError">
+                                                {{'Please enter Phone No.' | translate}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label [style.color]="style.baseColor">Description</label>
+                                            <textarea class="form-control" type="text" placeholder="Description"
+                                                rows="4" formControlName="description"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label [style.color]="style.baseColor">New Suggestion</label>
+                                            <textarea type="text" class="form-control" placeholder="New Suggestion"
+                                                rows="4" formControlName="new_suggestions"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row" *ngIf="suggestions.length">
+                                    <div class="col-md-12">
+                                        <label>Select Suggestions</label>
+                                        <div class="cust">
+                                            <form>
+                                                <div class="form-group check">
+                                                    <div class="row sugg-bx">
+                                                        <label class="col-md-12"
+                                                            *ngFor="let suggestion of suggestions; let i = index;trackBy:trackBySuggestionsFn">
+                                                            <input type="checkbox" name="{{'name' + i}}"
+                                                                (change)="selectSuggestion(suggestion)">
+                                                            <span class="ml-3">{{suggestion?.name}}</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button class="btn mt-3"
+                                    [ngStyle]="{'backgroundColor': style.primaryColor, 'borderColor': style.primaryColor, 'color': '#ffffff'}"
+                                    href="javascript:void(0)" type="submit">{{'Submit' | translate}}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</ng-container>

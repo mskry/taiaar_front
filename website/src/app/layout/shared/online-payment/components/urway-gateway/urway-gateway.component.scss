@@ -1,0 +1,19 @@
+.form-group.required .control-label:after {
+    content: "*";
+    color: red;
+}
+
+.hasError {
+    /* display: none; */
+    width: 100%;
+    margin-top: .25rem;
+    font-size: 80%;
+    color: #dc3545;
+}
+
+.heading {
+    background: -webkit-linear-gradient(#2bb673, #19aeee);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 48px;
+}

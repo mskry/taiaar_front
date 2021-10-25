@@ -1,0 +1,544 @@
+<ng-container [ngSwitch]="settings?.selected_template">
+
+    <ng-template [ngSwitchCase]="1">
+
+        <header id="header" class="fixed_top" *ngIf="!settings?.is_single_vendor else singleVendor"
+            [style.background-color]="settings?.app_type == 7 ? '#4A4A4A' : is_dark ?  style.backgroundColor : style?.headerBackgroundColor || style.backgroundColor">
+            <div class="" [ngClass]="settings?.enable_pearwheel_theme == 1 ? 'container-fluid' : 'container'">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="header-logo">
+                            <a class="navbar-brand cursor" [class.disabled]="isNavigating" (click)="onLogo()">
+                                <app-logo [width]="'auto'" [height]="'50'" [logoColor]="style.primaryColor"
+                                    [logoPadding]="'10'">
+                                </app-logo>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-3 add-header-search">
+                        <div class="mt-3 mr-2" *ngIf="settings?.enable_food_varients">
+                            <app-categories *ngIf="settings?.app_type == 1"></app-categories>
+                        </div>
+
+                        <app-search
+                            *ngIf="(fix_search && ((router.url == '/' && !settings?.isCustomFlow) || (settings?.isCustomFlow && (router.url).startsWith('/food/home')))) ||( router.url !== '/' && !settings?.isCustomFlow) || (settings?.isCustomFlow && !(router.url).startsWith('/food/home') )"
+                            class="header-fixed-search" [settings]="settings" [style]="style"></app-search>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="navbar food-temp">
+
+                            <a *ngIf="settings?.is_social_ecommerce == 1" [style.color]="style?.headerTextColor"
+                                [class.disabled]="isNavigating" [routerLink]="['/social-ecom']">
+                                {{whatsTrending | translate}}
+                            </a>
+
+                            <app-header-cart class="main_cart_outter" [style]="style" [settings]="settings"
+                                [isNavigating]="isNavigating">
+                            </app-header-cart>
+
+                            <span class="open_menu" (click)="sidenav = 1">&#9776;
+                                <!-- <span _ngcontent-c3="" *ngIf="totalCart > 0" class="cart_value"
+                                  [style.background-color]="style.primaryColor">{{totalCart}}</span> -->
+                            </span>
+                            <div id="mySidenav" class="sidenav"
+                                [style.width]="sidenav != 0  ? sidenav == 1 ? '250px' : '0px' : ''">
+                                <a href="javascript:void(0)" class="closebtn" (click)="sidenav = 2">&times;</a>
+                                <app-function-list class=" ml-auto" [showSearchbar]="showSearchbar"
+                                    [userWalletBalance]="userWalletBalance" [userData]="userData" [loggedIn]="loggedIn"
+                                    [style]="style" [settings]="settings" [openAuth]="openAuth"
+                                    (searchBar)="showSearchbar = $event" (triggerAuthModal)="openAuth = $event"
+                                    (authType)="openAuthModal($event)">
+                                </app-function-list>
+                                <app-language *ngIf="settings.secondary_language != '0'" [style]="style"
+                                    [settings]="settings"></app-language>
+                                <app-currency *ngIf="settings.is_multicurrency_enable" [style]="style"
+                                    [settings]="settings"></app-currency>
+                            </div>
+                            <ul *ngIf="settings.show_header_useful_link == 1">
+                                <li *ngIf="settings?.aboutUs">
+                                    <a [style.color]="style?.headerTextColor" [routerLink]="['/about']">{{'about_us' | localization |
+                                      translate}}</a>
+                                </li>
+                                <li *ngIf="settings?.is_vendor_registration == 1"><a [style.color]="style?.headerTextColor"
+                                    target="_blank" [href]="registrationUrl">{{'Register As' | translate}}
+                                    {{'suppliers' | localization | translate}}</a></li>
+                            </ul>
+                            <ul class="social-header" *ngIf="settings.show_header_social_link == 1">
+                                <li *ngIf="settings?.fackbook_link"><a target="_blank" [style.color]="style?.headerTextColor"
+                                        [href]="settings?.fackbook_link"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                                <li *ngIf="settings?.instagram_link"><a target="_blank" [style.color]="style?.headerTextColor"
+                                        [href]="settings?.instagram_link"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                                <li *ngIf="settings?.twitter_link"><a target="_blank" [style.color]="style?.headerTextColor"
+                                        [href]="settings?.twitter_link"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </header>
+
+        <ng-template #singleVendor>
+            <section id="signle_vender-header"
+                [style.background-color]="settings?.app_type == 7 ? '#4A4A4A' : is_dark ?  style.backgroundColor : style?.headerBackgroundColor || style.backgroundColor">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-md-2">
+                            <div class="single-vender-logo">
+                                <a class="navbar-brand" [ngClass]="router.url === '/' ? 'default-pointer' : 'pointer'"
+                                    (click)="onLogo()">
+                                    <app-logo [width]="'auto'" [height]="'50'" [logoColor]="style.primaryColor"
+                                        [logoPadding]="'10'">
+                                    </app-logo>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="single-vender-location test">
+                                <app-location [settings]="settings"></app-location>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="single-vender-right">
+                                <div class="single-vender-search">
+                                    <app-search class="header-fixed-search" [settings]="settings" [style]="style">
+                                    </app-search>
+                                </div>
+
+                                <div class="single-vender-menu">
+                                    <ul>
+                                        <li>
+                                            <app-header-cart class="main_cart_outter" [style]="style"
+                                                [settings]="settings"></app-header-cart>
+                                        </li>
+                                        <li>
+                                            <div id="mySidenav" class="sidenav"
+                                                [style.width]="sidenav != 0  ? sidenav == 1 ? '250px' : '0px' : ''">
+                                                <a href="javascript:void(0)" class="closebtn"
+                                                    (click)="sidenav = 2">&times;</a>
+                                                <app-function-list class=" ml-auto" [showSearchbar]="showSearchbar"
+                                                    [userWalletBalance]="userWalletBalance" [userData]="userData"
+                                                    [loggedIn]="loggedIn" [style]="style" [settings]="settings"
+                                                    [openAuth]="openAuth" (searchBar)="showSearchbar = $event"
+                                                    (triggerAuthModal)="openAuth = $event"
+                                                    (authType)="openAuthModal($event)">
+                                                </app-function-list>
+                                                <app-language *ngIf="settings.secondary_language != '0'" [style]="style"
+                                                    [settings]="settings"></app-language>
+                                                <app-currency *ngIf="settings.is_multicurrency_enable" [style]="style"
+                                                    [settings]="settings"></app-currency>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </ng-template>
+
+
+    </ng-template>
+
+
+    <ng-template [ngSwitchCase]="2">
+
+        <header *ngIf="!settings?.is_single_vendor else singleVendor"
+            [style.background-color]="settings?.app_type == 7 ? '#4A4A4A' : is_dark ?  style.backgroundColor : style?.headerBackgroundColor || style.backgroundColor">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="header-logo">
+                            <a class="navbar-brand" [ngClass]="router.url === '/' ? 'default-pointer' : 'pointer'"
+                                (click)="onLogo()">
+                                <app-logo >
+                                </app-logo>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-2 add-header-search">
+                        <app-search
+                            *ngIf="(fix_search && ((router.url == '/' && !settings?.isCustomFlow) || (settings?.isCustomFlow && (router.url).startsWith('/food/home')))) ||( router.url !== '/' && !settings?.isCustomFlow) || (settings?.isCustomFlow && !(router.url).startsWith('/food/home') )"
+                            class="header-fixed-search" [settings]="settings" [style]="style"></app-search>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="navbar food-temp" style="margin-top: 10px;">
+                            <div class="app-dwnld">
+                                <a *ngIf="settings.ios_app_url" target="_blank" [href]="settings.ios_app_url"><img
+                                        src="/assets/images/app_store.png"></a>
+                                <a *ngIf="settings.android_app_url" target="_blank"
+                                    [href]="settings.android_app_url"><img style="margin-top: 0px;"
+                                        src="/assets/images/google_play.png"></a>
+                            </div>
+
+                            <li style="list-style: none"><a [style.color]="style?.baseColor"
+                                    [style.color]="style?.headerTextColor" [class.disabled]="isNavigating"
+                                    [routerLink]="['/about']">About Us</a></li>
+                            <!-- <a *ngIf="settings?.is_social_ecommerce == 1" [style.color]="style?.headerTextColor"
+                                [routerLink]="['/social-ecom']">{{'Whats Trending' | translate}}</a> -->
+
+                            <app-header-cart class="main_cart_outter" [style]="style" [settings]="settings">
+                            </app-header-cart>
+
+                            <span class="open_menu" (click)="sidenav = 1">&#9776;
+                                <!-- <span _ngcontent-c3="" *ngIf="totalCart > 0" class="cart_value"
+                                  [style.background-color]="style.primaryColor">{{totalCart}}</span> -->
+                            </span>
+                            <div id="mySidenav" class="sidenav"
+                                [style.width]="sidenav != 0  ? sidenav == 1 ? '250px' : '0px' : ''">
+                                <a href="javascript:void(0)" class="closebtn" (click)="sidenav = 2">&times;</a>
+                                <app-function-list class=" ml-auto" [showSearchbar]="showSearchbar"
+                                    [userWalletBalance]="userWalletBalance" [userData]="userData" [loggedIn]="loggedIn"
+                                    [style]="style" [settings]="settings" [openAuth]="openAuth"
+                                    (searchBar)="showSearchbar = $event" (triggerAuthModal)="openAuth = $event"
+                                    (authType)="openAuthModal($event)">
+                                </app-function-list>
+                                <app-language *ngIf="settings.secondary_language != '0'" [style]="style"
+                                    [settings]="settings"></app-language>
+                                <app-currency *ngIf="settings.is_multicurrency_enable" [style]="style"
+                                    [settings]="settings"></app-currency>
+                            </div>
+
+
+                            <ul class="social-header">
+                                <li *ngIf="settings?.fackbook_link"><a target="_blank"
+                                        [href]="settings?.fackbook_link"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                                <li *ngIf="settings?.instagram_link"><a target="_blank"
+                                        [href]="settings?.instagram_link"><i class="fa fa-instagram" aria-hidden="true"></i>
+                                    </a></li>
+                                <li *ngIf="settings?.twitter_link"><a target="_blank"
+                                        [href]="settings?.twitter_link"><i class="fa fa-twitter" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </header>
+
+        <ng-template #singleVendor>
+
+            <div class="top_header" [ngStyle]="{'color': '#ffffff', 'backgroundColor': style?.primaryColor}">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12 t-center top_head">
+                            <i class="fa fa-mobile" aria-hidden="true"></i><a style="cursor: pointer;"
+                                data-toggle="modal" data-target="#appLinks">get the {{site_name}} app</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div [ngStyle]="{'color': '#ffffff', 'backgroundColor': '#AE272D'}" *ngIf="settings.pickit_home_theme == 1 && settings.min_order_amount_for_free_delivery > 0">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12 t-center top_head" style="margin-bottom: 3px;">
+                            <a style="cursor: pointer;font-size: 10px;font-weight: 500;"
+                                data-toggle="modal" data-target="#appLinks">Shop for {{currency}} {{settings.min_order_amount_for_free_delivery}} to get free delivery in Dubai.</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <header class="t-center"
+                [style.background-color]="settings?.app_type == 7 ? '#4A4A4A' : is_dark ?  style.backgroundColor : style?.headerBackgroundColor || style.backgroundColor">
+                <div class="container bg-white">
+                    <div class="row">
+                        <div class="logo col-sm-2 t-center col">
+                            <a class="navbar-brand" width="150" alt="Logo"
+                                [ngClass]="router.url === '/' ? 'default-pointer' : 'pointer'" (click)="onLogo()">
+                                <app-logo [width]="'auto'" [height]="'50'" [logoColor]="style.primaryColor"
+                                    [logoPadding]="'10'">
+                                </app-logo>
+                            </a>
+                        </div>
+                        <div class="tog t-right col-sm-9">
+                            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="fa fa-bars"></span>
+                            </button>
+                        </div><!-- .nav-button -->
+                        <nav class="navbar navbar-expand-lg navbar-light t-left col-sm-10">
+                            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                <ul class="navbar-nav">
+                                    <form>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-3 icon"
+                                                *ngIf="!settings?.enable_custom_header_contant">
+                                                <app-location [settings]="settings"></app-location>
+                                            </div>
+                                            <div class="form-group col-md-6 icon">
+                                                <div *ngIf="!settings?.enable_custom_header_contant;else headerCustomMenu">
+                                                    <app-search [settings]="settings" [style]="style">
+                                                    </app-search>
+                                                </div>
+                                                <ng-template #headerCustomMenu>
+                                                    <div class="headerCustomMenu">
+                                                        <div class="row mt-3">
+                                                        <ul>
+                                                            <li>
+                                                                <a class="cursor lnk_btn" (click)="navigate('/about_us')">{{'About Us' | translate }}</a>
+                                                            </li>
+                                                            <li>
+                                                                <a class="cursor lnk_btn" (click)="navigate('/products/all-categories')">{{'Shop' | translate }}</a>
+                                                            </li>
+                                                            <li>
+                                                                <a class="cursor lnk_btn" (click)="navigate('/contact_us')">{{'Contact Us' | translate }}</a>
+                                                            </li>
+                                                        </ul>
+                                                        </div>
+                                                        <div class="row search mt-5" *ngIf="show_header_custom_search">
+                                                            <!-- <p>
+                                                                {{'Food Tradition & Beyond' | translate}}
+                                                            </p> -->
+                                                            <input type="text" class="form-control" id="inputCity"
+                                                                [placeholder]="'Search For ' + ('product' | localization | translate)" [(ngModel)]="searchText"
+                                                                (keydown.enter)="searchProduct($event.target.value)">
+                                                            <i class="fa fa-search" aria-hidden="true"></i>
+                                                
+                                                            <button class="go" (click)="searchProduct(searchText)">{{'Go' | translate }}</button>
+                                                        </div>
+                                                    </div>
+                                                </ng-template>
+                                                
+                                            </div>
+                                            <div class="form-group col-md-6 right-btn">
+                                                <div class="cust_location"
+                                                    *ngIf="settings?.enable_custom_header_contant">
+                                                    <app-location [settings]="settings"></app-location>
+                                                </div>
+                                                <app-header-cart class="main_cart_outter" [style]="style"
+                                                    [settings]="settings"></app-header-cart>
+
+                                                <app-function-list class=" ml-auto" [showSearchbar]="showSearchbar"
+                                                    [userWalletBalance]="userWalletBalance" [userData]="userData"
+                                                    [loggedIn]="loggedIn" [style]="style" [settings]="settings"
+                                                    [openAuth]="openAuth" (searchBar)="showSearchbar = $event"
+                                                    (triggerAuthModal)="openAuth = $event"
+                                                    (authType)="openAuthModal($event)">
+                                                </app-function-list>
+    
+
+<app-language *ngIf="settings.secondary_language != '0'"[style]="style"
+[settings]="settings"></app-language>
+
+
+                                            </div>
+                                        </div>
+                                    </form>
+                                </ul><!-- .navbar-nav -->
+                            </div><!-- .collapse -->
+                        </nav><!-- .navbar -->
+                    </div><!-- .row -->
+                </div><!-- .container -->
+            </header>
+        </ng-template>
+
+    </ng-template>
+
+
+    <ng-template [ngSwitchCase]="3">
+
+        <header id="header" class="fixed_top" *ngIf="!settings?.is_single_vendor else singleVendor"
+            [style.background-color]="settings?.app_type == 7 ? '#4A4A4A' : is_dark ?  style.backgroundColor : style?.headerBackgroundColor || style.backgroundColor">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="header-logo">
+                            <a class="navbar-brand" [ngClass]="router.url === '/' ? 'default-pointer' : 'pointer'"
+                                [class.disabled]="isNavigating" (click)="onLogo()">
+                                <app-logo [width]="'auto'" [height]="'50'" [logoColor]="style.primaryColor"
+                                    [logoPadding]="'10'">
+                                </app-logo>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 add-header-search">
+                        <app-search
+                            *ngIf="(fix_search && ((router.url == '/' && !settings?.isCustomFlow) || (settings?.isCustomFlow && (router.url).startsWith('/food/home')))) ||( router.url !== '/' && !settings?.isCustomFlow) || (settings?.isCustomFlow && !(router.url).startsWith('/food/home') )"
+                            class="header-fixed-search" [settings]="settings" [style]="style"></app-search>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="navbar food-temp">
+
+                            <a *ngIf="settings?.is_social_ecommerce == 1" [style.color]="style?.headerTextColor"
+                                [class.disabled]="isNavigating" [routerLink]="['/social-ecom']">
+                                {{whatsTrending | translate}}
+                            </a>
+
+                            <app-header-cart class="main_cart_outter" [style]="style" [settings]="settings"
+                                [isNavigating]="isNavigating">
+                            </app-header-cart>
+
+                            <span class="open_menu" (click)="sidenav = 1">&#9776;
+                                <!-- <span _ngcontent-c3="" *ngIf="totalCart > 0" class="cart_value"
+                                  [style.background-color]="style.primaryColor">{{totalCart}}</span> -->
+                            </span>
+                            <div id="mySidenav" class="sidenav"
+                                [style.width]="sidenav != 0  ? sidenav == 1 ? '250px' : '0px' : ''">
+                                <a href="javascript:void(0)" class="closebtn" (click)="sidenav = 2">&times;</a>
+                                <app-function-list class=" ml-auto" [showSearchbar]="showSearchbar"
+                                    [userWalletBalance]="userWalletBalance" [userData]="userData" [loggedIn]="loggedIn"
+                                    [style]="style" [settings]="settings" [openAuth]="openAuth"
+                                    (searchBar)="showSearchbar = $event" (triggerAuthModal)="openAuth = $event"
+                                    (authType)="openAuthModal($event)">
+                                </app-function-list>
+                                <app-language *ngIf="settings.secondary_language != '0'" [style]="style"
+                                    [settings]="settings"></app-language>
+                                <app-currency *ngIf="settings.is_multicurrency_enable" [style]="style"
+                                    [settings]="settings"></app-currency>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </header>
+
+        <ng-template #singleVendor>
+            <section id="signle_vender-header"
+                [style.background-color]="settings?.app_type == 7 ? '#4A4A4A' : is_dark ?  style.backgroundColor : style?.headerBackgroundColor || style.backgroundColor">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="single-vender-logo">
+                                <a class="navbar-brand" [ngClass]="router.url === '/' ? 'default-pointer' : 'pointer'"
+                                    (click)="onLogo()">
+                                    <app-logo [width]="'auto'" [height]="'50'" [logoColor]="style.primaryColor"
+                                        [logoPadding]="'10'">
+                                    </app-logo>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="single-vender-location">
+                                <app-location [settings]="settings"></app-location>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="single-vender-right">
+                                <div class="single-vender-search">
+                                    <app-search class="header-fixed-search" [settings]="settings" [style]="style">
+                                    </app-search>
+                                </div>
+
+                                <div class="single-vender-menu">
+                                    <ul>
+                                        <li>
+                                            <app-header-cart class="main_cart_outter" [style]="style"
+                                                [settings]="settings"></app-header-cart>
+                                        </li>
+                                        <li>
+                                            <div id="mySidenav" class="sidenav"
+                                                [style.width]="sidenav != 0  ? sidenav == 1 ? '250px' : '0px' : ''">
+                                                <a href="javascript:void(0)" class="closebtn"
+                                                    (click)="sidenav = 2">&times;</a>
+                                                <app-function-list class=" ml-auto" [showSearchbar]="showSearchbar"
+                                                    [userWalletBalance]="userWalletBalance" [userData]="userData"
+                                                    [loggedIn]="loggedIn" [style]="style" [settings]="settings"
+                                                    [openAuth]="openAuth" (searchBar)="showSearchbar = $event"
+                                                    (triggerAuthModal)="openAuth = $event"
+                                                    (authType)="openAuthModal($event)">
+                                                </app-function-list>
+                                                <app-language *ngIf="settings.secondary_language != '0'" [style]="style"
+                                                    [settings]="settings"></app-language>
+                                                <app-currency *ngIf="settings.is_multicurrency_enable" [style]="style"
+                                                    [settings]="settings"></app-currency>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </ng-template>
+
+
+    </ng-template>
+
+
+    <ng-template [ngSwitchCase]="4">
+
+        <header class="t-center" *ngIf="!settings?.is_single_vendor">
+            <div class="container">
+                <div class="row">
+                    <div class="logo col-md-4 t-left col">
+                        <a class="navbar-brand" [ngClass]="router.url === '/' ? 'default-pointer' : 'pointer'"
+                            [class.disabled]="isNavigating" (click)="onLogo()">
+                            <app-logo [width]="'auto'" [height]="''" [logoColor]="style.primaryColor"
+                                [logoPadding]="'10'">
+                            </app-logo>
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a class="nav-link ft-size" href="#"><span>BMT</span>Bookmytable.me</a>
+                    </div>
+                    <!-- <div class="tog t-right col-sm-12">
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="fa fa-bars"></span>
+                        </button>
+                    </div> -->
+                    <nav class="navbar navbar-expand-lg navbar-light t-right col-md-4">
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav mr-auto">
+                                <!-- <li class="nav-item m-left">
+                                    <a class="nav-link ft-size" href="#"><span>BMT</span>Bookmytable.me</a>
+                                </li> -->
+                                <li class="nav-item fa-icon">
+                                    <app-function-list class=" ml-auto" [showSearchbar]="showSearchbar"
+                                        [userWalletBalance]="userWalletBalance" [userData]="userData"
+                                        [loggedIn]="loggedIn" [style]="style" [settings]="settings"
+                                        [openAuth]="openAuth" (searchBar)="showSearchbar = $event"
+                                        (triggerAuthModal)="openAuth = $event" (authType)="openAuthModal($event)">
+                                    </app-function-list>
+                                </li>
+                                <li class="nav-item fa-icon">
+                                    <app-header-cart class="main_cart_outter" [style]="style" [settings]="settings">
+                                    </app-header-cart>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+
+    </ng-template>
+
+</ng-container>
+
+<div class="modal fade" id="appLinks" tabindex="-1" role="dialog" aria-labelledby="appLinks" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="appLinks" style="text-align: center;">App Links
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <a *ngIf="appLink?.android" target="_blank" [href]="appLink?.android">
+                            <img style="width: 100%;" src="/assets/images/google_play.png">
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a *ngIf="appLink?.ios" target="_blank" [href]="appLink?.ios">
+                            <img style="width: 100%;" src="/assets/images/app_store.png">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

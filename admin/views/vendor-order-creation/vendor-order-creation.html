@@ -1,0 +1,361 @@
+<div class="container-fluid back">
+
+</div>
+
+
+<div class="container">
+    <div class="row profile">
+        <div class="col-4">
+
+        </div>
+    </div>
+</div>
+
+
+<div class="wrapper">
+    <div class="category">
+        <div class="row">
+            <div class="col-md-6 col-sm-6">
+                <h1 class="bold">{{'Vendor Order Creation' | translate}}</h1>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="topfil">
+                    <ul>
+                        <li style="filter: grayscale(0)" ng-if="permissions('promotions', 'create') == 1">
+                            <!-- <button type="button" class="bold create" data-toggle="modal"
+                                    ng-click="addNewAddressModal(true)" data-target="#addNewUserRef">{{'CREATE ORDER'
+                                    |
+                                    translate}}</button> -->
+
+                            <button style="display: none;" type="button" class="bold create" id="check_order"
+                                ui-sref="orders.ordersDescription({order_id:order_id})">{{'CHECK ORDER' |
+                                    translate}}</button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="modbody persinfo order_create_form">
+
+                    <form role="form" id="addNewUserForm" name="addNewUserForm"
+                        ng-submit="addNewUserSubmit(addNewUserForm)" novalidate>
+                        <div class="form-group">
+                            <label>{{'EMAIL' | translate}}<span class="star">*</span></label>
+                            <input type="email" name="email" ng-model="user_info.email"
+                                placeholder="{{'EMAIL' | translate}}" ng-keyup="getUsers($event)" required>
+                            <div class="error" ng-show="addNewUserForm.email.$invalid && addNewUserForm.$submitted">
+                                <small ng-show="addNewUserForm.email.$error.required">{{'PLEASE ENTER EMAIL' |
+                                        translate}}</small>
+                                <small ng-show="addNewUserForm.email.$error.email">{{'PLEASE ENTER A VALID EMAIL' |
+                                        translate}}</small>
+                            </div>
+                        </div>
+
+                        <div class="users_list" ng-if="users && users.length && !add_to_cart.accessToken">
+                            <ul>
+                                <li ng-repeat="user in users" ng-click="selectUser(user)">
+                                    {{user.firstname + ' ' + user.lastname}}({{user.email}})</li>
+                            </ul>
+                        </div>
+
+                        <div class="form-group">
+                            <label>{{'Name' | translate}}<span class="star">*</span></label>
+                            <input type="text" name="name" ng-model="user_info.name"
+                                placeholder="{{'NAME' | translate}}" required>
+                            <div class="error" ng-show="addNewUserForm.name.$invalid && addNewUserForm.$submitted">
+                                <small ng-show="addNewUserForm.name.$error.required">Please enter
+                                    name.</small>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>{{'PHONE' | translate}}<span class="star">*</span></label>
+                            <input id="sup_phone" type="text" name="mobile" ng-minlength="6" ng-maxlength="15"
+                                ng-model="user_info.phone" production-qty placeholder="{{'MOBILE' | translate}}"
+                                required>
+                            <div class="error" ng-show="addNewUserForm.mobile.$invalid && addNewUserForm.$submitted">
+                                <small ng-show="addNewUserForm.mobile.$error.required">{{'PLEASE ENTER PHONE NO.' |
+                                        translate}}</small>
+                                <small ng-show="addNewUserForm.mobile.$error.minlength">{{'PHONE NO. MUST BE MORE
+                                        THAN
+                                        6
+                                        DIGITS' | translate}}</small>
+                                <small ng-show="addNewUserForm.mobile.$error.maxlength">{{'PHONE NO. MUST BE LESS
+                                        THAN
+                                        15
+                                        DIGITS' | translate}}</small>
+                            </div>
+                            <div class="error"
+                                ng-show="!addNewUserForm.mobile.$invalid && addNewUserForm.$submitted && invalid_phone_no">
+                                <small>{{'INVALID PHONE NUMBER' | translate}}</small>
+                            </div>
+                        </div>
+                        <!-- <div class="form-group">
+                                <label>{{'PICK UP ADDRESS' | translate}}<span class="star">*</span></label>
+                                <input type="text" name="address" ng-model="pick_up_location.address"
+                                    placeholder="{{'PICK UP ADDRESS' | translate}}" id="searchTextField_Pickup" required>
+                                <div class="error" ng-show="addNewUserForm.address.$invalid && addNewUserForm.$submitted">
+                                    <small ng-show="addNewUserForm.address.$error.required">{{'PLEASE ENETER ADDRESS.' |
+                                        translate}}</small>
+                                </div>
+                            </div> -->
+
+
+                        <div class="form-group">
+                                <label>{{'PRICE' | translate}}<span class="star">*</span></label>
+                                <input type="number" name="price" integers ng-model="user_info.price"
+                                    placeholder="{{'PRICE' | translate}}" required>
+                                <div class="error" ng-show="addNewUserForm.price.$invalid && addNewUserForm.$submitted">
+                                    <small ng-show="addNewUserForm.price.$error.required">Please enter
+                                        price.</small>
+                                </div>
+                            </div>
+
+                        <div class="form-group" ng-if="selected_user.id"
+                        ng-style="selected_user.id ? {'display' : 'block'} : {'display' : 'none'}">
+                            <label>{{'DROP OFF ADDRESS' | translate}}<span class="star">*</span></label>
+                            <input type="text" name="address" ng-model="drop_off_location.address"
+                                placeholder="{{'DROP OFF ADDRESS' | translate}}" required readonly>
+                            <div class="error" ng-show="addNewUserForm.address.$invalid && addNewUserForm.$submitted">
+                                <small ng-show="addNewUserForm.address.$error.required">{{'PLEASE ENETER ADDRESS.' |
+                                        translate}}</small>
+                            </div>
+                            <a style="float: right;color:var(--primary-color)"
+                                ng-click="openaddressPopUp()"><small>Change</small></a>
+                        </div>
+                        <div class="form-group" ng-if="!selected_user.id"
+                        ng-style="selected_user.id ? {'display' : 'none'} : {'display' : 'block'}">
+                            <label>{{'DROP OFF ADDRESS' | translate}}<span class="star">*</span></label>
+                            <input type="text" name="address" ng-model="drop_off_location.address" id="searchTextField_DropOff"
+                                placeholder="{{'DROP OFF ADDRESS' | translate}}" required >
+                            <div class="error" ng-show="addNewUserForm.address.$invalid && addNewUserForm.$submitted">
+                                <small ng-show="addNewUserForm.address.$error.required">{{'PLEASE ENETER ADDRESS.' |
+                                        translate}}</small>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-if="is_vehicle_category_enable == '1'">
+                            <label>{{'SELECT VEHICLE CATEGORY' | translate}}<span class="star">*</span></label>
+                            <select class="select-category mb-3 app" ng-model="selected_agent_vehicle_cat"
+                                name="addNewUserForm." ng-change="onSelectAgentVehicle(selected_agent_vehicle_cat)">
+                                <option value="">{{'SELECT CATEGORY' | translate}}</option>
+                                <option ng-repeat="vehicle in vehicleCatList" value="{{vehicle.id}}">{{vehicle.name}}
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>{{'DESCRIPTION' | translate}}<span class="star">*</span></label>
+                            <textarea type="text" name="description" ng-model="user_info.description"
+                                placeholder="{{'DESCRIPTION' | translate}}" rows="5" cols="50" required></textarea>
+                            <div class="error"
+                                ng-show="addNewUserForm.description.$invalid && addNewUserForm.$submitted">
+                                <small ng-show="addNewUserForm.description.$error.required">Please enter
+                                    name.</small>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <table>
+                                <tr>
+                                    <td>
+                                        {{'Expected Delivery Changes' | translate}}
+                                    </td>
+                                    <td>
+                                        {{expectedDeliveryCharges.toFixed(2)}}
+                                    </td>
+                                </tr>
+                            </table>
+                            <h3 style="color: red; text-align: center;"><small>Actual Delivery Charges may vary from
+                                    expected</small></h3>
+                        </div>
+
+                        <div class="submit-plan mt-3">
+                            <button type="submit" style="width: 100%;" class="text-center">{{'SUBMIT' |
+                                    translate}}</button>
+                        </div>
+                        <br class="mt-3">
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="addNewUserAddress">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <div class="modhead" style="border: none;">
+                    <h3>{{'CREATE ORDER' | translate}}</h3>
+                    <button type="button" class="close" data-dismiss="modal"><img
+                            src="img/v1_images/ic_cross.svg"></button>
+                </div>
+
+                <div class="modbody persinfo" style="border: none;">
+
+                    <form role="form" id="addNewUserAddressForm" name="addNewUserAddressForm"
+                        ng-submit="addNewAddress(addNewUserAddressForm)" novalidate>
+                        <!-- <div class="form-group">
+                            <label>{{'Name' | translate}}<span class="star">*</span></label>
+                            <input type="text" name="name" ng-model="address_model.name"
+                                placeholder="{{'NAME' | translate}}" required>
+                            <div class="error" ng-show="addNewUserAddressForm.name.$invalid && addNewUserAddressForm.$submitted">
+                                <small ng-show="addNewUserAddressForm.name.$error.required">Please enter
+                                    name.</small>
+                            </div>
+                        </div> -->
+
+                        <!-- <div class="form-group">
+                            <label>{{'PHONE' | translate}}<span class="star">*</span></label>
+                            <input id="user_phone" type="text" name="mobile" ng-minlength="6" ng-maxlength="15"
+                                ng-model="address_model.phone" production-qty placeholder="{{'MOBILE' | translate}}"
+                                required>
+                            <div class="error" ng-show="addNewUserAddressForm.mobile.$invalid && addNewUserAddressForm.$submitted">
+                                <small ng-show="addNewUserAddressForm.mobile.$error.required">{{'PLEASE ENTER PHONE NO.' |
+                                    translate}}</small>
+                                <small ng-show="addNewUserAddressForm.mobile.$error.minlength">{{'PHONE NO. MUST BE MORE
+                                    THAN
+                                    6
+                                    DIGITS' | translate}}</small>
+                                <small ng-show="addNewUserAddressForm.mobile.$error.maxlength">{{'PHONE NO. MUST BE LESS
+                                    THAN
+                                    15
+                                    DIGITS' | translate}}</small>
+                            </div>
+                            <div class="error"
+                                ng-show="!addNewUserAddressForm.mobile.$invalid && addNewUserAddressForm.$submitted && invalid_phone_no">
+                                <small>{{'INVALID PHONE NUMBER' | translate}}</small>
+                            </div>
+                        </div> -->
+
+                        <div class="form-group">
+                            <label>{{'DROP OFF ADDRESS' | translate}}<span class="star">*</span></label>
+                            <input type="text" name="address" ng-model="address_model.addressLineFirst"
+                                placeholder="{{'DROP OFF ADDRESS' | translate}}" id="user_address" required>
+                            <div class="error" ng-show="addNewUserAddressForm.address.$invalid && addNewUserAddressForm.$submitted">
+                                <small ng-show="addNewUserAddressForm.address.$error.required">{{'PLEASE ENETER ADDRESS.' |
+                                    translate}}</small>
+                            </div>
+                        </div>
+
+
+                        <div class="submit-plan mt-5">
+                            <button type="submit" style="width: 100%;" class="text-center">{{'SUBMIT' |
+                                translate}}</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="chooseUserAddress">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body row">
+                <div class="modhead" style="border: none;padding:20px; width:100%">
+                    <h3><b>{{'Choose Address' | translate}}</b></h3>
+                    <button type="button" class="close" data-dismiss="modal"><img
+                            src="img/v1_images/ic_cross.svg"></button>
+                </div>
+                <div class="modbody persinfo row" style="border: none;padding: 20px;width: 100%; text-align: center;padding-left: 50px;">
+                    <div ng-repeat="address in userAddresses" class=" col-md-6" style="padding: 0px !important;"
+                        ng-click="chooseAddress(address)">
+                        <div class="userAddress">
+                            <h3>{{address.address_line_1 || address.customer_address}}</h3>
+                        </div>
+                    </div>
+                    <div class="userAddressAdd col-md-12"
+                        ng-click="addAddress()">
+                        <h3>{{'Add New' | translate}}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<success-modal message="message"></success-modal>
+
+
+
+
+<style>
+    .delete {
+        cursor: pointer;
+    }
+
+    .delete:hover {
+        text-decoration: underline;
+        font-weight: 600;
+    }
+
+    .actions {
+        font-size: 24px;
+    }
+
+    .pac-container {
+        z-index: 99999 !important;
+    }
+
+    .order_create_form {
+        border: 1px solid;
+        border-radius: 10px;
+        width: 599px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 50px;
+    }
+
+    .users_list ul {
+        border: 2px solid black;
+        padding: 4px 8px;
+        border-radius: 5px;
+    }
+
+    .users_list {
+        max-height: 150px;
+        overflow-y: scroll;
+    }
+
+    .users_list ul li:hover {
+        background-color: var(--primary-color);
+        color: white
+    }
+
+    .userAddress {
+        padding: 15px;
+        border: 1px solid;
+        border-radius: 10px;
+        cursor: pointer;
+        height: 110px;
+        margin: 10px;
+    }
+
+    .userAddress:hover {
+        padding: 15px;
+        border: 1px solid var(--primary-color);
+        border-radius: 10px;
+        cursor: pointer;
+        color: var(--primary-color)
+    }
+
+    .userAddressAdd {
+        padding: 15px;
+        border: 1px solid var(--primary-color);
+        border-radius: 10px;
+        cursor: pointer;
+        color: var(--primary-color)
+    }
+    .userAddressAdd {
+        padding: 15px;
+        border: 1px solid var(--primary-color);
+        border-radius: 10px;
+        cursor: pointer;
+        color: white;
+        background: var(--primary-color);
+    }
+</style>
